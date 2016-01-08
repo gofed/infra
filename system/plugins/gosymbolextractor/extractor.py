@@ -1,6 +1,6 @@
 from metaprocessor import MetaProcessor
 import os
-from ..helpers.utils import getScriptDir, runCommand
+from system.helpers.utils import getScriptDir, runCommand
 import logging
 import json
 
@@ -10,6 +10,7 @@ DATA_PROJECT = "project"
 DATA_COMMIT = "commit"
 DATA_IPPREFIX = "ipprefix"
 ARTEFACT_GOLANG_PROJECT_PACKAGES = "golang-project-packages"
+ARTEFACT_GOLANG_PROJECT_EXPORTED_API = "golang-project-exported-api"
 
 class GoSymbolExtractor(MetaProcessor):
 	"""
@@ -113,6 +114,7 @@ class GoSymbolExtractor(MetaProcessor):
 		data = []
 
 		data.append(self._generateGolangProjectPackagesArtefact())
+		data.append(self._generateGolangProjectExportedAPI())
 
 		return data
 
@@ -147,6 +149,33 @@ class GoSymbolExtractor(MetaProcessor):
 
 		# Godeps directory located
 		data["godeps_found"] = self.godeps_on
+
+		return data
+
+	def _generateGolangProjectExportedAPI(self):
+		data = {}
+
+		# set artefact
+		data["artefact"] = ARTEFACT_GOLANG_PROJECT_EXPORTED_API
+
+		# project credentials
+		data["project"] = self.project
+		data["commit"] = self.commit
+
+		packages = []
+		for key in self.symbols:
+			package = {}
+
+			# full package name (location of a package without ipprefix)
+			path = str(key.split(":")[0])
+			package["package"] = path
+
+			# data types
+			for type in self.symbols[key]["types"]:
+				print type
+
+			print package
+			break
 
 		return data
 
