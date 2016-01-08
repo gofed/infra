@@ -1,8 +1,9 @@
-from metaprocessor import MetaProcessor
+from system.plugins.metaprocessor import MetaProcessor
 import os
-from system.helpers.utils import getScriptDir, runCommand
 import logging
 import json
+from system.helpers.utils import getScriptDir, runCommand
+from coder import GoTypeCoder
 
 CONFIG_SOURCE_CODE_DIRECTORY = "source_code_directory"
 CONFIG_SKIPPED_DIRECTORIES = "directories_to_skip"
@@ -173,6 +174,9 @@ class GoSymbolExtractor(MetaProcessor):
 			# data types
 			for type in self.symbols[key]["types"]:
 				print type
+				c = GoTypeCoder(type)
+				print c.code()
+				break
 
 			print package
 			break
