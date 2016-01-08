@@ -6,6 +6,10 @@ import json
 
 CONFIG_SOURCE_CODE_DIRECTORY = "source_code_directory"
 CONFIG_SKIPPED_DIRECTORIES = "directories_to_skip"
+DATA_PROJECT = "project"
+DATA_COMMIT = "commit"
+DATA_IPPREFIX = "ipprefix"
+ARTEFACT_GOLANG_PROJECT_PACKAGES = "golang-project-packages"
 
 class GoSymbolExtractor(MetaProcessor):
 	"""
@@ -56,7 +60,10 @@ class GoSymbolExtractor(MetaProcessor):
                 self.main_packages = []
                 # Godeps directory is present
                 self.godeps_on = False 
-
+		# project
+		self.project = ""
+		# commit
+		self.commit = ""
 
 		"""set implicit states"""
 		self.input_validated = False
@@ -90,10 +97,36 @@ class GoSymbolExtractor(MetaProcessor):
 		if CONFIG_SKIPPED_DIRECTORIES in data:
 			self.noGodeps = data[CONFIG_SKIPPED_DIRECTORIES]
 
+		# optional, project, commit, ipprefix
+		if DATA_PROJECT in data:
+			self.project = data[DATA_PROJECT]
+
+		if DATA_COMMIT in data:
+			self.commit = data[DATA_COMMIT]
+
+		if DATA_IPPREFIX in data:
+			self.ipprefix = data[DATA_IPPREFIX]
+
 		return True
 
 	def getData(self):
+		data = []
+
+		data.append(self._generateGolangProjectPackagesArtefact())
+
+		return data
+
+	def _generateGolangProjectPackagesArtefact(self):
 		data = {}
+
+		# set artefact
+		data["artefact"] = ARTEFACT_GOLANG_PROJECT_PACKAGES
+
+		# project credentials
+		data["project"] = self.project
+		data["commit"] = self.commit
+		data["ipprefix"] = self.ipprefix
+
 		# package imports
 		package_imports = {}
 		for key in self.package_imports:
@@ -111,6 +144,9 @@ class GoSymbolExtractor(MetaProcessor):
 
 		# files with 'package main'
 		data["main"] = ",".join(map(lambda i: str(i), self.main_packages))
+
+		# Godeps directory located
+		data["godeps_found"] = self.godeps_on
 
 		return data
 
