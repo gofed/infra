@@ -106,6 +106,12 @@ class GoSymbolExtractor(MetaProcessor):
 		# list of defined packages (defined package has at least one exported symbol)
 		data["packages"] = ",".join(map(lambda i: str(i.split(":")[0]), self.symbols.keys()))
 
+		# list of tests
+		data["tests"] = ",".join(map(lambda i: str(i), self.test_directories))
+
+		# files with 'package main'
+		data["main"] = ",".join(map(lambda i: str(i), self.main_packages))
+
 		return data
 
 	def execute(self):
