@@ -135,11 +135,9 @@ class GoSymbolExtractor(MetaProcessor):
 		for key in self.package_imports:
 			path = str(key.split(":")[0])
 			arr = sorted(map(lambda i: str(i), self.package_imports[key]))
-			package_imports[path] = ",".join(arr)
+			package_imports[path] = arr
 
-		data["dependencies"] = {}
-		for dep in package_imports.keys():
-			data["dependencies"][dep] = package_imports[dep].split(",")
+		data["dependencies"] = package_imports
 
 		# list of defined packages (defined package has at least one exported symbol)
 		data["packages"] = map(lambda i: str(i.split(":")[0]), self.symbols.keys())
