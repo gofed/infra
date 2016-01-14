@@ -15,7 +15,7 @@ ARTEFACT_GOLANG_PROJECT_EXPORTED_API = "golang-project-exported-api"
 
 class GoSymbolExtractor(MetaProcessor):
 	"""
-	Input: 
+	Input:
 	 - directory to parse
 	 - directories to skip
 	Input(json):
@@ -61,7 +61,7 @@ class GoSymbolExtractor(MetaProcessor):
                 # main packages
                 self.main_packages = []
                 # Godeps directory is present
-                self.godeps_on = False 
+                self.godeps_on = False
 		# project
 		self.project = ""
 		# commit
@@ -137,16 +137,18 @@ class GoSymbolExtractor(MetaProcessor):
 			arr = sorted(map(lambda i: str(i), self.package_imports[key]))
 			package_imports[path] = ",".join(arr)
 
-		data["dependencies"] = package_imports
+		data["dependencies"] = {}
+		for dep in package_imports.keys():
+			data["dependencies"][dep] = package_imports[dep].split(",")
 
 		# list of defined packages (defined package has at least one exported symbol)
-		data["packages"] = ",".join(map(lambda i: str(i.split(":")[0]), self.symbols.keys()))
+		data["packages"] = map(lambda i: str(i.split(":")[0]), self.symbols.keys())
 
 		# list of tests
-		data["tests"] = ",".join(map(lambda i: str(i), self.test_directories))
+		data["tests"] = map(lambda i: str(i), self.test_directories)
 
 		# files with 'package main'
-		data["main"] = ",".join(map(lambda i: str(i), self.main_packages))
+		data["main"] = map(lambda i: str(i), self.main_packages)
 
 		# Godeps directory located
 		data["godeps_found"] = self.godeps_on
@@ -297,7 +299,7 @@ class GoSymbolExtractor(MetaProcessor):
 					logging.warning("Scanning %s..." % ("%s/%s" % (dir_info['dir'], go_file)))
 
 				go_file_json = {}
-				err, output = self._getGoSymbols("%s/%s/%s" % 
+				err, output = self._getGoSymbols("%s/%s/%s" %
 					(self.directory, dir_info['dir'], go_file), self.imports_only)
 				if err != 0:
 					if self.skip_errors:
