@@ -58,8 +58,11 @@ class GoSymbolExtractor(MetaProcessor):
                 # occurences of imported paths in packages
                 self.package_imports_occurence = {}
                 self.test_directories = []
+                self.test_directory_dependencies = {}
                 # main packages
                 self.main_packages = []
+                # main packages dependencies
+                self.main_package_deps = {}
                 # Godeps directory is present
                 self.godeps_on = False
 		# project
@@ -143,10 +146,26 @@ class GoSymbolExtractor(MetaProcessor):
 		data["packages"] = map(lambda i: str(i.split(":")[0]), self.symbols.keys())
 
 		# list of tests
-		data["tests"] = map(lambda i: str(i), self.test_directories)
+		test_objs = []
+		for test_dir in self.test_directory_dependencies:
+			test_obj = {
+				"test": test_dir,
+				"dependencies": self.test_directory_dependencies[test_dir]
+			}
+			test_objs.append(test_obj)
+
+		data["tests"] = test_objs
 
 		# files with 'package main'
-		data["main"] = map(lambda i: str(i), self.main_packages)
+		main_objs = []
+		for filename in self.main_package_deps:
+			main_obj = {
+				"filename": filename,
+				"dependencies": self.main_package_deps[filename]
+			}
+			main_objs.append(main_obj)
+
+		data["main"] = main_objs
 
 		# Godeps directory located
 		data["godeps_found"] = self.godeps_on
@@ -261,9 +280,11 @@ class GoSymbolExtractor(MetaProcessor):
 		go_packages = {}
 		ip_packages = {}
 		test_directories = []
+		test_directory_dependencies = {}
 		ip_used = []
 		package_imports = {}
 		main_packages = []
+		main_package_deps = {}
 
 		for dir_info in self._getGoFiles(self.directory):
 			if dir_info["dir"].startswith("Godeps"):
@@ -340,15 +361,24 @@ class GoSymbolExtractor(MetaProcessor):
 
 				# don't check test files, read their import paths only
 				if go_file.endswith("_test.go"):
+					# get dependencies of tests
+					dir_key = dir_info['dir']
+					if dir_key not in test_directory_dependencies:
+						test_directory_dependencies[dir_key] = []
+
+					test_directory_dependencies[dir_key] = test_directory_dependencies[dir_key] + map(lambda p: str(p["path"]), go_file_json["imports"])
 					test_directories.append(dir_info['dir'])
 					continue
 
 				# skip all main packages
 				if pname == "main":
 					if dir_info['dir'] == ".":
-						main_packages.append(go_file,)
+						main_key = go_file
 					else:
-						main_packages.append("%s/%s" % (dir_info['dir'], go_file))
+						main_key = "%s/%s" % (dir_info['dir'], go_file)
+
+					main_packages.append(main_key)
+					main_package_deps[main_key] = sorted(map(lambda p: str(p["path"]), go_file_json["imports"]))
 					continue
 
 				# all files in a directory must define the same package
@@ -386,12 +416,19 @@ class GoSymbolExtractor(MetaProcessor):
 				ip_packages[prefix] = dir_info["dir"]
 				package_imports[prefix] = list(set(package_imports[prefix]))
 
+		# sort and unique test dependencies
+		for test_key in test_directory_dependencies:
+			test_directory_dependencies[test_key] = sorted(set(test_directory_dependencies[test_key]))
+
+
 		self.symbols = go_packages
 		self.symbols_position = ip_packages
 		self.package_imports = package_imports
 		self.imported_packages = ip_used
 		self.test_directories = list(set(test_directories))
+		self.test_directory_dependencies = test_directory_dependencies
 		self.main_packages = main_packages
+		self.main_package_deps = main_package_deps
 
 		return True
 
