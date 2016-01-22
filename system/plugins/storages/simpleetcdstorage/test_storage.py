@@ -1,4 +1,6 @@
 from golang_project_info_fedora_driver import GolangProjectInfoFedoraDriver
+from golang_project_to_package_name_driver import GolangProjectToPackageNameDriver
+
 import unittest
 import json
 
@@ -12,5 +14,19 @@ class GolangProjectInfoFedoraTest(unittest.TestCase):
 		expected = json.dumps(input)
 		current = driver.retrieve(input)
 	
+		# value is a string, not json so no need to sorted it before comparison
+		self.assertEqual(current, expected)
+
+class GolangProjectToPackageNameTest(unittest.TestCase):
+	def test(self):
+
+		input = {"artefact": "golang-project-to-package-name", "product": "Fedora", "distribution": "f22", "project": "github.com/coreos/etcd", "name": "etcd"}
+
+		driver = GolangProjectToPackageNameDriver()
+		driver.store(input)
+
+		expected = json.dumps(input)
+		current = driver.retrieve(input)
+
 		# value is a string, not json so no need to sorted it before comparison
 		self.assertEqual(current, expected)
