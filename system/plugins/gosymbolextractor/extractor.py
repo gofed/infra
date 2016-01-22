@@ -123,22 +123,29 @@ class GoSymbolExtractor(MetaProcessor):
 		return data
 
 	def _generateGolangProjectPackagesArtefact(self):
-		data = {}
+		artefact = {}
 
 		# set artefact
-		data["artefact"] = ARTEFACT_GOLANG_PROJECT_PACKAGES
+		artefact["artefact"] = ARTEFACT_GOLANG_PROJECT_PACKAGES
 
 		# project credentials
-		data["project"] = self.project
-		data["commit"] = self.commit
-		data["ipprefix"] = self.ipprefix
+		artefact["project"] = self.project
+		artefact["commit"] = self.commit
+		artefact["ipprefix"] = self.ipprefix
+
+		data = {}
 
 		# package imports
-		package_imports = {}
+		package_imports = []
 		for key in self.package_imports:
 			path = str(key.split(":")[0])
 			arr = sorted(map(lambda i: str(i), self.package_imports[key]))
-			package_imports[path] = arr
+
+			pkg_obj =  {
+				"package": path,
+				"dependencies": arr
+			}
+			package_imports.append(pkg_obj)
 
 		data["dependencies"] = package_imports
 
@@ -170,7 +177,9 @@ class GoSymbolExtractor(MetaProcessor):
 		# Godeps directory located
 		data["godeps_found"] = self.godeps_on
 
-		return data
+		artefact["data"] = data
+
+		return artefact
 
 	def _generateGolangProjectExportedAPI(self):
 		data = {}
