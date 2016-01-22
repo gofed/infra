@@ -1,49 +1,5 @@
-"""
-## Predefined types
-predifined types:
-	bool byte complex64 complex128 error float32 float64
-	int int8 int16 int32 int64 rune string
-	uint uint8 uint16 uint32 uint64 uintptr
-
-No change
-## Types
-
-### Ident type
-
-{u'type': u'ident', u'def': u'dynamicTable'}
-
-### Array types
-
-ArrayType   = "[" ArrayLength "]" ElementType .
-
-The length is part of the array's type;
-it must evaluate to a non-negative constant representable by a value of type int.
-string: [INT] TYPE
-
-### Slice types
-
-SliceType = "[" "]" ElementType .
-
-### Structs
-
-StructType     = "struct" "{" { FieldDecl ";" } "}" .
-FieldDecl      = (IdentifierList Type | AnonymousField) [ Tag ] .
-AnonymousField = [ "*" ] TypeName .
-Tag            = string_lit .
-
-
-## structs
-type ID struct {
-        [ID    TYPE]+
-}
-
-into
-
-"struct ID {ID TYPE[,ID TYPE]*}"
-
-"""
-
 import logging
+import json
 
 PREDEFINED_TYPES = ["bool", "byte", "complex64", "complex128", "error", "float32", "float64", "int", "int8", "int16", "int32", "int64", "rune", "string", "uint", "uint8", "uint16", "uint32", "uint64", "uintptr"]
 
@@ -80,14 +36,29 @@ class GoTypeCoder:
 		return False
 
 	def _ident_to_string(self, type):
-		#
-		#
-		#
-		print type
-		if "name" in type:
-			return "%s '%s' {%s}" % (TYPE_IDENT, type["name"], type["def"]["def"])
-		else:
-			return "%s {%s}" % (TYPE_IDENT, type["def"])
+		# "identifier": {
+		# 	"type": "object",
+		# 	"description": "Identifier definition",
+		# 	"properties": {
+		# 		"type": {
+		# 			"type": "string",
+		# 			"description": "Type identifier",
+		# 			"oneOf": [
+		# 				{"enum": ["identifier"]}
+		# 			]
+		# 		},
+		# 		"def": {
+		# 			"type": "string",
+		# 			"description": "Primitive type or ID",
+		# 			"minLength": 1
+		# 		}
+		# 	},
+		# 	"required": ["type", "def"]
+		# },
+		ident_obj = {}
+		ident_obj["type"] = "identifier"
+		ident_obj["def"] = type["def"]
+		return ident_obj
 
 	def _is_array(self, type):
 		if type["type"] == TYPE_ARRAY:
@@ -98,8 +69,32 @@ class GoTypeCoder:
 		# ArrayType   = "[" ArrayLength "]" ElementType .
 		# {u'elmtype': {u'type': u'ident', u'def': u'byte'}, u'type': u'array', u'name': u''}
 		# [INT] TYPE
-		elmtype_to_string = self._type_to_string(type["elmtype"])
-		return "%s %s {%s}" % (TYPE_ARRAY, type["name"], elmtype_to_string)
+
+		# "array": {
+		# 	"type": "object",
+		# 	"description": "Array definition",
+		# 	"properties": {
+		# 		"type": {
+		# 			"type": "string",
+		# 			"description": "type identifier",
+		# 			"oneof": [
+		# 				{"enum": ["array"]}
+		# 			]
+		# 		},
+		# 		"elmtype": {
+		# 			"type": "object",
+		# 			"description": "element type definition",
+		# 			"oneof": [
+		#				TYPEDEF
+		# 			]
+		# 		}
+		# 	},
+		# 	"properties": ["type", "elmtype"]
+		# }
+		array_obj = {}
+		array_obj["type"] = "array"
+		array_obj["elmtype"] = self._type_to_string(type["elmtype"])
+		return array_obj
 
 	def _is_slice(self, type):
 		if type["type"] == TYPE_SLICE:
@@ -110,8 +105,31 @@ class GoTypeCoder:
 		# SliceType = "[" "]" ElementType .
 		#
 		# slice {TYPE}
-		element_type_to_string = self._type_to_string(type["elmtype"])
-		return "%s {%s}" % (TYPE_SLICE, element_type_to_string)
+		# "slice": {
+		# 	"type": "object",
+		# 	"description": "Slice definition",
+		# 	"properties": {
+		# 		"type": {
+		# 			"type": "string",
+		# 			"description": "Type identifier",
+		# 			"oneOf": [
+		# 				{"enum": ["slice"]}
+		# 			]
+		# 		},
+		# 		"elmtype": {
+		# 			"type": "object",
+		# 			"description": "Element type definition",
+		# 			"oneOf": [
+		#				TYPEDEF
+		# 			]
+		# 		}
+		# 	},
+		# 	"properties": ["type", "elmtype"]
+		# }
+		slice_obj = {}
+		slice_obj["type"] = "slice"
+		slice_obj["elmtype"] = self._type_to_string(type["elmtype"])
+		return slice_obj
 
 	def _is_struct(self, type):
 		if type["type"] == TYPE_STRUCT:
@@ -119,15 +137,54 @@ class GoTypeCoder:
 		return False
 
 	def _struct_to_string(self, type):
-		#
-		#
-		# struct {}
-		fields = []
-		for field in type["def"]:
-			field_type_str = self._type_to_string(field["def"])
-			fields.append("'%s' %s" % (field["name"], field_type_str))
+		# "struct": {
+		# 	"type": "object",
+		# 	"description": "Struct definition",
+		# 	"properties": {
+		# 		"type": {
+		# 			"type": "string",
+		# 			"description": "Type identifier"
+		# 		},
+		# 		"fields": {
+		# 			"type": "array",
+		# 			"description": "Definition of fields",
+		# 			"items": {
+		# 				"type": "object",
+		# 				"description": "Field definition",
+		# 				"properties": {
+		# 					"name": {
+		# 						"type": "string",
+		# 						"description": "Field name. Anonymous if omited.",
+		# 						"minLength": 1
+		# 					},
+		# 					"def": {
+		# 						"type": "object",
+		# 						"description": "Type definition",
+		# 						"oneof": [
+		# 							TYPEDEF
+		# 						]
+		# 					}
+		# 				},
+		# 				"required": ["def"]
+		# 			},
+		# 			"uniqueItems": true
+		# 		}
+		# 	},
+		# 	"required": ["type", "def"]
+		# }
 
-		return "%s '%s' {%s}" % (TYPE_STRUCT, type["name"], ", ".join(fields))
+		fields_objs = []
+
+		for field in type["def"]:
+			field_obj = {}
+			field_obj["name"] = field["name"]
+			field_obj["def"] = self._type_to_string(field["def"])
+			fields_objs.append(field_obj)
+
+		struct_obj = {}
+		struct_obj["type"] = "struct"
+		struct_obj["fields"] = fields_objs
+		return struct_obj
 
 	def _is_selector(self, type):
 		if type["type"] == TYPE_SELECTOR:
@@ -138,8 +195,38 @@ class GoTypeCoder:
 		# {u'item': u'Writer', u'prefix': {u'type': u'ident', u'def': u'io'}, u'type': u'selector'}
 		#
 		# selector ITEM {PREFIX}
-		prefix_type_string = self._type_to_string(type["prefix"])
-		return "%s %s {%s}" % (TYPE_SELECTOR, type["item"], prefix_type_string)
+
+		# "selector": {
+		# 	"type": "object",
+		# 	"description": "Identifier definition",
+		# 	"properties": {
+		# 		"type": {
+		# 			"type": "string",
+		# 			"description": "Type identifier",
+		# 			"oneOf": [
+		# 				{"enum": ["selector"]}
+		# 			]
+		# 		},
+		# 		"prefix": {
+		# 			"type": "object",
+		# 			"description": "Prefix definition",
+		# 			"oneOf": [
+		# 				TYPEDEF
+		# 			]
+		# 		},
+		# 		"item": {
+		# 			"type": "string",
+		# 			"description": "Item identifier",
+		# 			"minLength": 1
+		# 		}
+		# 	},
+		# 	"required": ["type", "prefix", "item"]
+		# }
+		selector_obj = {}
+		selector_obj["type"] = "selector"
+		selector_obj["prefix"] = self._type_to_string(type["prefix"])
+		selector_obj["item"] = type["item"]
+		return selector_obj
 
 	def _is_function_type(self, type):
 		if type["type"] == TYPE_FUNC:
@@ -150,20 +237,59 @@ class GoTypeCoder:
 		# {u'name': u'emit', u'def': {u'params': [{u'type': u'ident', u'def': u'HeaderField'}], u'type': u'func', u'results': []}
 		#
 		# func NAME {TYPE[,TYPE]*} {TYPE[,TYPE]*}
-		args = []
+
+		# "function": {
+		# 	"type": "object",
+		# 	"description": "Function definition",
+		# 	"properties": {
+		# 		"type": {
+		# 			"type": "string",
+		# 			"description": "Type identifier",
+		# 			"oneof": [
+		# 				{"enum": ["method"]}
+		# 			]
+		# 		},
+		# 		"params": {
+		# 			"type": "array",
+		# 			"description": "List of parameters",
+		# 			"items": {
+		# 				"type": "object",
+		# 				"description": "Parameter type definition",
+		# 				"oneof": [
+		# 					TYPEDEF
+		# 				]
+		# 			}
+		# 		},
+		# 		"results": {
+		# 			"type": "array",
+		# 			"description": "List of results",
+		# 			"items": {
+		# 				"type": "object",
+		# 				"description": "Results type definition",
+		# 				"oneof": [
+		# 					TYPEDEF
+		# 				]
+		# 			}
+		# 		}
+		# 	},
+		# 	"properties": ["type", "params", "results"]
+		# }
+		function_obj = {}
+		function_obj["type"] = "function"
+
+		params_objs = []
+		results_objs = []
+
 		for param in type["params"]:
-			args.append(self._type_to_string(param))
-		fnc_args_to_string = ", ".join(args)
+			params_objs.append(self._type_to_string(param))
 
-		res = []
 		for param in type["results"]:
-			res.append(self._type_to_string(param))
-		fnc_res_to_string = ", ".join(res)
+			results_objs.append(self._type_to_string(param))
 
-		if "name" not in type:
-			return "%s {%s} {%s}" % (TYPE_FUNC, fnc_args_to_string, fnc_res_to_string)
-		else:
-			return "%s %s {%s} {%s}" % (TYPE_FUNC, type["name"], fnc_args_to_string, fnc_res_to_string)
+		function_obj["params"] = params_objs
+		function_obj["results"] = results_objs
+
+		return function_obj
 
 	def _is_map(self, type):
 		if type["type"] == TYPE_MAP:
@@ -173,9 +299,40 @@ class GoTypeCoder:
 	def _map_to_string(self, type):
 		# {u'type': u'map', u'name': u'', u'def': {u'keytype': {u'type': u'ident', u'def': u'string'}, u'valuetype': {u'elmtype': {u'type': u'pointer', u'def': {u'type': u'ident', u'def': u'clientConn'}}, u'type': u'slice', u'name': u''}}}
 		# map NAME {KEYTYPE} {VALUETYPE}
-		keytype_to_string = self._type_to_string(type["def"]["keytype"])
-		valuetype_to_string = self._type_to_string(type["def"]["valuetype"])
-		return "%s %s {%s} {%s}" % (TYPE_MAP, type["name"], keytype_to_string, valuetype_to_string)
+
+		# "map": {
+		# 	"type": "object",
+		# 	"description": "Map definition",
+		# 	"properties": {
+		# 		"type": {
+		# 			"type": "string",
+		# 			"description": "type identifier",
+		# 			"oneof": [
+		# 				{"enum": ["map"]}
+		# 			]
+		# 		},
+		# 		"keytype": {
+		# 			"type": "object",
+		# 			"description": "Key type definition",
+		# 			"oneof": [
+		# 				TYPEDEF
+		# 			]
+		# 		},
+		# 		"valuetype": {
+		# 			"type": "object",
+		# 			"description": "Key type definition",
+		# 			"oneof": [
+		# 				TYPEDEF
+		# 			]
+		# 		}
+		# 	},
+		# 	"properties": ["type", "keytype", "valuetype"]
+		# }
+		map_obj = {}
+		map_obj["type"] = "map"
+		map_obj["keytype"] = self._type_to_string(type["def"]["keytype"])
+		map_obj["valuetype"] = self._type_to_string(type["def"]["valuetype"])
+		return map_obj
 
 	def _is_pointer(self, type):
 		if type["type"] == TYPE_POINTER:
@@ -186,8 +343,32 @@ class GoTypeCoder:
 		# {u'type': u'pointer', u'def': {u'type': u'ident', u'def': u'clientConn'}}
 		#
 		# pointer {TYPE}
-		pointer_type_to_string = self._type_to_string(type["def"])
-		return "%s {%s}" % (TYPE_POINTER, pointer_type_to_string)
+
+		# "pointer": {
+		# 	"type": "object",
+		# 	"description": "Pointer definition",
+		# 	"properties": {
+		# 		"type": {
+		# 			"type": "string",
+		# 			"description": "type identifier",
+		# 			"oneof": [
+		# 				{"enum": ["pointer"]}
+		# 			]
+		# 		},
+		# 		"def": {
+		# 			"type": "object",
+		# 			"description": "Pointed type definition",
+		# 			"oneof": [
+		#				TYPEDEF
+		# 			]
+		# 		}
+		# 	},
+		# 	"properties": ["type", "def"]
+		# }
+		pointer_obj = {}
+		pointer_obj["type"] = "pointer"
+		pointer_obj["def"] = self._type_to_string(type["def"])
+		return pointer_obj
 
 	def _is_method(self, type):
 		if type["type"] == TYPE_METHOD:
@@ -197,15 +378,62 @@ class GoTypeCoder:
 	def _method_to_string(self, type):
 		# {u'type': u'method', u'name': u'Header', u'def': {u'params': [], u'type': u'func', u'results': [{u'type': u'ident', u'def': u'FrameHeader'}]}}
 		# method NAME {TYPE[,TYPE]*} {TYPE[,TYPE]*}
-		params_as_strings = []
+
+		# Method appears only when a function on the highest level is defined.
+		# Method in here comes from interface definition.
+
+		# "function": {
+		# 	"type": "object",
+		# 	"description": "Function definition",
+		# 	"properties": {
+		# 		"type": {
+		# 			"type": "string",
+		# 			"description": "Type identifier",
+		# 			"oneof": [
+		# 				{"enum": ["method"]}
+		# 			]
+		# 		},
+		# 		"params": {
+		# 			"type": "array",
+		# 			"description": "List of parameters",
+		# 			"items": {
+		# 				"type": "object",
+		# 				"description": "Parameter type definition",
+		# 				"oneof": [
+		# 					TYPEDEF
+		# 				]
+		# 			}
+		# 		},
+		# 		"results": {
+		# 			"type": "array",
+		# 			"description": "List of results",
+		# 			"items": {
+		# 				"type": "object",
+		# 				"description": "Results type definition",
+		# 				"oneof": [
+		# 					TYPEDEF
+		# 				]
+		# 			}
+		# 		}
+		# 	},
+		# 	"properties": ["type", "params", "results"]
+		# }
+
+		function_obj = {}
+		function_obj["type"] = "function"
+
+		params_objs = []
 		for param in type["def"]["params"]:
-			params_as_strings.append(self._type_to_string(param))
+			params_objs.append(self._type_to_string(param))
 
-		results_as_strings = []
+		results_objs = []
 		for result in type["def"]["results"]:
-			results_as_strings.append(self._type_to_string(result))
+			results_objs.append(self._type_to_string(result))
 
-		return "%s %s {%s} {%s}" % (TYPE_METHOD, type["name"], ", ".join(params_as_strings), ", ".join(results_as_strings) )
+		function_obj["params"] = params_objs
+		function_obj["results"] = results_objs
+
+		return function_obj
 
 	def _is_interface(self, type):
 		if type["type"] == TYPE_INTERFACE:
@@ -216,11 +444,60 @@ class GoTypeCoder:
 		# {u'type': u'interface', u'name': u'Frame', u'def': [{u'type': u'method', u'name': u'Header', u'def': {u'params': [], u'type': u'func', u'results': [{u'type': u'ident', u'def': u'FrameHeader'}]}}, {u'type': u'method', u'name': u'invalidate', u'def': {u'type': u'func', u'params': [], u'results': []}}]}
 		#
 		# interface {FNC[,FNC]*} or just interface{}
-		fncs = []
-		for fnc in type["def"]:
-			fncs.append( self._method_to_string(fnc) )
 
-		return "%s {%s}" % (TYPE_INTERFACE, ", ".join(fncs))
+		# "interface": {
+		# 	"type": "object",
+		# 	"description": "Interface definition",
+		# 	"properties": {
+		# 		"type": {
+		# 			"type": "string",
+		# 			"description": "type identifier",
+		# 			"oneof": [
+		# 				{"enum": ["interface"]}
+		# 			]
+		# 		},
+		# 		"methods": {
+		# 			"type": "array",
+		# 			"description": "List of methods",
+		# 			"items": {
+		# 				"type": "object",
+		# 				"description": "Method definition",
+		# 				"properties": {
+		# 					"name": {
+		# 						"type": "string",
+		# 						"description": "Method name",
+		# 						"minLength": 1
+		# 					},
+		# 					"def": {
+		# 						"type": "object",
+		# 						"description": "Function type definition",
+		# 						"oneof": [
+		# 							{ "$ref": "#/definitions/function" }
+		# 						]	
+		# 					}
+		# 				},
+		# 				"required": ["name", "def"]
+		# 			},
+		# 			"uniqueItems": true
+		# 		}
+		# 	},
+		# 	"properties": ["type", "methods"]
+		# }
+
+		interface_obj = {}
+		interface_obj["type"] = "interface"
+
+		method_objs = []
+
+		for fnc in type["def"]:
+			method_obj = {}
+			method_obj["name"] = fnc["name"]
+			method_obj["def"] = self._method_to_string(fnc)
+			method_objs.append(method_obj)
+
+
+		interface_obj["methods"] = method_objs
+		return interface_obj
 
 	def _type_to_string(self, type):
 		if self._is_struct(type):
