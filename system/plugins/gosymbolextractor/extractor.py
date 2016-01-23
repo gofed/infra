@@ -202,12 +202,13 @@ class GoSymbolExtractor(MetaProcessor):
 			# data types
 			data_types = []
 			for type in self.symbols[key]["types"]:
-				#print type
 				c = GoTypeCoder(type)
 				data_types.append(c.code())
-				#print ""
 
 			package["datatypes"] = data_types
+
+			# functions
+
 
 			#print json.dumps(package)
 			packages.append(package)

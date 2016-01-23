@@ -27,7 +27,7 @@ class GoTypeCoder:
 			return True
 		return False
 
-	def _predefined_type_to_string(self, type):
+	def _predefined_type_to_json(self, type):
 		return type
 
 	def _is_ident(self, type):
@@ -35,7 +35,7 @@ class GoTypeCoder:
 			return True
 		return False
 
-	def _ident_to_string(self, type):
+	def _ident_to_json(self, type):
 		# "identifier": {
 		# 	"type": "object",
 		# 	"description": "Identifier definition",
@@ -57,7 +57,12 @@ class GoTypeCoder:
 		# },
 		ident_obj = {}
 		ident_obj["type"] = "identifier"
-		ident_obj["def"] = type["def"]
+
+		if "name" in type:
+			ident_obj["def"] = type["def"]["def"]
+		else:
+			ident_obj["def"] = type["def"]
+
 		return ident_obj
 
 	def _is_array(self, type):
@@ -65,11 +70,9 @@ class GoTypeCoder:
 			return True
 		return False
 
-	def _array_to_string(self, type):
+	def _array_to_json(self, type):
 		# ArrayType   = "[" ArrayLength "]" ElementType .
 		# {u'elmtype': {u'type': u'ident', u'def': u'byte'}, u'type': u'array', u'name': u''}
-		# [INT] TYPE
-
 		# "array": {
 		# 	"type": "object",
 		# 	"description": "Array definition",
@@ -93,7 +96,8 @@ class GoTypeCoder:
 		# }
 		array_obj = {}
 		array_obj["type"] = "array"
-		array_obj["elmtype"] = self._type_to_string(type["elmtype"])
+		array_obj["elmtype"] = self._type_to_json(type["elmtype"])
+
 		return array_obj
 
 	def _is_slice(self, type):
@@ -101,10 +105,8 @@ class GoTypeCoder:
 			return True
 		return False
 
-	def _slice_to_string(self, type):
+	def _slice_to_json(self, type):
 		# SliceType = "[" "]" ElementType .
-		#
-		# slice {TYPE}
 		# "slice": {
 		# 	"type": "object",
 		# 	"description": "Slice definition",
@@ -128,7 +130,8 @@ class GoTypeCoder:
 		# }
 		slice_obj = {}
 		slice_obj["type"] = "slice"
-		slice_obj["elmtype"] = self._type_to_string(type["elmtype"])
+		slice_obj["elmtype"] = self._type_to_json(type["elmtype"])
+
 		return slice_obj
 
 	def _is_struct(self, type):
@@ -136,7 +139,7 @@ class GoTypeCoder:
 			return True
 		return False
 
-	def _struct_to_string(self, type):
+	def _struct_to_json(self, type):
 		# "struct": {
 		# 	"type": "object",
 		# 	"description": "Struct definition",
@@ -172,18 +175,18 @@ class GoTypeCoder:
 		# 	},
 		# 	"required": ["type", "def"]
 		# }
-
 		fields_objs = []
 
 		for field in type["def"]:
 			field_obj = {}
 			field_obj["name"] = field["name"]
-			field_obj["def"] = self._type_to_string(field["def"])
+			field_obj["def"] = self._type_to_json(field["def"])
 			fields_objs.append(field_obj)
 
 		struct_obj = {}
 		struct_obj["type"] = "struct"
 		struct_obj["fields"] = fields_objs
+
 		return struct_obj
 
 	def _is_selector(self, type):
@@ -191,11 +194,8 @@ class GoTypeCoder:
 			return True
 		return False
 
-	def _selector_to_string(self, type):
+	def _selector_to_json(self, type):
 		# {u'item': u'Writer', u'prefix': {u'type': u'ident', u'def': u'io'}, u'type': u'selector'}
-		#
-		# selector ITEM {PREFIX}
-
 		# "selector": {
 		# 	"type": "object",
 		# 	"description": "Identifier definition",
@@ -224,8 +224,9 @@ class GoTypeCoder:
 		# }
 		selector_obj = {}
 		selector_obj["type"] = "selector"
-		selector_obj["prefix"] = self._type_to_string(type["prefix"])
+		selector_obj["prefix"] = self._type_to_json(type["prefix"])
 		selector_obj["item"] = type["item"]
+
 		return selector_obj
 
 	def _is_function_type(self, type):
@@ -233,7 +234,7 @@ class GoTypeCoder:
 			return True
 		return False
 
-	def _function_to_string(self, type):
+	def _function_to_json(self, type):
 		# {u'name': u'emit', u'def': {u'params': [{u'type': u'ident', u'def': u'HeaderField'}], u'type': u'func', u'results': []}
 		#
 		# func NAME {TYPE[,TYPE]*} {TYPE[,TYPE]*}
@@ -281,10 +282,10 @@ class GoTypeCoder:
 		results_objs = []
 
 		for param in type["params"]:
-			params_objs.append(self._type_to_string(param))
+			params_objs.append(self._type_to_json(param))
 
 		for param in type["results"]:
-			results_objs.append(self._type_to_string(param))
+			results_objs.append(self._type_to_json(param))
 
 		function_obj["params"] = params_objs
 		function_obj["results"] = results_objs
@@ -294,12 +295,11 @@ class GoTypeCoder:
 	def _is_map(self, type):
 		if type["type"] == TYPE_MAP:
 			return True
+
 		return False
 
-	def _map_to_string(self, type):
+	def _map_to_json(self, type):
 		# {u'type': u'map', u'name': u'', u'def': {u'keytype': {u'type': u'ident', u'def': u'string'}, u'valuetype': {u'elmtype': {u'type': u'pointer', u'def': {u'type': u'ident', u'def': u'clientConn'}}, u'type': u'slice', u'name': u''}}}
-		# map NAME {KEYTYPE} {VALUETYPE}
-
 		# "map": {
 		# 	"type": "object",
 		# 	"description": "Map definition",
@@ -330,8 +330,9 @@ class GoTypeCoder:
 		# }
 		map_obj = {}
 		map_obj["type"] = "map"
-		map_obj["keytype"] = self._type_to_string(type["def"]["keytype"])
-		map_obj["valuetype"] = self._type_to_string(type["def"]["valuetype"])
+		map_obj["keytype"] = self._type_to_json(type["def"]["keytype"])
+		map_obj["valuetype"] = self._type_to_json(type["def"]["valuetype"])
+
 		return map_obj
 
 	def _is_pointer(self, type):
@@ -339,11 +340,8 @@ class GoTypeCoder:
 			return True
 		return False
 
-	def _pointer_to_string(self, type):
+	def _pointer_to_json(self, type):
 		# {u'type': u'pointer', u'def': {u'type': u'ident', u'def': u'clientConn'}}
-		#
-		# pointer {TYPE}
-
 		# "pointer": {
 		# 	"type": "object",
 		# 	"description": "Pointer definition",
@@ -367,7 +365,8 @@ class GoTypeCoder:
 		# }
 		pointer_obj = {}
 		pointer_obj["type"] = "pointer"
-		pointer_obj["def"] = self._type_to_string(type["def"])
+		pointer_obj["def"] = self._type_to_json(type["def"])
+
 		return pointer_obj
 
 	def _is_method(self, type):
@@ -375,13 +374,11 @@ class GoTypeCoder:
 			return True
 		return False
 
-	def _method_to_string(self, type):
+	def _method_to_json(self, type):
 		# {u'type': u'method', u'name': u'Header', u'def': {u'params': [], u'type': u'func', u'results': [{u'type': u'ident', u'def': u'FrameHeader'}]}}
-		# method NAME {TYPE[,TYPE]*} {TYPE[,TYPE]*}
-
 		# Method appears only when a function on the highest level is defined.
 		# Method in here comes from interface definition.
-
+		#
 		# "function": {
 		# 	"type": "object",
 		# 	"description": "Function definition",
@@ -424,11 +421,11 @@ class GoTypeCoder:
 
 		params_objs = []
 		for param in type["def"]["params"]:
-			params_objs.append(self._type_to_string(param))
+			params_objs.append(self._type_to_json(param))
 
 		results_objs = []
 		for result in type["def"]["results"]:
-			results_objs.append(self._type_to_string(result))
+			results_objs.append(self._type_to_json(result))
 
 		function_obj["params"] = params_objs
 		function_obj["results"] = results_objs
@@ -438,13 +435,11 @@ class GoTypeCoder:
 	def _is_interface(self, type):
 		if type["type"] == TYPE_INTERFACE:
 			return True
+
 		return False
 
-	def _interface_to_string(self, type):
+	def _interface_to_json(self, type):
 		# {u'type': u'interface', u'name': u'Frame', u'def': [{u'type': u'method', u'name': u'Header', u'def': {u'params': [], u'type': u'func', u'results': [{u'type': u'ident', u'def': u'FrameHeader'}]}}, {u'type': u'method', u'name': u'invalidate', u'def': {u'type': u'func', u'params': [], u'results': []}}]}
-		#
-		# interface {FNC[,FNC]*} or just interface{}
-
 		# "interface": {
 		# 	"type": "object",
 		# 	"description": "Interface definition",
@@ -492,32 +487,32 @@ class GoTypeCoder:
 		for fnc in type["def"]:
 			method_obj = {}
 			method_obj["name"] = fnc["name"]
-			method_obj["def"] = self._method_to_string(fnc)
+			method_obj["def"] = self._method_to_json(fnc)
 			method_objs.append(method_obj)
 
-
 		interface_obj["methods"] = method_objs
+
 		return interface_obj
 
-	def _type_to_string(self, type):
+	def _type_to_json(self, type):
 		if self._is_struct(type):
-			return self._struct_to_string(type)
+			return self._struct_to_json(type)
 		if self._is_ident(type):
-			return self._ident_to_string(type)
+			return self._ident_to_json(type)
 		if self._is_selector(type):
-			return self._selector_to_string(type)
+			return self._selector_to_json(type)
 		if self._is_slice(type):
-			return self._slice_to_string(type)
+			return self._slice_to_json(type)
 		if self._is_function_type(type):
-			return self._function_to_string(type)
+			return self._function_to_json(type)
 		if self._is_array(type):
-			return self._array_to_string(type)
+			return self._array_to_json(type)
 		if self._is_map(type):
-			return self._map_to_string(type)
+			return self._map_to_json(type)
 		if self._is_pointer(type):
-			return self._pointer_to_string(type)
+			return self._pointer_to_json(type)
 		if self._is_interface(type):
-			return self._interface_to_string(type)
+			return self._interface_to_json(type)
 
 		logging.error("%s type not implemented" % type["type"])
 		logging.error(type)
@@ -528,4 +523,13 @@ class GoTypeCoder:
 		self.type = type
 
 	def code(self):
-		return self._type_to_string(self.type)
+		# the highest definition must carries data type name
+		if "name" not in self.type:
+			logging.error("Missing data type name for %s" % json.dumps(self.type))
+			return {}
+
+		o_json = {}
+		o_json["name"] = self.type["name"]
+		o_json["def"] = self._type_to_json(self.type)
+
+		return o_json
