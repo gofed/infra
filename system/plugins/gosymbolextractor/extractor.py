@@ -2,6 +2,7 @@ from system.plugins.metaprocessor import MetaProcessor
 import os
 import logging
 import json
+from system.helpers.artefact_schema_validator import ArtefactSchemaValidator
 from system.helpers.utils import getScriptDir, runCommand
 from coder import GoTypeCoder
 
@@ -118,27 +119,43 @@ class GoSymbolExtractor(MetaProcessor):
 		data = []
 
 		data.append(self._generateGolangProjectPackagesArtefact())
+		validator = ArtefactSchemaValidator(ARTEFACT_GOLANG_PROJECT_PACKAGES)
+		if not validator.validate(data[0]):
+			logging.error("%s is not valid" % ARTEFACT_GOLANG_PROJECT_PACKAGES)
+			return {}
+
 		data.append(self._generateGolangProjectExportedAPI())
+		validator = ArtefactSchemaValidator(ARTEFACT_GOLANG_PROJECT_EXPORTED_API)
+		if not validator.validate(data[1]):
+			logging.error("%s is not valid" % ARTEFACT_GOLANG_PROJECT_EXPORTED_API)
+			return {}
 
 		return data
 
 	def _generateGolangProjectPackagesArtefact(self):
-		data = {}
+		artefact = {}
 
 		# set artefact
-		data["artefact"] = ARTEFACT_GOLANG_PROJECT_PACKAGES
+		artefact["artefact"] = ARTEFACT_GOLANG_PROJECT_PACKAGES
 
 		# project credentials
-		data["project"] = self.project
-		data["commit"] = self.commit
-		data["ipprefix"] = self.ipprefix
+		artefact["project"] = self.project
+		artefact["commit"] = self.commit
+		artefact["ipprefix"] = self.ipprefix
+
+		data = {}
 
 		# package imports
-		package_imports = {}
+		package_imports = []
 		for key in self.package_imports:
 			path = str(key.split(":")[0])
 			arr = sorted(map(lambda i: str(i), self.package_imports[key]))
-			package_imports[path] = arr
+
+			pkg_obj =  {
+				"package": path,
+				"dependencies": arr
+			}
+			package_imports.append(pkg_obj)
 
 		data["dependencies"] = package_imports
 
@@ -170,7 +187,9 @@ class GoSymbolExtractor(MetaProcessor):
 		# Godeps directory located
 		data["godeps_found"] = self.godeps_on
 
-		return data
+		artefact["data"] = data
+
+		return artefact
 
 	def _generateGolangProjectExportedAPI(self):
 		data = {}
@@ -193,14 +212,28 @@ class GoSymbolExtractor(MetaProcessor):
 			# data types
 			data_types = []
 			for type in self.symbols[key]["types"]:
-				#print type
 				c = GoTypeCoder(type)
-				data_types.append(str(c.code()))
-				#print ""
+				data_types.append(c.codeDataType())
 
 			package["datatypes"] = data_types
 
-			#print json.dumps(package)
+			# functions
+			functions_types = []
+			# {u'name': u'Close', u'def': {u'params': [], u'returns': [], u'recv': [{u'type': u'ident', u'def': u'closeWaiter'}]}}
+			for fnc in self.symbols[key]["funcs"]:
+				c = GoTypeCoder(fnc)
+				functions_types.append(c.codeFunctionType())
+
+			package["functions"] = functions_types
+
+			# variables
+			vars_types = []
+			for var in self.symbols[key]["vars"]:
+				c = GoTypeCoder(var)
+				vars_types.append(c.codeVariableType())
+
+			package["variables"] = vars_types
+
 			packages.append(package)
 
 		data["packages"] = packages
