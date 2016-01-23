@@ -4,7 +4,7 @@ import json
 import jsonschema
 from utils import getScriptDir
 
-SCHEMA_DIRECTORY="%s/../../schemas/" % (getScriptDir())
+SCHEMA_DIRECTORY="%s/../artefacts/schemas/" % (getScriptDir())
 
 ARTEFACT_GOLANG_PROJECT_PACKAGES = "golang-project-packages"
 ARTEFACT_GOLANG_PROJECT_EXPORTED_API = "golang-project-exported-api"
