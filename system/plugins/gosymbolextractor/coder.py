@@ -584,6 +584,45 @@ class GoTypeCoder:
 
 		return channel_obj
 
+	def _function_with_receiver_to_json(self, type):
+		# {u'name': u'Wait', u'def': {u'params': [], u'returns': [], u'recv': [{u'type': u'ident', u'def': u'closeWaiter'}]}}
+		# "method": {
+		# 	"type": "object",
+		# 	"description": "Method definition",
+		# 	"properties": {
+		# 		"type": {
+		# 			"type": "string",
+		# 			"description": "type identifier",
+		# 			"oneOf": [
+		# 				{"enum": ["method"]}
+		# 			]
+		# 		},
+		# 		"receiver": {
+		# 			"type": "object",
+		# 			"description": "Receiver type definition",
+		# 			"anyOf": [
+		# 				{ "$ref": "#/definitions/identifier" },
+		# 				{ "$ref": "#/definitions/selector" },
+		# 				{ "$ref": "#/definitions/pointer" }
+		# 			]
+		# 		},
+		# 		"def": {
+		# 			"type": "object",
+		# 			"description": "Function type definition",
+		# 			"oneOf": [
+		# 				{ "$ref": "#/definitions/function" }
+		# 			]
+		# 		}
+		# 	},
+		# 	"required": ["receiver", "def"]
+		# }
+		function_obj = {}
+		function_obj["type"] = "method"
+		function_obj["receiver"] = self._type_to_json(type["recv"][0])
+		function_obj["def"] = self._function_to_json(type)
+
+		return function_obj
+
 	def _type_to_json(self, type):
 		if self._is_struct(type):
 			return self._struct_to_json(type)
@@ -616,8 +655,8 @@ class GoTypeCoder:
 	def __init__(self, type):
 		self.type = type
 
-	def code(self):
-		# the highest definition must carries data type name
+	def codeDataType(self):
+		# the highest definition must carry data type name
 		if "name" not in self.type:
 			logging.error("Missing data type name for %s" % json.dumps(self.type))
 			return {}
@@ -625,5 +664,30 @@ class GoTypeCoder:
 		o_json = {}
 		o_json["name"] = self.type["name"]
 		o_json["def"] = self._type_to_json(self.type)
+
+		return o_json
+
+	def codeFunctionType(self):
+		# the highest definition must carry function name
+		if "name" not in self.type:
+			logging.error("Missing function name for %s" % json.dumps(self.type))
+
+		o_json = {}
+		o_json["name"] = self.type["name"]
+		# {u'name': u'Wait', u'def': {u'params': [], u'returns': [], u'recv': [{u'type': u'ident',     u'def': u'closeWaiter'}]}}
+		if "recv" in self.type["def"]:
+			if len(self.type["def"]["recv"]) > 0:
+				o_json["def"] = self._function_with_receiver_to_json(self.type["def"])
+			else:
+				o_json["def"] = self._function_to_json(self.type["def"])
+		else:
+			o_json["def"] = self._function_to_json(self.type["def"])
+
+		return o_json
+
+	def codeVariableType(self):
+		# atm each type as variable name
+		o_json = {}
+		o_json["name"] = self.type
 
 		return o_json

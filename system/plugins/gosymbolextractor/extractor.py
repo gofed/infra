@@ -2,6 +2,7 @@ from system.plugins.metaprocessor import MetaProcessor
 import os
 import logging
 import json
+from system.helpers.artefact_schema_validator import ArtefactSchemaValidator
 from system.helpers.utils import getScriptDir, runCommand
 from coder import GoTypeCoder
 
@@ -118,7 +119,16 @@ class GoSymbolExtractor(MetaProcessor):
 		data = []
 
 		data.append(self._generateGolangProjectPackagesArtefact())
+		validator = ArtefactSchemaValidator(ARTEFACT_GOLANG_PROJECT_PACKAGES)
+		if not validator.validate(data[0]):
+			logging.error("%s is not valid" % ARTEFACT_GOLANG_PROJECT_PACKAGES)
+			return {}
+
 		data.append(self._generateGolangProjectExportedAPI())
+		validator = ArtefactSchemaValidator(ARTEFACT_GOLANG_PROJECT_EXPORTED_API)
+		if not validator.validate(data[1]):
+			logging.error("%s is not valid" % ARTEFACT_GOLANG_PROJECT_EXPORTED_API)
+			return {}
 
 		return data
 
@@ -203,14 +213,27 @@ class GoSymbolExtractor(MetaProcessor):
 			data_types = []
 			for type in self.symbols[key]["types"]:
 				c = GoTypeCoder(type)
-				data_types.append(c.code())
+				data_types.append(c.codeDataType())
 
 			package["datatypes"] = data_types
 
 			# functions
+			functions_types = []
+			# {u'name': u'Close', u'def': {u'params': [], u'returns': [], u'recv': [{u'type': u'ident', u'def': u'closeWaiter'}]}}
+			for fnc in self.symbols[key]["funcs"]:
+				c = GoTypeCoder(fnc)
+				functions_types.append(c.codeFunctionType())
 
+			package["functions"] = functions_types
 
-			#print json.dumps(package)
+			# variables
+			vars_types = []
+			for var in self.symbols[key]["vars"]:
+				c = GoTypeCoder(var)
+				vars_types.append(c.codeVariableType())
+
+			package["variables"] = vars_types
+
 			packages.append(package)
 
 		data["packages"] = packages
