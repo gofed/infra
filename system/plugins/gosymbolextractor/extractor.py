@@ -1,4 +1,5 @@
 from system.plugins.metaprocessor import MetaProcessor
+from system.artefacts.artefacts import ARTEFACT_GOLANG_PROJECT_PACKAGES, ARTEFACT_GOLANG_PROJECT_EXPORTED_API
 import os
 import logging
 import json
@@ -11,8 +12,6 @@ CONFIG_SKIPPED_DIRECTORIES = "directories_to_skip"
 DATA_PROJECT = "project"
 DATA_COMMIT = "commit"
 DATA_IPPREFIX = "ipprefix"
-ARTEFACT_GOLANG_PROJECT_PACKAGES = "golang-project-packages"
-ARTEFACT_GOLANG_PROJECT_EXPORTED_API = "golang-project-exported-api"
 
 class GoSymbolExtractor(MetaProcessor):
 	"""

@@ -1,3 +1,4 @@
+from system.artefacts.artefacts import ARTEFACT_GOLANG_PROJECT_PACKAGES, ARTEFACT_GOLANG_PROJECT_EXPORTED_API
 import logging
 import os
 import json
@@ -5,9 +6,6 @@ import jsonschema
 from utils import getScriptDir
 
 SCHEMA_DIRECTORY="%s/../artefacts/schemas/" % (getScriptDir())
-
-ARTEFACT_GOLANG_PROJECT_PACKAGES = "golang-project-packages"
-ARTEFACT_GOLANG_PROJECT_EXPORTED_API = "golang-project-exported-api"
 
 class ArtefactSchemaValidator:
 
