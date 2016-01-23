@@ -222,10 +222,18 @@ class GoTypeCoder:
 		# 	},
 		# 	"required": ["type", "prefix", "item"]
 		# }
+		#
+
 		selector_obj = {}
 		selector_obj["type"] = "selector"
-		selector_obj["prefix"] = self._type_to_json(type["prefix"])
-		selector_obj["item"] = type["item"]
+
+		# {u'type': u'selector', u'name': u'URLsValue', u'def': {u'item': u'URLs', u'prefix': {u'type': u'ident', u'def': u'types'}, u'type': u'selector'}}
+		if "name" in type:
+			selector_obj["prefix"] = self._type_to_json(type["def"]["prefix"])
+			selector_obj["item"] = type["def"]["item"]
+		else:
+			selector_obj["prefix"] = self._type_to_json(type["prefix"])
+			selector_obj["item"] = type["item"]
 
 		return selector_obj
 
@@ -280,6 +288,11 @@ class GoTypeCoder:
 
 		params_objs = []
 		results_objs = []
+
+		# high level definition of function type
+		# E.g. {u'type': u'func', u'name': u'EntryFormatter', u'def': {u'params': [{u'elmtype': {u'type': u'ident', u'def': u'byte'}, u'type': u'slice', u'name': u''}], u'type': u'func', u'results': [{u'type': u'ident', u'def': u'string'}]}}
+		if "name" in type:
+			type = type["def"]
 
 		for param in type["params"]:
 			params_objs.append(self._type_to_json(param))
@@ -494,6 +507,83 @@ class GoTypeCoder:
 
 		return interface_obj
 
+	def _is_ellipses(self, type):
+		if type["type"] == TYPE_ELLIPSIS:
+			return True
+
+		return False
+
+	def _ellipses_to_json(self, type):
+		# {u'type': u'ellipsis', u'elt': TYPEDEF}
+		# "ellipses": {
+		# 	"type": "object",
+		# 	"description": "Pointer definition",
+		# 	"properties": {
+		# 		"type": {
+		# 			"type": "string",
+		# 			"description": "type identifier",
+		# 			"oneOf": [
+		# 				{"enum": ["ellipses"]}
+		# 			]
+		# 		},
+		# 		"def": {
+		# 			"type": "object",
+		# 			"description": "Ellipses type definition",
+		# 			"anyOf": [
+		# 				TYPEDEF
+		# 			]
+		# 		}
+		# 	},
+		# 	"required": ["type", "def"]
+		# }
+		ellipses_obj = {}
+		ellipses_obj["type"] = "ellipses"
+		ellipses_obj["def"] = self._type_to_json(type["elt"])
+		return ellipses_obj
+
+	def _is_channel(self, type):
+		if type["type"] == TYPE_CHANNEL:
+			return True
+
+		return False
+
+	def _channel_to_json(self, type):
+		# {u'type': u'channel', u'value': {u'type': u'ident', u'def': u'Ready'}, u'dir': u'2'}
+		# "channel": {
+		# 	"type": "object",
+		# 	"description": "Channel definition",
+		# 	"properties": {
+		# 		"type": {
+		# 			"type": "string",
+		# 			"description": "Type identifier",
+		# 			"oneOf": [
+		# 				{"enum": ["channel"]}
+		# 			]
+		# 		},
+		# 		"dir": {
+		# 			"type": "string",
+		# 			"description": "Direction specification",
+		# 			"oneOf": [
+		# 				{"enum": ["1", "2", "3"]}
+		# 			]
+		# 		},
+		# 		"value": {
+		# 			"type": "object",
+		# 			"description": "Value definition",
+		# 			"oneOf": [
+		# 				TYPEDEF
+		# 			]
+		# 		}
+		# 	},
+		# 	"required": ["type", "dir", "value"]
+		# }
+		channel_obj = {}
+		channel_obj["type"] = "channel"
+		channel_obj["dir"] = type["dir"]
+		channel_obj["value"] = self._type_to_json(type["value"])
+
+		return channel_obj
+
 	def _type_to_json(self, type):
 		if self._is_struct(type):
 			return self._struct_to_json(type)
@@ -513,11 +603,15 @@ class GoTypeCoder:
 			return self._pointer_to_json(type)
 		if self._is_interface(type):
 			return self._interface_to_json(type)
+		if self._is_ellipses(type):
+			return self._ellipses_to_json(type)
+		if self._is_channel(type):
+			return self._channel_to_json(type)
 
 		logging.error("%s type not implemented" % type["type"])
 		logging.error(type)
 
-		return ""
+		return {}
 
 	def __init__(self, type):
 		self.type = type
