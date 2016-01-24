@@ -4,6 +4,7 @@ import os
 import logging
 import json
 from system.helpers.artefact_schema_validator import ArtefactSchemaValidator
+from system.helpers.schema_validator import SchemaValidator
 from system.helpers.utils import getScriptDir, runCommand
 from coder import GoTypeCoder
 
@@ -69,6 +70,8 @@ class GoSymbolExtractor(MetaProcessor):
 		self.project = ""
 		# commit
 		self.commit = ""
+		# ipprefix
+		self.ipprefix = ""
 
 		"""set implicit states"""
 		self.input_validated = False
@@ -81,12 +84,10 @@ class GoSymbolExtractor(MetaProcessor):
 		self.skip_errors = True
 
 	def _validateInput(self, data):
-		if CONFIG_SOURCE_CODE_DIRECTORY not in data:
-			logging.error("Input data missing source_code_directory")
-			return False
-
-		self.input_validated = True
-		return True
+		validator = SchemaValidator()
+		schema = "%s/input_schema.json" % getScriptDir(__file__)
+		self.input_validated = validator.validateFromFile(schema, data)
+		return self.input_validated
 
 	def setData(self, data):
 		self.input_validated = False
@@ -115,6 +116,9 @@ class GoSymbolExtractor(MetaProcessor):
 		return True
 
 	def getData(self):
+		if not self.input_validated:
+			return []
+
 		data = []
 
 		data.append(self._generateGolangProjectPackagesArtefact())

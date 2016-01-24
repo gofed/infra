@@ -1,0 +1,39 @@
+{
+	"$schema": "http://json-schema.org/draft-04/schema#",
+	"title": "Golang symbols extractor plugin",
+	"description": "Definition of packages of a golang project",
+	"type": "object",
+	"properties": {
+		"source_code_directory": {
+			"type": "string",
+			"description": "Directory with Go source codes",
+			"minLength": 1
+		},
+		"directories_to_skip": {
+			"type": "array",
+			"description": "List of directories to skip. E.g. Godeps, vendor, etc.",
+			"items": {
+				"type": "string",
+				"description": "Directory to skip",
+				"minLength": 1
+			},
+			"uniqueItems": true
+		},
+		"project": {
+			"type": "string",
+			"description": "Project name",
+			"minLength": 1
+		},
+		"commit": {
+			"type": "string",
+			"description": "Commit of projetc's source codes",
+			"minLength": 1
+		},
+		"ipprefix": {
+			"type": "string",
+			"description": "Import path prefix",
+			"minLength": 1
+		}
+	},
+	"required": ["source_code_directory", "directories_to_skip", "project", "commit", "ipprefix"]
+}
