@@ -1,0 +1,15 @@
+{
+	"$schema": "http://json-schema.org/draft-04/schema#",
+	"title": "Golang symbols extractor plugin",
+	"description": "Definition of packages of a golang project",
+	"type": "object",
+	"properties": {
+		"exported_api_1": {
+			"$ref": "golang-project-exported-api.json"
+		},
+		"exported_api_2": {
+			"$ref": "golang-project-exported-api.json"
+		}
+	},
+	"required": ["exported_api_1", "exported_api_2"]
+}
