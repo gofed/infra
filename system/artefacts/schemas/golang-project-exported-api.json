@@ -1,7 +1,7 @@
 {
 	"$schema": "http://json-schema.org/draft-04/schema#",
-	"title": "Golang project packages artefact",
-	"description": "Definition of packages of a golang project",
+	"title": "Golang project exported api artefact",
+	"description": "Definition of exported api of a golang project",
 	"type": "object",
 	"properties": {
 		"artefact": {
