@@ -3,7 +3,6 @@ from system.helpers.artefact_schema_validator import ArtefactSchemaValidator
 from system.helpers.schema_validator import SchemaValidator
 import logging
 from system.helpers.utils import getScriptDir
-import time
 
 TYPE_IDENT = "identifier"
 TYPE_ARRAY = "array"
@@ -49,9 +48,7 @@ class GoApiDiff(MetaProcessor):
 
 	def setData(self, data):
 		"""Validation and data pre-processing"""
-		logging.info("Validating started: %s" % time.time())
 		self.input_validated = True #self._validateInput(data)
-		logging.info("Validating done: %s" % time.time())
 		if not self.input_validated:
 			return false
 
@@ -97,18 +94,52 @@ class GoApiDiff(MetaProcessor):
 		for pkg in common_packages:
 			self._comparePackages(packages1[pkg], packages2[pkg])
 
+		for diff in self.diffs:
+			print diff
+
 	def _comparePackages(self, definition1, definition2):
 		# compare data types
-		if "datatypes" not in definition1:
-			logging.error("definition1: datatypes field missing")
-			return False
+		types1_in = "datatypes" in definition1
+		types2_in = "datatypes" in definition2
+		if types1_in and types2_in:
+			self._compareDataTypes(definition1["datatypes"], definition2["datatypes"])
 
-		if "datatypes" not in definition2:
+		if types1_in and not types2_in:
 			logging.error("definition2: datatypes field missing")
 			return False
 
-		self._compareDataTypes(definition1["datatypes"], definition2["datatypes"])
-		#self._compare_func_types(definition1["functions"], definition2["functions"])
+		if not types1_in and types2_in:
+			logging.error("definition1: datatypes field missing")
+			return False
+
+		# compare functions types
+		types1_in = "functions" in definition1
+		types2_in = "functions" in definition2
+		if types1_in and types2_in:
+			self._compareFuncTypes(definition1["functions"], definition2["functions"])
+
+		if types1_in and not types2_in:
+			logging.error("definition2: functions field missing")
+			return False
+
+		if not types1_in and types2_in:
+			logging.error("definition1: functions field missing")
+			return False
+
+		# compare variables types
+		types1_in = "variables" in definition1
+		types2_in = "variables" in definition2
+		if types1_in and types2_in:
+			self._compareVariables(definition1["variables"], definition2["variables"])
+
+		if types1_in and not types2_in:
+			logging.error("definition2: variables field missing")
+			return False
+
+		if not types1_in and types2_in:
+			logging.error("definition1: variables field missing")
+			return False
+
 
 	def _compareDataTypes(self, data_types1, data_types2):
 		types1_ids = []
@@ -148,7 +179,7 @@ class GoApiDiff(MetaProcessor):
 		#  old in file *** on line ***
 		#  new in file *** on line ***
 		if data_type1["type"] != data_type2["type"]:
-			self.diff.append("-type differs: %s != %s" % (data_type1["type"], data_type2["type"]))
+			self.diffs.append("-type differs: %s != %s" % (data_type1["type"], data_type2["type"]))
 			return
 		type = data_type1["type"]
 
@@ -184,6 +215,9 @@ class GoApiDiff(MetaProcessor):
 			return
 		if type == TYPE_MAP:
 			self._compareMaps(data_type1, data_type2)
+			return
+		if type == TYPE_METHOD:
+			self._compareMethods(data_type1, data_type2)
 			return
 
 		logging.error("%s type not implemented yet" % type)
@@ -303,6 +337,13 @@ class GoApiDiff(MetaProcessor):
 		for i in range(0, l1):
 			self._compareDataType(function1["results"][i], function2["results"][i])
 
+	def _compareMethods(self, method1, method2):
+		self._compareDataType(method1["receiver"], method2["receiver"])
+		self._compareDataType(method1["def"], method2["def"])
+
+	def _compareSlices(self, slice1, slice2):
+		self._compareDataType(slice1["elmtype"], slice2["elmtype"])
+
 	def _compareSlices(self, slice1, slice2):
 		self._compareDataType(slice1["elmtype"], slice2["elmtype"])
 
@@ -355,15 +396,36 @@ class GoApiDiff(MetaProcessor):
 		for method in com_methods:
 			self._compareDataType(methods1_types[method], methods2_types[method])
 
-	def _compare_func_types(self, func_types1, func_types2):
+	def _constructMethodName(self, method_def):
+		# Receiver type must be of the form T or *T (possibly using parentheses) where T is a type name.
+		# The type denoted by T is called the receiver base type;
+		# it must not be a pointer or interface type and it must be declared
+		# in the same package as the method.
+
+		# if def has not receiver, return the name
+		if method_def["def"]["type"] == TYPE_FUNC:
+			return method_def["name"]
+
+		# else construct receiver.method_name
+		receiver = self._constructTypeQualifiedName(method_def["def"]["receiver"])
+		return "%s.%s" % (receiver, method_def["name"])
+
+	def _compareFuncTypes(self, func_types1, func_types2):
 		func1_ids = []
 		func2_ids = []
 
+		func1_types = {}
+		func2_types = {}
+
 		for functype in func_types1:
-			func1_ids.append(functype["name"])
+			name = self._constructMethodName(functype)
+			func1_ids.append(name)
+			func1_types[name] = functype["def"]
 
 		for functype in func_types2:
-			func2_ids.append(functype["name"])
+			name = self._constructMethodName(functype)
+			func2_ids.append(name)
+			func2_types[name] = functype["def"]
 
 		func1_ids_set = set(func1_ids)
 		func2_ids_set = set(func2_ids)
@@ -372,6 +434,35 @@ class GoApiDiff(MetaProcessor):
 		rem_func_ids = list(func1_ids_set - func2_ids_set)
 		com_func_ids = list(func1_ids_set & func2_ids_set)
 
-		#print new_func_ids
-		#print rem_func_ids
-		#print com_func_ids
+		for func in new_func_ids:
+			self.diffs.append("+%s func added" % func)
+
+		for func in rem_func_ids:
+			self.diffs.append("-%s func removed" % func)
+
+		for func in com_func_ids:
+			self._compareDataType(func1_types[func], func2_types[func])
+
+	def _compareVariables(self, vars1, vars2):
+		var1_ids = []
+		var2_ids = []
+
+		for var in vars1:
+			var1_ids.append(var["name"])
+
+		for var in vars2:
+			var2_ids.append(var["name"])
+
+		var1_ids_set = set(var1_ids)
+		var2_ids_set = set(var2_ids)
+
+		new_vars = list(var2_ids_set - var1_ids_set)
+		rem_vars = list(var1_ids_set - var2_ids_set)
+		com_vars = list(var1_ids_set & var2_ids_set)
+
+		for var in new_vars:
+			self.diffs.append("+%s variable/constant added" % var)
+
+		for var in rem_vars:
+			self.diffs.append("-%s variable/constant removed" % var)
+
