@@ -537,7 +537,7 @@ class GoTypeCoder:
 		# 	"required": ["type", "def"]
 		# }
 		ellipses_obj = {}
-		ellipses_obj["type"] = "ellipses"
+		ellipses_obj["type"] = TYPE_ELLIPSIS
 		ellipses_obj["def"] = self._type_to_json(type["elt"])
 		return ellipses_obj
 
