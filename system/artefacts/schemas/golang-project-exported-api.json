@@ -49,7 +49,7 @@
 										{ "$ref": "#/definitions/array" },
 										{ "$ref": "#/definitions/map" },
 										{ "$ref": "#/definitions/pointer" },
-										{ "$ref": "#/definitions/ellipses" },
+										{ "$ref": "#/definitions/ellipsis" },
 										{ "$ref": "#/definitions/function" },
 										{ "$ref": "#/definitions/method" },
 										{ "$ref": "#/definitions/interface" },
@@ -378,7 +378,7 @@
 			},
 			"required": ["type", "def"]
 		},
-		"ellipses": {
+		"ellipsis": {
 			"type": "object",
 			"description": "Pointer definition",
 			"properties": {
@@ -386,7 +386,7 @@
 					"type": "string",
 					"description": "type identifier",
 					"oneOf": [
-						{"enum": ["ellipses"]}
+						{"enum": ["ellipsis"]}
 					]
 				},
 				"def": {
@@ -434,7 +434,7 @@
 							{ "$ref": "#/definitions/array" },
 							{ "$ref": "#/definitions/map" },
 							{ "$ref": "#/definitions/pointer" },
-							{ "$ref": "#/definitions/ellipses" },
+							{ "$ref": "#/definitions/ellipsis" },
 							{ "$ref": "#/definitions/function" },
 							{ "$ref": "#/definitions/method" },
 							{ "$ref": "#/definitions/interface" },
