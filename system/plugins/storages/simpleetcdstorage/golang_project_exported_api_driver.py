@@ -20,11 +20,14 @@ class GolangProjectExportedAPIDriver(MetaArtefactDriver):
 			logging.error("Unable to store %s artefact with '%s' key" % (ARTEFACT_GOLANG_PROJECT_EXPORTED_API, key))
 			return False
 
+		# log info
+		logging.info("Value for key %s stored" % key)
+
 		return True
 
 	def retrieve(self, key_data):
 		"""retrieve artefact"""
-		key = GolangProjectInfoFedoraKeyGenerator().generate(key_data)
+		key = GolangProjectExportedAPIKeyGenerator().generate(key_data)
 		if key == "":
 			logging.error("Unable to store %s: key not generated" % ARTEFACT_GOLANG_PROJECT_EXPORTED_API)
 			return False
@@ -36,7 +39,7 @@ class GolangProjectExportedAPIDriver(MetaArtefactDriver):
 			logging.error("Unable to retrieve %s artefact with '%s' key" % (ARTEFACT_GOLANG_PROJECT_EXPORTED_API, key))
 			return ""
 
-		return value
+		return json.loads(value)
 
 	def storeList(self, dataList):
 		"""store list of artefacts"""

@@ -1,5 +1,8 @@
 from system.helpers.utils import runCommand
 import logging
+import tempfile
+
+MAXIMUM_VALUE_LEN = 1000
 
 class EtcdClient:
 	"""
@@ -14,13 +17,23 @@ class EtcdClient:
 		escaped_key = key.replace('"', '\\"')
 		escaped_value = value.replace('"', '\\"')
 
-		cmd = "etcdctl set \"%s\" \"%s\"" % (escaped_key, escaped_value)
-		so, se, rc = runCommand(cmd)
-		if rc != 0:
-			logging.error(se)
-			return False
+		# if the value is too long, save it into a file
+		if len(escaped_value) > MAXIMUM_VALUE_LEN:
+			f = tempfile.NamedTemporaryFile(delete=False)
+			with open(f.name, 'w') as s:
+				s.write(value)
+			cmd = "etcdctl set \"%s\" < %s" % (escaped_key, f.name)
+			so, se, rc = runCommand(cmd)
+			if rc != 0:
+				logging.error(se)
+				return False
+			f.close()
 		else:
-			logging.info(so)
+			cmd = "etcdctl set \"%s\" \"%s\"" % (escaped_key, escaped_value)
+			so, se, rc = runCommand(cmd)
+			if rc != 0:
+				logging.error(se)
+				return False
 
 	def get(self, key):
 		# key and values are string => escape quotes
