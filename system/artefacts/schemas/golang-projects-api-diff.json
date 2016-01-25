@@ -1,0 +1,127 @@
+{
+	"$schema": "http://json-schema.org/draft-04/schema#",
+	"title": "Golang project packages API difference",
+	"description": "Definition of API difference of a golang project",
+	"type": "object",
+	"properties": {
+		"artefact": {
+			"description": "Artefact name",
+			"type": "string",
+			"oneOf": {
+				"enum": ["golang-project-api-diff"]
+			}
+		},
+		"project": {
+			"description": "Project name",
+			"type": "string",
+			"minLength": 1
+		},
+		"commit1": {
+			"description": "Project's commit",
+			"type": "string",
+			"minLength": 1
+		},
+		"commit2": {
+			"description": "Project's commit",
+			"type": "string",
+			"minLength": 1
+		},
+		"data": {
+			"type": "object",
+			"description": "API difference",
+			"properties": {
+				"newpackages": {
+					"type": "array",
+					"description": "List of new golang packages",
+					"items": {
+						"type": "string",
+						"description": "Golang package",
+						"minLength": 1
+					},
+					"uniqueItems": true
+				},
+				"removedpackages": {
+					"type": "array",
+					"description": "List of removed golang packages",
+					"items": {
+						"type": "string",
+						"description": "Golang package",
+						"minLength": 1
+					},
+					"uniqueItems": true
+				},
+				"updatedpackages": {
+					"type": "array",
+					"description": "List of updated golang packages",
+					"items": {
+						"type": "object",
+						"description": "Golang package",
+						"properties": {
+							"package": {
+								"type": "string",
+								"description": "Package name",
+								"minLength": 1,
+							},
+							"types": {
+								"$ref": "#/definitions/diffs"
+							},
+							"functions": {
+								"$ref": "#/definitions/diffs"
+							},
+							"variables": {
+								"$ref": "#/definitions/diffs"
+							},
+							"constants": {
+								"$ref": "#/definitions/diffs"
+							}
+						},
+						"required": ["package", "types", "functions", "variables"]
+					},
+					"uniqueItems": true,
+				}
+			}
+		}
+	},
+	"required": ["artefact", "project", "commit1", "commit2", "data"],
+	"definitions": {
+		"diffs": {
+			"type": "object",
+			"description": "Differences in definition",
+			"properties": {
+				"new": {
+					"type": "array",
+					"description": "List of new types",
+					"items": {
+						"type": "string",
+						"description": "Type",
+						"minLength": 1
+					},
+					"uniqueItems": true
+		
+				},
+				"removed": {
+					"type": "array",
+					"description": "List of removed types",
+					"items": {
+						"type": "string",
+						"description": "Type",
+						"minLength": 1
+					},
+					"uniqueItems": true
+		
+				},
+				"updated": {
+					"type": "array",
+					"description": "List of updated types",
+					"items": {
+						"type": "string",
+						"description": "Change",
+						"minLength": 1
+					},
+					"uniqueItems": true
+				}
+			}
+		}
+	}
+}
+
