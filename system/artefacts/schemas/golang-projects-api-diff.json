@@ -7,9 +7,9 @@
 		"artefact": {
 			"description": "Artefact name",
 			"type": "string",
-			"oneOf": {
-				"enum": ["golang-project-api-diff"]
-			}
+			"oneOf": [{
+				"enum": ["golang-projects-api-diff"]
+			}]
 		},
 		"project": {
 			"description": "Project name",
@@ -60,7 +60,7 @@
 							"package": {
 								"type": "string",
 								"description": "Package name",
-								"minLength": 1,
+								"minLength": 1
 							},
 							"types": {
 								"$ref": "#/definitions/diffs"
@@ -75,9 +75,13 @@
 								"$ref": "#/definitions/diffs"
 							}
 						},
-						"required": ["package", "types", "functions", "variables"]
+						"anyOf": [
+							{"required": ["package", "functions"]},
+							{"required": ["package", "variables"]},
+							{"required": ["package", "types"]}
+						]
 					},
-					"uniqueItems": true,
+					"uniqueItems": true
 				}
 			}
 		}
@@ -120,7 +124,12 @@
 					},
 					"uniqueItems": true
 				}
-			}
+			},
+			"anyOf": [
+				{"required": ["new"]},
+				{"required": ["removed"]},
+				{"required": ["updated"]}
+			]
 		}
 	}
 }
