@@ -1,8 +1,10 @@
 from system.plugins.metaprocessor import MetaProcessor
 from system.helpers.artefact_schema_validator import ArtefactSchemaValidator
 from system.helpers.schema_validator import SchemaValidator
+from system.artefacts.artefacts import ARTEFACT_GOLANG_PROJECTS_API_DIFF
 import logging
 from system.helpers.utils import getScriptDir
+
 
 TYPE_IDENT = "identifier"
 TYPE_ARRAY = "array"
@@ -41,33 +43,63 @@ class GoApiDiff(MetaProcessor):
 		self.removed_packages = []
 		self.diffs = []
 
+		self.data = {}
+
 	def _validateInput(self, data):
 		validator = SchemaValidator("%s/../../artefacts/schemas" % getScriptDir(__file__))
 		schema_file = "%s/input_schema.json" % getScriptDir(__file__)
-		return validator.validateFromFile(schema_file, data)
+		if not validator.validateFromFile(schema_file, data):
+			return False
+
+		# projects must be the same
+		if data["exported_api_1"]["project"] != data["exported_api_2"]["project"]:
+			logging.error("goapidiff: project1 != project2")
+			return False
+
+		return True
 
 	def setData(self, data):
 		"""Validation and data pre-processing"""
-		self.input_validated = True #self._validateInput(data)
+		self.input_validated = self._validateInput(data)
 		if not self.input_validated:
-			return false
+			return False
 
 		self.exported_api_1 = data["exported_api_1"]
 		self.exported_api_2 = data["exported_api_2"]
 
-	def getData(self, data):
+		self.project = data["exported_api_1"]["project"]
+		self.commit1 = data["exported_api_1"]["commit"]
+		self.commit2 = data["exported_api_2"]["commit"]
+
+		return True
+
+	def getData(self):
 		"""Validation and data post-processing"""
 		if not self.input_validated:
 			return {}
 
-		raise NotImplementedError
+		return self._generateGolangProjectsAPIDiffArtefact()
+
+	def _generateGolangProjectsAPIDiffArtefact(self):
+
+		apidiff_obj = {
+			"artefact": ARTEFACT_GOLANG_PROJECTS_API_DIFF,
+			"project": self.project,
+			"commit1": self.commit1,
+			"commit2": self.commit2,
+			"data": self.data
+		}
+
+		return apidiff_obj
 
 	def execute(self):
 		"""Impementation of concrete data processor"""
 		if not self.input_validated:
-			return {}
+			logging.error("goapidiff: invalid input")
+			return False
 
 		self._compareApis()
+		return True
 
 	def _compareApis(self):
 		ip1 = []
@@ -87,22 +119,38 @@ class GoApiDiff(MetaProcessor):
 		ip1_set = set(ip1)
 		ip2_set = set(ip2)
 
-		self.new_packages = list( ip2_set - ip1_set )
-		self.removed_packages = list( ip1_set - ip2_set )
-		common_packages = sorted(list( ip1_set & ip2_set ))
+		new_packages = list( ip2_set - ip1_set )
+		rem_packages = list( ip1_set - ip2_set )
+		com_packages = sorted(list( ip1_set & ip2_set ))
 
-		for pkg in common_packages:
-			self._comparePackages(packages1[pkg], packages2[pkg])
+		self.data = {}
 
-		for diff in self.diffs:
-			print diff
+		if new_packages != []:
+			self.data["newpackages"] = new_packages
+
+		if rem_packages != []:
+			self.data["removedpackages"] = rem_packages
+
+		updated_packages = []
+		for pkg in com_packages:
+			pkg_obj = self._comparePackages(packages1[pkg], packages2[pkg])
+			if pkg_obj != {}:
+				pkg_obj["package"] = pkg
+				updated_packages.append(pkg_obj)
+
+		if updated_packages != []:
+			self.data["updatedpackages"] = updated_packages
 
 	def _comparePackages(self, definition1, definition2):
+		diff_data_types = {}
+		diff_func_types = {}
+		diff_vars_types = {}
+
 		# compare data types
 		types1_in = "datatypes" in definition1
 		types2_in = "datatypes" in definition2
 		if types1_in and types2_in:
-			self._compareDataTypes(definition1["datatypes"], definition2["datatypes"])
+			diff_data_types = self._compareDataTypes(definition1["datatypes"], definition2["datatypes"])
 
 		if types1_in and not types2_in:
 			logging.error("definition2: datatypes field missing")
@@ -116,7 +164,7 @@ class GoApiDiff(MetaProcessor):
 		types1_in = "functions" in definition1
 		types2_in = "functions" in definition2
 		if types1_in and types2_in:
-			self._compareFuncTypes(definition1["functions"], definition2["functions"])
+			diff_func_types = self._compareFuncTypes(definition1["functions"], definition2["functions"])
 
 		if types1_in and not types2_in:
 			logging.error("definition2: functions field missing")
@@ -130,7 +178,7 @@ class GoApiDiff(MetaProcessor):
 		types1_in = "variables" in definition1
 		types2_in = "variables" in definition2
 		if types1_in and types2_in:
-			self._compareVariables(definition1["variables"], definition2["variables"])
+			diff_vars_types = self._compareVariables(definition1["variables"], definition2["variables"])
 
 		if types1_in and not types2_in:
 			logging.error("definition2: variables field missing")
@@ -140,6 +188,18 @@ class GoApiDiff(MetaProcessor):
 			logging.error("definition1: variables field missing")
 			return False
 
+		pkg_obj = {}
+
+		if diff_data_types != {}:
+			pkg_obj["types"] = diff_data_types
+
+		if diff_func_types != {}:
+			pkg_obj["functions"] = diff_func_types
+
+		if diff_vars_types != {}:
+			pkg_obj["variables"] = diff_vars_types
+
+		return pkg_obj
 
 	def _compareDataTypes(self, data_types1, data_types2):
 		types1_ids = []
@@ -163,14 +223,22 @@ class GoApiDiff(MetaProcessor):
 		rem_type_ids = list(types1_ids_set - types2_ids_set)
 		com_type_ids = list(types1_ids_set & types2_ids_set)
 
-		for datatype in new_type_ids:
-			self.diffs.append("+%s type added" % datatype)
+		diffs_obj = {}
 
-		for datatype in rem_type_ids:
-			self.diffs.append("-%s type removed" % datatype)
+		if new_type_ids != []:
+			diffs_obj["new"] = new_type_ids
 
+		if rem_type_ids != []:
+			diffs_obj["removed"] = rem_type_ids
+
+		self.diffs = []
 		for type_id in com_type_ids:
 			self._compareDataType(types1[type_id]["def"], types2[type_id]["def"])
+
+		if self.diffs != []:
+			diffs_obj["updated"] = self.diffs
+
+		return diffs_obj
 
 	def _compareDataType(self, data_type1, data_type2):
 		#
@@ -434,14 +502,22 @@ class GoApiDiff(MetaProcessor):
 		rem_func_ids = list(func1_ids_set - func2_ids_set)
 		com_func_ids = list(func1_ids_set & func2_ids_set)
 
-		for func in new_func_ids:
-			self.diffs.append("+%s func added" % func)
+		diffs_obj = {}
 
-		for func in rem_func_ids:
-			self.diffs.append("-%s func removed" % func)
+		if new_func_ids != []:
+			diffs_obj["new"] = new_func_ids
 
+		if rem_func_ids != []:
+			diffs_obj["removed"] = rem_func_ids
+
+		self.diffs = []
 		for func in com_func_ids:
 			self._compareDataType(func1_types[func], func2_types[func])
+
+		if self.diffs != []:
+			diffs_obj["updated"] = self.diffs
+
+		return diffs_obj
 
 	def _compareVariables(self, vars1, vars2):
 		var1_ids = []
@@ -460,9 +536,15 @@ class GoApiDiff(MetaProcessor):
 		rem_vars = list(var1_ids_set - var2_ids_set)
 		com_vars = list(var1_ids_set & var2_ids_set)
 
-		for var in new_vars:
-			self.diffs.append("+%s variable/constant added" % var)
+		diffs_obj = {}
 
-		for var in rem_vars:
-			self.diffs.append("-%s variable/constant removed" % var)
+		if new_vars:
+			diffs_obj["new"] = new_vars
 
+		if rem_vars:
+			diffs_obj["removed"] = rem_vars
+
+		#self.diffs = []
+		#diffs_obj["updated"] = []
+
+		return diffs_obj
