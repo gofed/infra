@@ -1,0 +1,25 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Spec data extractor plugin",
+  "description": "Path to specfile of package in distribution",
+  "type": "object",
+  "properties": {
+    "product": {
+      "description": "product name",
+      "type": "string"
+    },
+    "distribution": {
+      "description": "distribution name",
+      "type": "string"
+    },
+    "package": {
+      "description": "package name",
+      "type": "string"
+    },
+    "specfile": {
+      "description": "specfile path",
+      "type": "string"
+    }
+  },
+  "required": ["product", "distribution", "package", "specfile"]
+}
