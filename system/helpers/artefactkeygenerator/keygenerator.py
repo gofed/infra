@@ -3,6 +3,7 @@ from golang_ipprefix_to_package_name import GolangIPPrefixToPackageNameKeyGenera
 from golang_project_info_fedora import GolangProjectInfoFedoraKeyGenerator
 from golang_project_to_package_name import GolangProjectToPackageNameKeyGenerator
 from golang_project_exported_api import GolangProjectExportedAPIKeyGenerator
+from golang_projects_api_diff import GolangProjectsAPIDiffKeyGenerator
 
 class KeyGeneratorFactory:
 
@@ -21,5 +22,8 @@ class KeyGeneratorFactory:
 
 		if artefact == artefacts.ARTEFACT_GOLANG_PROJECT_TO_PACKAGE_NAME:
 			return GolangProjectToPackageNameKeyGenerator()
+
+		if artefact == artefacts.ARTEFACT_GOLANG_PROJECTS_API_DIFF:
+			return GolangProjectsAPIDiffKeyGenerator()
 
 		return None
