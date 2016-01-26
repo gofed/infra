@@ -34,6 +34,9 @@ class ArtefactDriver(MetaArtefactDriver):
 			logging.error("Unable to store %s artefact with '%s' key" % (self.artefact, key))
 			return False
 
+		# log info
+		logging.info("Value for key %s stored" % key)
+
 		return True
 
 	def retrieve(self, key_data):
