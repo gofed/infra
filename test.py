@@ -3,9 +3,25 @@ from system.plugins.goapidiff.analyzer import GoApiDiff
 import json
 
 from system.plugins.storages.simpleetcdstorage.golang_project_exported_api_driver import GolangProjectExportedAPIDriver
+from system.plugins.storages.simpleetcdstorage.golang_projects_api_diff_driver import GolangProjectsAPIDiffDriver
 
 import logging
 logging.basicConfig(level=logging.INFO)
+
+def getAPI():
+
+	data = {
+		"source_code_directory": "/home/jchaloup/Packages/golang-github-bradfitz-http2/fedora/golang-github-bradfitz-http2/http2-f8202bc903bda493ebba4aa54922d78430c2c42f",
+		"directories_to_skip": ["Godeps","hack"],
+		"project": "github.com/bradfitz/http2",
+		"commit": "f8202bc903bda493ebba4aa54922d78430c2c42f",
+		"ipprefix": "github.com/bradfitz/http2"
+	}
+
+	p = GoSymbolExtractor()
+	p.setData(data)
+	p.execute()
+	return p.getData()
 
 def getAPI1():
 
@@ -67,6 +83,11 @@ def retrieveExportedAPI():
 
 	return (exported_api1, exported_api2)
 
+#data = getAPI()
+#driver = GolangProjectExportedAPIDriver()
+#driver.store(data[1])
+#exit(1)
+
 #storeExportedAPI()
 
 exported_api1, exported_api2 = retrieveExportedAPI()
@@ -78,3 +99,9 @@ data = {
 p = GoApiDiff()
 p.setData(data)
 p.execute()
+data = p.getData()
+
+driver = GolangProjectsAPIDiffDriver()
+driver.store(data)
+
+print json.dumps(data)
