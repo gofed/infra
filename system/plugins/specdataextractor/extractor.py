@@ -1,4 +1,14 @@
 from system.plugins.metaprocessor import MetaProcessor
+import logging
+from datetime import datetime
+from system.artefacts.artefacts import (
+	ARTEFACT_GOLANG_PROJECT_TO_PACKAGE_NAME,
+	ARTEFACT_GOLANG_PROJECT_INFO_FEDORA,
+	ARTEFACT_GOLANG_IPPREFIX_TO_PACKAGE_NAME
+)
+from system.helpers.artefact_schema_validator import ArtefactSchemaValidator
+from system.helpers.schema_validator import SchemaValidator
+from system.helpers.utils import getScriptDir
 from SpecParser import SpecParser
 
 class SpecDataExtractor(MetaProcessor):
@@ -14,40 +24,86 @@ class SpecDataExtractor(MetaProcessor):
 		self.commit = ""
 		self.project = ""
 		self.ipprefix = ""
+		self.lastupdated = ""
+
+	def _validateInput(self, data):
+		validator = SchemaValidator()
+		schema = "%s/input_schema.json" % getScriptDir(__file__)
+		self.input_validated = validator.validateFromFile(schema, data)
+		return self.input_validated
 
 	def setData(self, data):
 		"""Validation and data pre-processing"""
-		# TODO(jchaloup): validate data with JSON Schema
+		self.input_validated = False
+		self.data = data
 
+		if not self._validateInput(data):
+			return False
+
+		self.product = data["product"]
+		self.distribution = data["distribution"]
+		self.package = data ["package"]
 		self.specfile = data["specfile"]
+
+		return True
 
 	def getData(self):
 		"""Validation and data post-processing"""
 		data = []
 
 		data.append(self._generateGolangProjectInfoFedora())
+		validator = ArtefactSchemaValidator(ARTEFACT_GOLANG_PROJECT_INFO_FEDORA)
+		if not validator.validate(data[0]):
+			logging.error("%s is not valid" % ARTEFACT_GOLANG_PROJECT_INFO_FEDORA)
+			return {}
+
 		data.append(self._generateGolangProjectToPackageName())
+		validator = ArtefactSchemaValidator(ARTEFACT_GOLANG_PROJECT_TO_PACKAGE_NAME)
+		if not validator.validate(data[1]):
+			logging.error("%s is not valid" % ARTEFACT_GOLANG_PROJECT_TO_PACKAGE_NAME)
+			return {}
+
 		data.append(self._generateGolangIPPrefixToPackageName())
+		validator = ArtefactSchemaValidator(ARTEFACT_GOLANG_IPPREFIX_TO_PACKAGE_NAME)
+		if not validator.validate(data[2]):
+			logging.error("%s is not valid" % ARTEFACT_GOLANG_IPPREFIX_TO_PACKAGE_NAME)
+			return {}
 
 		return data
 
 	def _generateGolangProjectInfoFedora(self):
-		# TOOD(jchaloup): generate json from class attributes
-		print "commit: %s" % self.commit
+		artefact = {}
 
-		raise NotImplementedError
+		artefact["artefact"] = ARTEFACT_GOLANG_PROJECT_INFO_FEDORA
+
+		artefact["distribution"] = self.distribution
+		artefact["project"] = self.project
+		artefact["commit"] = self.commit
+		artefact["last-updated"] = self.lastupdated
+
+		return artefact
 
 	def _generateGolangProjectToPackageName(self):
-		# TOOD(jchaloup): generate json from class attributes
-		print "project: %s" % self.project
+		artefact = {}
 
-		raise NotImplementedError
+		artefact["artefact"] = ARTEFACT_GOLANG_PROJECT_TO_PACKAGE_NAME
+
+		artefact["product"] = self.product
+		artefact["distribution"] = self.distribution
+		artefact["project"] = self.project
+		artefact["package"] = self.package
+
+		return artefact
 
 	def _generateGolangIPPrefixToPackageName(self):
-		# TOOD(jchaloup): generate json from class attributes
-		print "ipprefix: %s" % self.ipprefix
+		artefact = {}
 
-		raise NotImplementedError
+		artefact["artefact"] = ARTEFACT_GOLANG_IPPREFIX_TO_PACKAGE_NAME
+
+		artefact["product"] = self.product
+		artefact["distribution"] = self.distribution
+		artefact["ipprefix"] = self.ipprefix
+		artefact["package"] = self.package
 
 	def execute(self):
 		"""Impementation of concrete data processor"""
@@ -73,6 +129,17 @@ class SpecDataExtractor(MetaProcessor):
 		self.ipprefix = sp.getMacro("import_path")
 		if self.ipprefix == "":
 			logging.error("import path prefix not found")
+			return False
+
+		# Extract date from changelog and set its format
+		header = sp.getLastChangelog().header
+		if header == "":
+			logging.error("last changelog not found")
+			return False
+		try:
+			self.lastupdated = datetime.strptime(header.split('-')[0],"* %a %b %d %Y ").strftime("%Y-%m-%d")
+		except ValueError as e:
+			logging.error("invalid changelog header format")
 			return False
 
 		return True
