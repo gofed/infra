@@ -3,11 +3,11 @@ from etcdclient import EtcdClient
 import json
 import logging
 from system.helpers.artefactkeygenerator.keygenerator import KeyGeneratorFactory
-from system.artefacts.artefacts import ARTEFACT_NO_ARTEFACT
+from system.artefacts import artefacts
 
 class ArtefactDriver(MetaArtefactDriver):
 
-	def __init__(self, artefact = ARTEFACT_NO_ARTEFACT):
+	def __init__(self, artefact = artefacts.ARTEFACT_NO_ARTEFACT):
 		self.artefact = artefact
 
 	def _generateKey(self, data):

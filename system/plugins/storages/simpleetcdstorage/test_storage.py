@@ -1,48 +1,60 @@
-from golang_project_info_fedora_driver import GolangProjectInfoFedoraDriver
-from golang_project_to_package_name_driver import GolangProjectToPackageNameDriver
-from golang_ipprefix_to_package_name_driver import GolangIPPrefixToPackageNameDriver
+from system.artefacts import artefacts
+from artefactdriverfactory import ArtefactDriverFactory
+from system.helpers.jsoncomparator import DirectJSONComparator
 
 import unittest
 import json
 
-class GolangProjectInfoFedoraTest(unittest.TestCase):
-	def test(self):
+class ArtefactDriverTest(unittest.TestCase):
 
-		input = {"artefact": "golang-project-info-fedora", "distribution": "f23", "project": "github.com/coreos/etcd", "commit": "729b530c489a73532843e664ae9c6db5c686d314", "last-updated": "2015-12-12"}
-		driver = GolangProjectInfoFedoraDriver()
-		driver.store(input)
-	
-		expected = json.dumps(input)
-		current = driver.retrieve(input)
-	
-		# value is a string, not json so no need to sorted it before comparison
-		self.assertEqual(current, expected)
+	def runTest(self, input, artefact = ""):
 
-class GolangProjectToPackageNameTest(unittest.TestCase):
-	def test(self):
+		if artefact == "":
+			artefact = input["artefact"]
 
-		input = {"artefact": "golang-project-to-package-name", "product": "Fedora", "distribution": "f22", "project": "github.com/coreos/etcd", "name": "etcd"}
+		driver = ArtefactDriverFactory().build(artefact)
+		if driver == None:
+			raise Exception("Driver not built")
 
-		driver = GolangProjectToPackageNameDriver()
 		driver.store(input)
 
-		expected = json.dumps(input)
+		expected = input
 		current = driver.retrieve(input)
+		self.assertEqual(DirectJSONComparator().equal(current, expected), True)
 
-		# value is a string, not json so no need to sorted it before comparison
-		self.assertEqual(current, expected)
+	def testGolangProjectInfoFedora(self):
 
-class GolangIPPrefixToPackageNameTest(unittest.TestCase):
-	def test(self):
+		input = {
+			"artefact": artefacts.ARTEFACT_GOLANG_PROJECT_INFO_FEDORA,
+			"distribution": "f23",
+			"project": "github.com/coreos/etcd",
+			"commit": "729b530c489a73532843e664ae9c6db5c686d314",
+			"last-updated": "2015-12-12"
+		}
 
-		input = {"artefact": "golang-ipprefix-to-package-name", "product": "Fedora", "distribution": "f22", "ipprefix": "github.com/coreos/etcd", "name": "etcd"}
+		self.runTest(input)
 
-		driver = GolangIPPrefixToPackageNameDriver()
-		driver.store(input)
+	def testGolangProjectToPackageName(self):
 
-		expected = json.dumps(input)
-		current = driver.retrieve(input)
+		input = {
+			"artefact": artefacts.ARTEFACT_GOLANG_PROJECT_TO_PACKAGE_NAME,
+			"product": "Fedora",
+			"distribution": "f22",
+			"project": "github.com/coreos/etcd",
+			"name": "etcd"
+		}
 
-		# value is a string, not json so no need to sorted it before comparison
-		self.assertEqual(current, expected)
+		self.runTest(input)
+
+	def testGolangIPPrefixToPackageName(self):
+
+		input = {
+			"artefact": artefacts.ARTEFACT_GOLANG_IPPREFIX_TO_PACKAGE_NAME,
+			"product": "Fedora",
+			"distribution": "f22",
+			"ipprefix": "github.com/coreos/etcd",
+			"name": "etcd"
+		}
+
+		self.runTest(input)
 
