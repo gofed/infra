@@ -18,7 +18,7 @@ class MetaProcessor:
 		"""Validation and data pre-processing"""
 		raise NotImplementedError
 
-	def getData(self, data):
+	def getData(self):
 		"""Validation and data post-processing"""
 		raise NotImplementedError
 
