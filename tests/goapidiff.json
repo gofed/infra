@@ -1,0 +1,89 @@
+{
+    "testdatadir": "testdata",
+    "pairs_identical_commits": [
+        [
+            {
+                "name": "github.com/coreos/etcd",
+                "commit": "b4bddf685b26b4aa70e939445044bdeac822d042"
+            },
+            {
+                "name": "github.com/coreos/etcd",
+                "commit": "b4bddf685b26b4aa70e939445044bdeac822d042"
+            }
+        ],
+        [
+            {
+                "name": "github.com/google/martian",
+                "commit": "1afb734cc2eb3a5dab708a901ee07106a94a9186"
+            },
+            {
+                "name": "github.com/google/martian",
+                "commit": "1afb734cc2eb3a5dab708a901ee07106a94a9186"
+            }
+        ]
+    ],
+    "pairs_different_projects": [
+        [
+            {
+                "name": "github.com/coreos/etcd",
+                "commit": "b4bddf685b26b4aa70e939445044bdeac822d042"
+            },
+            {
+                "name": "github.com/google/martian",
+                "commit": "1afb734cc2eb3a5dab708a901ee07106a94a9186"
+            }
+        ],
+        [
+            {
+                "name": "github.com/influxdata/influxdb",
+                "commit": "d771eb72f708c523bb2bec35a97f6bb83ae4ef1d"
+            },
+            {
+                "name": "github.com/coreos/etcd",
+                "commit": "bdee27b19e8601ffd7bd4f0481abe9bbae04bd09"
+            }
+        ]
+    ],
+    "pairs_generic": [
+        [
+            {
+                "name": "github.com/coreos/etcd",
+                "commit": "b4bddf685b26b4aa70e939445044bdeac822d042"
+            },
+            {
+                "name": "github.com/coreos/etcd",
+                "commit": "bdee27b19e8601ffd7bd4f0481abe9bbae04bd09"
+            }
+        ],
+        [
+            {
+                "name": "github.com/influxdata/influxdb",
+                "commit": "f326c6c0e4349a6f9bca056571b01ded81a2887c"
+            },
+            {
+                "name": "github.com/influxdata/influxdb",
+                "commit": "688bc7a2f1877b524a3c915ae1ff7981267fcb49"
+            }
+        ],
+        [
+            {
+                "name": "github.com/influxdata/influxdb",
+                "commit": "688bc7a2f1877b524a3c915ae1ff7981267fcb49"
+            },
+            {
+                "name": "github.com/influxdata/influxdb",
+                "commit": "d771eb72f708c523bb2bec35a97f6bb83ae4ef1d"
+            }
+        ],
+        [
+            {
+                "name": "github.com/google/martian",
+                "commit": "4d4cb10a32e7f1237228d58ecf95c571b0947a11"
+            },
+            {
+                "name": "github.com/google/martian",
+                "commit": "1afb734cc2eb3a5dab708a901ee07106a94a9186"
+            }
+        ]
+    ]
+}

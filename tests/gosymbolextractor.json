@@ -1,0 +1,55 @@
+{
+    "testdatadir": "testdata",
+    "projects": [
+        {
+            "name": "github.com/coreos/etcd",
+            "commit": "b4bddf685b26b4aa70e939445044bdeac822d042",
+            "directories_to_skip": ["Godeps", "hack"]
+        },
+        {
+            "name": "github.com/eBay/fabio",
+            "commit": "5e24a09752a75f30448f43773cb529e8ce02ce93",
+            "directories_to_skip": ["_third_party"]
+        },
+        {
+            "name": "github.com/PuerkitoBio/agora",
+            "commit": "fc5914daad197185f2b2fc1873b2084f0e86b6b4",
+            "directories_to_skip": []
+        },
+        {
+            "name": "github.com/hectane/hectane",
+            "commit": "87062ba605491392423da3e75b1512cfe6350337",
+            "directories_to_skip": []
+        },
+        {
+            "name": "github.com/mozilla-services/heka",
+            "commit": "149c483a52f0f4c9ea50b73805feebed1b7c45c3",
+            "directories_to_skip": []
+        },
+        {
+            "name": "github.com/pingcap/tidb",
+            "commit": "482dc3f06c438c320e1fc64ff02a5479d2a989fb",
+            "directories_to_skip": ["Godeps"]
+        },
+        {
+            "name": "github.com/cznic/ql",
+            "commit": "77545ff365ff426dfab06c46d70fa77600cd55af",
+            "directories_to_skip": []
+        },
+        {
+            "name": "github.com/google/cayley",
+            "commit": "792fe5d42c4dd4d967c3db2e30bd380fcdfb3151",
+            "directories_to_skip": ["Godeps"]
+        },
+        {
+            "name": "github.com/influxdata/influxdb",
+            "commit": "d771eb72f708c523bb2bec35a97f6bb83ae4ef1d",
+            "directories_to_skip": []
+        },
+        {
+            "name": "github.com/google/martian",
+            "commit": "1afb734cc2eb3a5dab708a901ee07106a94a9186",
+            "directories_to_skip": []
+        }
+    ]
+}
