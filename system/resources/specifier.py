@@ -40,7 +40,7 @@ class ResourceSpecifier:
 		return {
 			"resource": types.RESOURCE_USER_DIRECTORY,
 			"subresource": subresource,
-			"resource-type": types.RESOURCE_TYPE_TARBALL,
+			"resource-type": type,
 			"location": location
 		}
 
