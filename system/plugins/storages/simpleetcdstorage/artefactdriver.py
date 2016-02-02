@@ -30,7 +30,7 @@ class ArtefactDriver(MetaArtefactDriver):
 			return False
 
 		# store the data into etcd
-		if EtcdClient().set(key, json.dumps(data)):
+		if not EtcdClient().set(key, json.dumps(data)):
 			logging.error("Unable to store %s artefact with '%s' key" % (self.artefact, key))
 			return False
 
@@ -43,16 +43,16 @@ class ArtefactDriver(MetaArtefactDriver):
 		"""retrieve artefact"""
 		key = self._generateKey(key_data)
 		if key == "":
-			return False
+			return False, {}
 	
 		# get the data from etcd
 		ok, value = EtcdClient().get(key)
 
 		if not ok:
 			logging.error("Unable to retrieve %s artefact with '%s' key" % (self.artefact, key))
-			return ""
+			return False, {}
 
-		return json.loads(value)
+		return True, json.loads(value)
 
 	def storeList(self, dataList):
 		"""store list of artefacts"""
