@@ -1,4 +1,4 @@
-from system.plugins.metaprocessor import MetaProcessor
+from system.core.meta.metaprocessor import MetaProcessor
 from system.artefacts.artefacts import ARTEFACT_GOLANG_PROJECT_PACKAGES, ARTEFACT_GOLANG_PROJECT_EXPORTED_API
 import os
 import logging

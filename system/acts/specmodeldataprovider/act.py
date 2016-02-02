@@ -1,4 +1,4 @@
-from system.acts.metaact import MetaAct
+from system.core.meta.metaact import MetaAct
 from system.resources.specifier import ResourceSpecifier
 from system.resources import types
 from system.core.functionfactory import FunctionFactory

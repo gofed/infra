@@ -1,4 +1,4 @@
-from system.plugins.metaprocessor import MetaProcessor
+from system.core.meta.metaprocessor import MetaProcessor
 import logging
 from datetime import datetime
 from system.artefacts.artefacts import (

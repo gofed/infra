@@ -1,4 +1,4 @@
-from metaartefactkeygenerator import MetaArtefactKeyGenerator
+from system.core.meta.metaartefactkeygenerator import MetaArtefactKeyGenerator
 from system.artefacts.artefacts import ARTEFACT_GOLANG_PROJECTS_API_DIFF
 import logging
 

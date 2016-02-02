@@ -1,4 +1,4 @@
-from metaartefactkeygenerator import MetaArtefactKeyGenerator
+from system.core.meta.metaartefactkeygenerator import MetaArtefactKeyGenerator
 import logging
 
 class GolangIPPrefixToPackageNameKeyGenerator(MetaArtefactKeyGenerator):

@@ -3,9 +3,9 @@ from system.plugins.goapidiff.analyzer import GoApiDiff
 import json
 
 from system.artefacts import artefacts
-from system.plugins.storages.simpleetcdstorage.storagewritter import StorageWritter
+from system.plugins.simpleetcdstorage.storagewritter import StorageWritter
 
-from system.plugins.storages.simpleetcdstorage.storagereader import StorageReader
+from system.plugins.simpleetcdstorage.storagereader import StorageReader
 
 import logging
 logging.basicConfig(level=logging.INFO)

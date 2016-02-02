@@ -1,4 +1,4 @@
-from system.plugins.metaprocessor import MetaProcessor
+from system.core.meta.metaprocessor import MetaProcessor
 from system.helpers.artefact_schema_validator import ArtefactSchemaValidator
 from system.helpers.schema_validator import SchemaValidator
 from system.artefacts.artefacts import ARTEFACT_GOLANG_PROJECTS_API_DIFF

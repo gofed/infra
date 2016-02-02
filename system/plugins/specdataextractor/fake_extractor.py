@@ -1,4 +1,4 @@
-from system.plugins.metaprocessor import MetaProcessor
+from system.core.meta.metaprocessor import MetaProcessor
 from system.helpers.artefact_schema_validator import ArtefactSchemaValidator
 import logging
 from system.artefacts.artefacts import (

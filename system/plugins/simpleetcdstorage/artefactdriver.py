@@ -1,4 +1,4 @@
-from system.plugins.storages.metaartefactdriver import MetaArtefactDriver
+from system.core.meta.metaartefactdriver import MetaArtefactDriver
 from etcdclient import EtcdClient
 import json
 import logging
