@@ -1,5 +1,10 @@
 from basicfunction import BasicFunction
+from storagefunction import StorageFunction
 from system.helpers.utils import getScriptDir
+from system.core.meta.metaprocessor import MetaProcessor
+from system.core.meta.metastoragereader import MetaStorageReader
+from system.core.meta.metastoragewritter import MetaStorageWritter
+
 import os
 import json
 import logging
@@ -21,6 +26,11 @@ class FunctionFactory:
 		self.recipes = {}
 		self._detectPlugins()
 
+	def _checkRegistration(self, reg_obj):
+		if "id" not in reg_obj or "class" not in reg_obj or "file" not in reg_obj:
+			return False
+		return True
+
 	def _detectPlugins(self):
 		plugins_dir = "%s/../plugins" % getScriptDir(__file__)
 		# TODO(jchaloup): check if the directory exists
@@ -32,15 +42,19 @@ class FunctionFactory:
 			reg_obj = {}
 			with open(register_file, "r") as f:
 				reg_obj = json.load(f)
-				# TODO(jchaloup): in future add support for more ID->class pairs in register.json
-				if "id" not in reg_obj or "class" not in reg_obj or "file" not in reg_obj:
-					logging.warning("plugin not loaded, invalid register.json: %s" % reg_obj)
-					continue
 
-				self.recipes[reg_obj["id"]] = {
-					"class": reg_obj["class"],
-					"import": "%s.%s" % (os.path.basename(dirName), reg_obj["file"].split(".")[-2])
-				}
+				if type(reg_obj) != type([]):
+					reg_obj = [reg_obj]
+
+				for reg in reg_obj:
+					if not self._checkRegistration(reg):
+						logging.warning("plugin %s not loaded, invalid register.json: %s" % (reg["id"], reg))
+						continue
+
+					self.recipes[reg["id"]] = {
+						"class": reg["class"],
+						"import": "%s.%s" % (os.path.basename(dirName), reg["file"].split(".")[-2])
+					}
 
 	def bake(self, function_ID):
 		if function_ID not in self.recipes:
@@ -49,7 +63,13 @@ class FunctionFactory:
 
 		# TODO(jchaloup): catch exception, does the class exists, ... other checks
 		module = importlib.import_module("system.plugins.%s" % self.recipes[function_ID]["import"])
-		obj = getattr(module, "GoSymbolExtractor")()
-		# TODO(jchaloup): add support for proxy and other kind functions
-		return BasicFunction(obj)
-		
+		if not hasattr(module, self.recipes[function_ID]["class"]):
+			raise FunctionNotFoundError("function %s not bakeable: class %s not found" % (function_ID, self.recipes[function_ID]["class"]))
+
+		obj = getattr(module, self.recipes[function_ID]["class"])()
+		if isinstance(obj, MetaProcessor):
+			return BasicFunction(obj)
+		elif isinstance(obj, MetaStorageReader) or isinstance(obj, MetaStorageWritter):
+			return StorageFunction(obj)
+
+		raise FunctionNotFoundError("function %s not bakeable: function kind not supported" % function_ID)
