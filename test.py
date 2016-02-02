@@ -3,10 +3,9 @@ from system.plugins.goapidiff.analyzer import GoApiDiff
 import json
 
 from system.artefacts import artefacts
-from system.plugins.storages.simpleetcdstorage.artefactdriverfactory import ArtefactDriverFactory
+from system.plugins.storages.simpleetcdstorage.storagewritter import StorageWritter
 
-from system.plugins.storages.simpleetcdstorage.golang_project_exported_api_driver import GolangProjectExportedAPIDriver
-from system.plugins.storages.simpleetcdstorage.golang_projects_api_diff_driver import GolangProjectsAPIDiffDriver
+from system.plugins.storages.simpleetcdstorage.storagereader import StorageReader
 
 import logging
 logging.basicConfig(level=logging.INFO)
@@ -61,20 +60,17 @@ def storeExportedAPI():
 	exported_api2 = getAPI2()
 
 	# store the data
-	driver = ArtefactDriverFactory().build(artefacts.ARTEFACT_GOLANG_PROJECT_EXPORTED_API)
-	driver.store(exported_api1[1])
-	driver.store(exported_api2[1])
+	StorageWritter().store(exported_api1[1])
+	StorageWritter().store(exported_api2[1])
 
 def retrieveExportedAPI():
-	driver = ArtefactDriverFactory().build(artefacts.ARTEFACT_GOLANG_PROJECT_EXPORTED_API)
-
 	data = {
 		"artefact": "golang-project-exported-api",
 		"project": "github.com/coreos/etcd",
 		"commit": "b4bddf685b26b4aa70e939445044bdeac822d042"
 	}
 
-	exported_api1 = driver.retrieve(data)
+	_, exported_api1 = StorageReader().retrieve(data)
 
 	data = {
 		"artefact": "golang-project-exported-api",
@@ -82,7 +78,7 @@ def retrieveExportedAPI():
 		"commit": "bdee27b19e8601ffd7bd4f0481abe9bbae04bd09"
 	}
 
-	exported_api2 = driver.retrieve(data)
+	_, exported_api2 = StorageReader().retrieve(data)
 
 	return (exported_api1, exported_api2)
 
@@ -104,7 +100,6 @@ p.setData(data)
 p.execute()
 data = p.getData()
 
-driver = ArtefactDriverFactory().build(artefacts.ARTEFACT_GOLANG_PROJECTS_API_DIFF)
-driver.store(data)
+StorageWritter().store(data)
 
 print json.dumps(data)
