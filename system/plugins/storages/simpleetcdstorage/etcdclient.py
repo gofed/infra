@@ -34,6 +34,7 @@ class EtcdClient:
 			if rc != 0:
 				logging.error(se)
 				return False
+		return True
 
 	def get(self, key):
 		# key and values are string => escape quotes
