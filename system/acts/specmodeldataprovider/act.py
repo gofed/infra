@@ -1,7 +1,7 @@
 from system.core.meta.metaact import MetaAct
 from system.resources.specifier import ResourceSpecifier
 from system.resources import types
-from system.core.functionfactory import FunctionFactory
+from system.core.functions.functionfactory import FunctionFactory
 from system.artefacts.artefacts import ARTEFACT_GOLANG_PROJECT_PACKAGES
 
 import json
@@ -34,6 +34,8 @@ class SpecModelDataProviderAct(MetaAct):
 
 	def execute(self):
 		"""Impementation of concrete data processor"""
+		# TODO(jchaloup): catch exceptions from functions and resources
+
 		res_spec = ResourceSpecifier()
 		dir_res  = res_spec.generateUserDirectory(self.data["source_code_directory"], type = types.RESOURCE_TYPE_DIRECTORY)
 		# retrieve resource

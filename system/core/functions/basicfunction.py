@@ -1,5 +1,6 @@
 from system.resources.client import ResourceClient
-from system.resources.types import RESOURCE_FIELD
+from system.resources.types import RESOURCE_FIELD, ResourceNotFoundError
+from types import FunctionFailedError
 
 class BasicFunction:
 	"""
@@ -25,17 +26,14 @@ class BasicFunction:
 		if RESOURCE_FIELD in data:
 			client = ResourceClient(data[RESOURCE_FIELD])
 			if not client.retrieve():
-				# raise Exception
-				return {}
+				raise ResourceNotFoundError("Unable to retrieve resource: %s" % data[RESOURCE_FIELD])
 
 			data[RESOURCE_FIELD] = client.getSubresource()
 
 		if not self.obj.setData(data):
-			# TODO(jchaloup): raise exception
-			return {}
+			raise FunctionFailedError("Unable to set data")
 
 		if not self.obj.execute():
-			# TODO(jchaloup): raise exception
-			return {}
+			raise FunctionFailedError("Computation failed")
 
 		return self.obj.getData()

@@ -1,5 +1,6 @@
 from system.core.meta.metastoragereader import MetaStorageReader
 from system.core.meta.metastoragewritter import MetaStorageWritter
+from types import FunctionFailedError
 
 class StorageFunction:
 	"""
@@ -25,4 +26,4 @@ class StorageFunction:
 			return self.obj.retrieve(data)
 		if isinstance(self.obj, MetaStorageWritter):
 			return self.obj.store(data)
-		# TODO(jchaloup): raise Exception
+		raise FunctionNotFoundError("Storage function is not any of MetaStorageReader or MetaStorageWritter")

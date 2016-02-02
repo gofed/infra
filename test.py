@@ -1,5 +1,5 @@
 from system.artefacts import artefacts
-from system.core.functionfactory import FunctionFactory
+from system.core.functions.functionfactory import FunctionFactory
 
 import logging
 import json

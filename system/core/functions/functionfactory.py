@@ -4,16 +4,13 @@ from system.helpers.utils import getScriptDir
 from system.core.meta.metaprocessor import MetaProcessor
 from system.core.meta.metastoragereader import MetaStorageReader
 from system.core.meta.metastoragewritter import MetaStorageWritter
+from types import FunctionNotFoundError
 
 import os
 import json
 import logging
 import imp
 import importlib
-
-class FunctionNotFoundError(RuntimeError):
-   def __init__(self, err):
-      self.err = err
 
 class FunctionFactory:
 	"""
@@ -32,7 +29,9 @@ class FunctionFactory:
 		return True
 
 	def _detectPlugins(self):
-		plugins_dir = "%s/../plugins" % getScriptDir(__file__)
+		# TODO(jchaloup): put plugins_dir into config file
+		# TODO(jchaloup): check if the plugin directory exists
+		plugins_dir = "%s/../../plugins" % getScriptDir(__file__)
 		# TODO(jchaloup): check if the directory exists
 		for dirName, subdirList, fileList in os.walk(plugins_dir):
 			register_file = "%s/register.json" % (dirName)
@@ -58,7 +57,6 @@ class FunctionFactory:
 
 	def bake(self, function_ID):
 		if function_ID not in self.recipes:
-			# throw exception 'function ID not found'
 			raise FunctionNotFoundError("function %s not found" % function_ID)
 
 		# TODO(jchaloup): catch exception, does the class exists, ... other checks
