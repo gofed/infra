@@ -4,10 +4,9 @@
 	"description": "Definition of packages of a golang project",
 	"type": "object",
 	"properties": {
-		"source_code_directory": {
+		"resource": {
 			"type": "string",
 			"description": "Directory with Go source codes",
-			"minLength": 1
 		},
 		"directories_to_skip": {
 			"type": "array",

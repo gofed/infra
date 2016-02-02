@@ -1,4 +1,5 @@
 from system.resources.client import ResourceClient
+from system.resources.types import RESOURCE_FIELD
 
 class BasicFunction:
 	"""
@@ -21,12 +22,13 @@ class BasicFunction:
 		:type data: data to forward to a plugin
 		"""
 		# retrieve resource from resource client
-		client = ResourceClient(data["source_code_directory"])
-		if not client.retrieve():
-			# raise Exception
-			return {}
+		if RESOURCE_FIELD in data:
+			client = ResourceClient(data[RESOURCE_FIELD])
+			if not client.retrieve():
+				# raise Exception
+				return {}
 
-		data["source_code_directory"] = client.getSubresource()
+			data[RESOURCE_FIELD] = client.getSubresource()
 
 		if not self.obj.setData(data):
 			# TODO(jchaloup): raise exception
@@ -37,4 +39,3 @@ class BasicFunction:
 			return {}
 
 		return self.obj.getData()
-		

@@ -8,3 +8,4 @@ RESOURCE_TYPE_TARBALL = "tarball"
 
 SUBRESOURCE_DIRECTORY_TREE = "directory-tree"
 
+RESOURCE_FIELD = "resource"
