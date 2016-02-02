@@ -1,0 +1,12 @@
+[{
+"id": "etcdstoragereader",
+"class": "StorageReader",
+"file": "storagereader.py",
+"version": "1.0-alpha1"
+},
+{
+"id": "etcdstoragewritter",
+"class": "StorageWritter",
+"file": "storagewritter.py",
+"version": "1.0-alpha1"
+}]
