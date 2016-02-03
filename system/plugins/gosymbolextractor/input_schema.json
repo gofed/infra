@@ -35,5 +35,5 @@
 			"minLength": 1
 		}
 	},
-	"required": ["resource", "directories_to_skip", "project", "commit", "ipprefix"]
+	"required": ["resource", "directories_to_skip", "ipprefix"]
 }

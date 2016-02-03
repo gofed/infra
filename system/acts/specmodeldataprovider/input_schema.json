@@ -2,7 +2,7 @@
 	"$schema": "http://json-schema.org/draft-04/schema#",
 	"title": "Spec model data provider act",
 	"description": "Definition of act providing data for spec model.",
-	"oneOf": [
+	"anyOf": [
 		{ "$ref": "#/definitions/upstream_source_code" },
 		{ "$ref": "#/definitions/user_directory" }
 	],
@@ -35,13 +35,10 @@
 						"minLength": 1
 					},
 					"uniqueItems": true
-				},
-				"resource": {
-					"description": "Specification of upstrem project",
-					"$ref": "upstream_source_code_schema.json"
 				}
 			},
-			"required": ["project", "commit", "ipprefix", "directories_to_skip", "resource"]
+			"required": ["project", "commit", "ipprefix", "directories_to_skip"],
+			"additionalProperties": false
 		},
 		"user_directory": {
 			"type": "object",
@@ -63,11 +60,13 @@
 					"uniqueItems": true
 				},
 				"resource": {
-					"description": "Specification of user directory",
-					"$ref": "user_directory_schema.json"
+					"type": "string",
+					"description": "User directory location",
+					"minLength": 1
 				}
 			},
-			"required": ["ipprefix", "directories_to_skip", "resource"]
+			"required": ["ipprefix", "directories_to_skip", "resource"],
+			"additionalProperties": false
 		}
 	}
 }
