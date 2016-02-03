@@ -1,0 +1,73 @@
+{
+	"$schema": "http://json-schema.org/draft-04/schema#",
+	"title": "Spec model data provider act",
+	"description": "Definition of act providing data for spec model.",
+	"oneOf": [
+		{ "$ref": "#/definitions/upstream_source_code" },
+		{ "$ref": "#/definitions/user_directory" }
+	],
+	"definitions": {
+		"upstream_source_code": {
+			"type": "object",
+			"description": "Upstream source codes",
+			"properties": {
+				"project": {
+					"type": "string",
+					"description": "Project name",
+					"minLength": 1
+				},
+				"commit": {
+					"type": "string",
+					"description": "Repository commit",
+					"minLength": 1
+				},
+				"ipprefix": {
+					"type": "string",
+					"description": "Import path prefix",
+					"minLength": 1
+				},
+				"directories_to_skip": {
+					"type": "array",
+					"description": "List of directories to skip",
+					"items": {
+						"type": "string",
+						"description": "Directory",
+						"minLength": 1
+					},
+					"uniqueItems": true
+				},
+				"resource": {
+					"description": "Specification of upstrem project",
+					"$ref": "upstream_source_code_schema.json"
+				}
+			},
+			"required": ["project", "commit", "ipprefix", "directories_to_skip", "resource"]
+		},
+		"user_directory": {
+			"type": "object",
+			"description": "Upstream source codes",
+			"properties": {
+				"ipprefix": {
+					"type": "string",
+					"description": "Import path prefix",
+					"minLength": 1
+				},
+				"directories_to_skip": {
+					"type": "array",
+					"description": "List of directories to skip",
+					"items": {
+						"type": "string",
+						"description": "Directory",
+						"minLength": 1
+					},
+					"uniqueItems": true
+				},
+				"resource": {
+					"description": "Specification of user directory",
+					"$ref": "user_directory_schema.json"
+				}
+			},
+			"required": ["ipprefix", "directories_to_skip", "resource"]
+		}
+	}
+}
