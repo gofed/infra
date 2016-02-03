@@ -3,6 +3,7 @@ from system.resources.specifier import ResourceSpecifier
 from system.resources import types
 from system.core.functions.functionfactory import FunctionFactory
 from system.artefacts.artefacts import ARTEFACT_GOLANG_PROJECT_PACKAGES
+from system.core.functions.types import FunctionNotFoundError, FunctionFailedError
 
 import json
 
@@ -37,15 +38,27 @@ class SpecModelDataProviderAct(MetaAct):
 		# TODO(jchaloup): catch exceptions from functions and resources
 
 		res_spec = ResourceSpecifier()
-		dir_res  = res_spec.generateUserDirectory(self.data["source_code_directory"], type = types.RESOURCE_TYPE_DIRECTORY)
+		dir_res  = res_spec.generateUserDirectory(self.data["resource"], type = types.RESOURCE_TYPE_DIRECTORY)
 		# retrieve resource
-		self.data["source_code_directory"] = dir_res
+		self.data["resource"] = dir_res
 
-		# extract data from resource
-		data = self.ff.bake("gosymbolsextractor").call(self.data)
-		# get ARTEFACT_GOLANG_PROJECT_PACKAGES artefact
-		self.golang_project_packages = {}
-		for item in data:
-			if item["artefact"] == ARTEFACT_GOLANG_PROJECT_PACKAGES:
-				self.golang_project_packages = item
-				break
+		try:
+			# extract data from resource
+			data = self.ff.bake("gosymbolsextractor").call(self.data)
+			# get ARTEFACT_GOLANG_PROJECT_PACKAGES artefact
+			self.golang_project_packages = {}
+			for item in data:
+				if item["artefact"] == ARTEFACT_GOLANG_PROJECT_PACKAGES:
+					self.golang_project_packages = item
+					break
+
+		except FunctionNotFoundError, e:
+			print "spec-model-data-provider-act: %s" % s
+			return False
+		except FunctionFailedError, e:
+			print "spec-model-data-provider-act: %s" % s
+			return False
+		except types.ResourceNotFoundError, e:
+			print "spec-model-data-provider-act: %s" % s
+			return False
+

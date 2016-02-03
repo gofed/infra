@@ -7,6 +7,7 @@
 		"resource": {
 			"type": "string",
 			"description": "Directory with Go source codes",
+			"minLength": 1
 		},
 		"directories_to_skip": {
 			"type": "array",
@@ -34,5 +35,5 @@
 			"minLength": 1
 		}
 	},
-	"required": ["source_code_directory", "directories_to_skip", "project", "commit", "ipprefix"]
+	"required": ["resource", "directories_to_skip", "project", "commit", "ipprefix"]
 }

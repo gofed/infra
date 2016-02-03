@@ -12,7 +12,7 @@ class SchemaValidator:
 		# get schema
 		try:
 			with open(schema_file, "r") as f:
-				schema = json.loads(f.read())
+				schema = json.load(f)
  		except IOError, e:
 			logging.error("Unable to load schema from %s" % schema_file)
 			return False

@@ -8,7 +8,7 @@ from system.helpers.schema_validator import SchemaValidator
 from system.helpers.utils import getScriptDir, runCommand
 from coder import GoTypeCoder
 
-CONFIG_SOURCE_CODE_DIRECTORY = "source_code_directory"
+CONFIG_SOURCE_CODE_DIRECTORY = "resource"
 CONFIG_SKIPPED_DIRECTORIES = "directories_to_skip"
 DATA_PROJECT = "project"
 DATA_COMMIT = "commit"
