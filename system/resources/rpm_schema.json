@@ -1,0 +1,40 @@
+{
+	"$schema": "http://json-schema.org/draft-04/schema#",
+	"title": "Rpm resource specification",
+	"description": "Rpm resource specification",
+	"type": "object",
+	"properties": {
+		"product": {
+			"type": "string",
+			"description": "Product, e.g Fedora, CentOS, etc.",
+			"minLength": 1
+		},
+		"rpm": {
+			"type": "string",
+			"description": "Requested rpm",
+			"minLength": 1
+		},
+		"resource-type": {
+			"type": "string",
+			"description": "Resource type, e.g. rpm",
+			"oneOf": [
+				{"enum": ["rpm"]}
+			]
+		},
+		"resource": {
+			"type": "string",
+			"description": "Requested resource",
+			"oneOf": [
+				{"enum": ["rpm"]}
+			]
+		},
+		"subresource": {
+			"type": "string",
+			"description": "Requested subresource from resource",
+			"oneOf": [
+				{"enum": ["directory-tree"]}
+			]
+		}
+	},
+	"required": ["product", "rpm", "resource-type", "resource", "subresource"]
+}

@@ -1,0 +1,33 @@
+{
+	"$schema": "http://json-schema.org/draft-04/schema#",
+	"title": "Upstream source code resource specification",
+	"description": "Upstream source code resource specification",
+	"type": "object",
+	"properties": {
+		"project": {
+			"type": "string",
+			"description": "Project name",
+			"minLength": 1
+		},
+		"commit": {
+			"type": "string",
+			"description": "Repository commit",
+			"minLength": 1
+		},
+		"resource": {
+			"type": "string",
+			"description": "Requested resource",
+			"oneOf": [
+				{"enum": ["upstream-source-code"]}
+			]
+		},
+		"subresource": {
+			"type": "string",
+			"description": "Requested subresource from resource",
+			"oneOf": [
+				{"enum": ["directory-tree"]}
+			]
+		}
+	},
+	"required": ["project", "commit", "resource", "subresource"]
+}
