@@ -4,6 +4,7 @@ from golang_project_exported_api_driver import GolangProjectExportedAPIDriver
 from golang_project_info_fedora_driver import GolangProjectInfoFedoraDriver
 from golang_projects_api_diff_driver import GolangProjectsAPIDiffDriver
 from golang_project_to_package_name_driver import GolangProjectToPackageNameDriver
+from golang_project_packages_driver import GolangProjectPackagesDriver
 
 class ArtefactDriverFactory:
 
@@ -23,5 +24,8 @@ class ArtefactDriverFactory:
 
 		if artefact == artefacts.ARTEFACT_GOLANG_PROJECTS_API_DIFF:
 			return GolangProjectsAPIDiffDriver()
+
+		if artefact == artefacts.ARTEFACT_GOLANG_PROJECT_PACKAGES:
+			return GolangProjectPackagesDriver()
 
 		return None
