@@ -58,8 +58,8 @@ class ResourceSpecifier:
 		:type  subresource: str	
 		"""
 		return {
-			"project": "project",
-			"commit": "commit",
+			"project": project,
+			"commit": commit,
 			"resource": types.RESOURCE_UPSTREAM_SOURCE_CODES,
 			"subresource": subresource
 		}
