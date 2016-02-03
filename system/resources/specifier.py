@@ -37,6 +37,9 @@ class ResourceSpecifier:
 		:param type: resource type, how is a given resource stored (e.g. tarball, directory, file, etc.)
 		:type  type: str
 		"""
+		if not location.startswith("file://"):
+			location = "file://%s" % location
+
 		return {
 			"resource": types.RESOURCE_USER_DIRECTORY,
 			"subresource": subresource,
