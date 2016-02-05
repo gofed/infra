@@ -131,5 +131,5 @@
 			"required": ["packages", "dependencies"]
 		}
 	},
-	"required": ["artefact", "project", "commit", "ipprefix", "data"]
+	"required": ["artefact", "project", "commit", "ipprefix", "data", "product", "distribution", "build", "rpm"]
 }

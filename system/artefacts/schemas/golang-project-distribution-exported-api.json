@@ -167,7 +167,7 @@
 			"minItems": 1
 		}
 	},
-	"required": ["artefact", "project", "commit", "packages"],
+	"required": ["artefact", "project", "commit", "packages", "product", "distribution", "build", "rpm"],
 	"definitions": {
 		"identifier": {
 			"type": "object",
