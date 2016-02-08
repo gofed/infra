@@ -1,0 +1,508 @@
+{
+  "symbols": {
+    "stringutil:stringutil": {
+      "funcs": [
+        {
+          "name": "Reverse",
+          "def": {
+            "params": [
+              {
+                "type": "ident",
+                "def": "string"
+              }
+            ],
+            "recv": [],
+            "results": [
+              {
+                "type": "ident",
+                "def": "string"
+              }
+            ]
+          }
+        }
+      ],
+      "vars": [],
+      "types": []
+    },
+    "appengine-hello:hello": {
+      "funcs": [],
+      "vars": [],
+      "types": []
+    }
+  },
+  "symbols_position": {
+    "stringutil:stringutil": "stringutil",
+    "appengine-hello:hello": "appengine-hello"
+  },
+  "package_imports": {
+    "stringutil:stringutil": [],
+    "appengine-hello:hello": [
+      "fmt",
+      "net/http"
+    ]
+  },
+  "imported_packages": [
+    "fmt",
+    "net/http",
+    "github.com/golang/example/stringutil",
+    "bufio",
+    "bytes",
+    "log",
+    "os",
+    "path/filepath",
+    "regexp",
+    "strings",
+    "go/ast",
+    "go/importer",
+    "go/parser",
+    "go/token",
+    "go/types",
+    "go/format",
+    "flag",
+    "golang.org/x/tools/go/loader",
+    "golang.org/x/tools/go/types",
+    "golang.org/x/tools/go/types/typeutil",
+    "unicode",
+    "unicode/utf8",
+    "net/http/httptest",
+    "testing",
+    "time",
+    "expvar",
+    "html/template",
+    "sync"
+  ],
+  "package_imports_occurence": {
+    "go/types": [
+      "gotypes/pkginfo/main.go:main",
+      "gotypes/typeandvalue/main.go:main",
+      "gotypes/defsuses/main.go:main",
+      "gotypes/lookup/lookup.go:main",
+      "gotypes/nilfunc/main.go:main",
+      "gotypes/implements/main.go:main"
+    ],
+    "go/importer": [
+      "gotypes/pkginfo/main.go:main",
+      "gotypes/typeandvalue/main.go:main",
+      "gotypes/defsuses/main.go:main",
+      "gotypes/lookup/lookup.go:main",
+      "gotypes/nilfunc/main.go:main",
+      "gotypes/implements/main.go:main"
+    ],
+    "golang.org/x/tools/go/types": [
+      "gotypes/hugeparam/main.go:main",
+      "gotypes/skeleton/main.go:main"
+    ],
+    "testing": [
+      "outyet/main_test.go:main",
+      "stringutil/reverse_test.go:stringutil"
+    ],
+    "sync": [
+      "outyet/main.go:main"
+    ],
+    "go/parser": [
+      "gotypes/pkginfo/main.go:main",
+      "gotypes/typeandvalue/main.go:main",
+      "gotypes/defsuses/main.go:main",
+      "gotypes/lookup/lookup.go:main",
+      "gotypes/doc/main.go:main",
+      "gotypes/nilfunc/main.go:main",
+      "gotypes/implements/main.go:main"
+    ],
+    "unicode": [
+      "gotypes/skeleton/main.go:main"
+    ],
+    "log": [
+      "gotypes/weave.go:main",
+      "gotypes/pkginfo/main.go:main",
+      "gotypes/typeandvalue/main.go:main",
+      "gotypes/defsuses/main.go:main",
+      "gotypes/lookup/lookup.go:main",
+      "gotypes/hugeparam/main.go:main",
+      "gotypes/doc/main.go:main",
+      "gotypes/nilfunc/main.go:main",
+      "gotypes/skeleton/main.go:main",
+      "gotypes/implements/main.go:main",
+      "outyet/main.go:main"
+    ],
+    "fmt": [
+      "appengine-hello/app.go:hello",
+      "hello/hello.go:main",
+      "gotypes/weave.go:main",
+      "gotypes/pkginfo/main.go:main",
+      "gotypes/hello/hello.go:main",
+      "gotypes/typeandvalue/main.go:main",
+      "gotypes/defsuses/main.go:main",
+      "gotypes/lookup/lookup.go:main",
+      "gotypes/hugeparam/main.go:main",
+      "gotypes/doc/main.go:main",
+      "gotypes/nilfunc/main.go:main",
+      "gotypes/skeleton/main.go:main",
+      "gotypes/implements/main.go:main",
+      "outyet/main.go:main"
+    ],
+    "expvar": [
+      "outyet/main.go:main"
+    ],
+    "path/filepath": [
+      "gotypes/weave.go:main"
+    ],
+    "bufio": [
+      "gotypes/weave.go:main"
+    ],
+    "net/http": [
+      "appengine-hello/app.go:hello",
+      "outyet/main_test.go:main",
+      "outyet/main.go:main"
+    ],
+    "html/template": [
+      "outyet/main.go:main"
+    ],
+    "flag": [
+      "gotypes/hugeparam/main.go:main",
+      "outyet/main.go:main"
+    ],
+    "regexp": [
+      "gotypes/weave.go:main"
+    ],
+    "golang.org/x/tools/go/loader": [
+      "gotypes/hugeparam/main.go:main",
+      "gotypes/doc/main.go:main",
+      "gotypes/skeleton/main.go:main"
+    ],
+    "unicode/utf8": [
+      "gotypes/skeleton/main.go:main"
+    ],
+    "golang.org/x/tools/go/types/typeutil": [
+      "gotypes/doc/main.go:main"
+    ],
+    "go/token": [
+      "gotypes/pkginfo/main.go:main",
+      "gotypes/typeandvalue/main.go:main",
+      "gotypes/defsuses/main.go:main",
+      "gotypes/lookup/lookup.go:main",
+      "gotypes/hugeparam/main.go:main",
+      "gotypes/nilfunc/main.go:main",
+      "gotypes/implements/main.go:main"
+    ],
+    "net/http/httptest": [
+      "outyet/main_test.go:main"
+    ],
+    "bytes": [
+      "gotypes/weave.go:main",
+      "gotypes/typeandvalue/main.go:main"
+    ],
+    "go/ast": [
+      "gotypes/pkginfo/main.go:main",
+      "gotypes/typeandvalue/main.go:main",
+      "gotypes/defsuses/main.go:main",
+      "gotypes/lookup/lookup.go:main",
+      "gotypes/hugeparam/main.go:main",
+      "gotypes/doc/main.go:main",
+      "gotypes/nilfunc/main.go:main",
+      "gotypes/implements/main.go:main"
+    ],
+    "go/format": [
+      "gotypes/typeandvalue/main.go:main"
+    ],
+    "github.com/golang/example/stringutil": [
+      "hello/hello.go:main"
+    ],
+    "time": [
+      "outyet/main_test.go:main",
+      "outyet/main.go:main"
+    ],
+    "os": [
+      "gotypes/weave.go:main",
+      "gotypes/doc/main.go:main",
+      "gotypes/skeleton/main.go:main"
+    ],
+    "strings": [
+      "gotypes/weave.go:main",
+      "gotypes/lookup/lookup.go:main",
+      "gotypes/skeleton/main.go:main",
+      "outyet/main_test.go:main"
+    ]
+  },
+  "test_directories": [
+    "outyet",
+    "stringutil"
+  ],
+  "test_directory_dependencies": {
+    "outyet": [
+      "net/http",
+      "net/http/httptest",
+      "strings",
+      "testing",
+      "time"
+    ],
+    "stringutil": [
+      "testing"
+    ]
+  },
+  "main_packages": {
+    "go/types": [
+      "gotypes/pkginfo/main.go:main",
+      "gotypes/typeandvalue/main.go:main",
+      "gotypes/defsuses/main.go:main",
+      "gotypes/lookup/lookup.go:main",
+      "gotypes/nilfunc/main.go:main",
+      "gotypes/implements/main.go:main"
+    ],
+    "go/importer": [
+      "gotypes/pkginfo/main.go:main",
+      "gotypes/typeandvalue/main.go:main",
+      "gotypes/defsuses/main.go:main",
+      "gotypes/lookup/lookup.go:main",
+      "gotypes/nilfunc/main.go:main",
+      "gotypes/implements/main.go:main"
+    ],
+    "golang.org/x/tools/go/types": [
+      "gotypes/hugeparam/main.go:main",
+      "gotypes/skeleton/main.go:main"
+    ],
+    "testing": [
+      "outyet/main_test.go:main",
+      "stringutil/reverse_test.go:stringutil"
+    ],
+    "sync": [
+      "outyet/main.go:main"
+    ],
+    "go/parser": [
+      "gotypes/pkginfo/main.go:main",
+      "gotypes/typeandvalue/main.go:main",
+      "gotypes/defsuses/main.go:main",
+      "gotypes/lookup/lookup.go:main",
+      "gotypes/doc/main.go:main",
+      "gotypes/nilfunc/main.go:main",
+      "gotypes/implements/main.go:main"
+    ],
+    "unicode": [
+      "gotypes/skeleton/main.go:main"
+    ],
+    "log": [
+      "gotypes/weave.go:main",
+      "gotypes/pkginfo/main.go:main",
+      "gotypes/typeandvalue/main.go:main",
+      "gotypes/defsuses/main.go:main",
+      "gotypes/lookup/lookup.go:main",
+      "gotypes/hugeparam/main.go:main",
+      "gotypes/doc/main.go:main",
+      "gotypes/nilfunc/main.go:main",
+      "gotypes/skeleton/main.go:main",
+      "gotypes/implements/main.go:main",
+      "outyet/main.go:main"
+    ],
+    "fmt": [
+      "appengine-hello/app.go:hello",
+      "hello/hello.go:main",
+      "gotypes/weave.go:main",
+      "gotypes/pkginfo/main.go:main",
+      "gotypes/hello/hello.go:main",
+      "gotypes/typeandvalue/main.go:main",
+      "gotypes/defsuses/main.go:main",
+      "gotypes/lookup/lookup.go:main",
+      "gotypes/hugeparam/main.go:main",
+      "gotypes/doc/main.go:main",
+      "gotypes/nilfunc/main.go:main",
+      "gotypes/skeleton/main.go:main",
+      "gotypes/implements/main.go:main",
+      "outyet/main.go:main"
+    ],
+    "expvar": [
+      "outyet/main.go:main"
+    ],
+    "path/filepath": [
+      "gotypes/weave.go:main"
+    ],
+    "bufio": [
+      "gotypes/weave.go:main"
+    ],
+    "net/http": [
+      "appengine-hello/app.go:hello",
+      "outyet/main_test.go:main",
+      "outyet/main.go:main"
+    ],
+    "html/template": [
+      "outyet/main.go:main"
+    ],
+    "flag": [
+      "gotypes/hugeparam/main.go:main",
+      "outyet/main.go:main"
+    ],
+    "regexp": [
+      "gotypes/weave.go:main"
+    ],
+    "golang.org/x/tools/go/loader": [
+      "gotypes/hugeparam/main.go:main",
+      "gotypes/doc/main.go:main",
+      "gotypes/skeleton/main.go:main"
+    ],
+    "unicode/utf8": [
+      "gotypes/skeleton/main.go:main"
+    ],
+    "golang.org/x/tools/go/types/typeutil": [
+      "gotypes/doc/main.go:main"
+    ],
+    "go/token": [
+      "gotypes/pkginfo/main.go:main",
+      "gotypes/typeandvalue/main.go:main",
+      "gotypes/defsuses/main.go:main",
+      "gotypes/lookup/lookup.go:main",
+      "gotypes/hugeparam/main.go:main",
+      "gotypes/nilfunc/main.go:main",
+      "gotypes/implements/main.go:main"
+    ],
+    "net/http/httptest": [
+      "outyet/main_test.go:main"
+    ],
+    "bytes": [
+      "gotypes/weave.go:main",
+      "gotypes/typeandvalue/main.go:main"
+    ],
+    "go/ast": [
+      "gotypes/pkginfo/main.go:main",
+      "gotypes/typeandvalue/main.go:main",
+      "gotypes/defsuses/main.go:main",
+      "gotypes/lookup/lookup.go:main",
+      "gotypes/hugeparam/main.go:main",
+      "gotypes/doc/main.go:main",
+      "gotypes/nilfunc/main.go:main",
+      "gotypes/implements/main.go:main"
+    ],
+    "go/format": [
+      "gotypes/typeandvalue/main.go:main"
+    ],
+    "github.com/golang/example/stringutil": [
+      "hello/hello.go:main"
+    ],
+    "time": [
+      "outyet/main_test.go:main",
+      "outyet/main.go:main"
+    ],
+    "os": [
+      "gotypes/weave.go:main",
+      "gotypes/doc/main.go:main",
+      "gotypes/skeleton/main.go:main"
+    ],
+    "strings": [
+      "gotypes/weave.go:main",
+      "gotypes/lookup/lookup.go:main",
+      "gotypes/skeleton/main.go:main",
+      "outyet/main_test.go:main"
+    ]
+  },
+  "main_package_deps": {
+    "gotypes/weave.go": [
+      "bufio",
+      "bytes",
+      "fmt",
+      "log",
+      "os",
+      "path/filepath",
+      "regexp",
+      "strings"
+    ],
+    "gotypes/implements/main.go": [
+      "fmt",
+      "go/ast",
+      "go/importer",
+      "go/parser",
+      "go/token",
+      "go/types",
+      "log"
+    ],
+    "hello/hello.go": [
+      "fmt",
+      "github.com/golang/example/stringutil"
+    ],
+    "gotypes/defsuses/main.go": [
+      "fmt",
+      "go/ast",
+      "go/importer",
+      "go/parser",
+      "go/token",
+      "go/types",
+      "log"
+    ],
+    "gotypes/typeandvalue/main.go": [
+      "bytes",
+      "fmt",
+      "go/ast",
+      "go/format",
+      "go/importer",
+      "go/parser",
+      "go/token",
+      "go/types",
+      "log"
+    ],
+    "gotypes/skeleton/main.go": [
+      "fmt",
+      "golang.org/x/tools/go/loader",
+      "golang.org/x/tools/go/types",
+      "log",
+      "os",
+      "strings",
+      "unicode",
+      "unicode/utf8"
+    ],
+    "gotypes/hugeparam/main.go": [
+      "flag",
+      "fmt",
+      "go/ast",
+      "go/token",
+      "golang.org/x/tools/go/loader",
+      "golang.org/x/tools/go/types",
+      "log"
+    ],
+    "outyet/main.go": [
+      "expvar",
+      "flag",
+      "fmt",
+      "html/template",
+      "log",
+      "net/http",
+      "sync",
+      "time"
+    ],
+    "gotypes/pkginfo/main.go": [
+      "fmt",
+      "go/ast",
+      "go/importer",
+      "go/parser",
+      "go/token",
+      "go/types",
+      "log"
+    ],
+    "gotypes/nilfunc/main.go": [
+      "fmt",
+      "go/ast",
+      "go/importer",
+      "go/parser",
+      "go/token",
+      "go/types",
+      "log"
+    ],
+    "gotypes/doc/main.go": [
+      "fmt",
+      "go/ast",
+      "go/parser",
+      "golang.org/x/tools/go/loader",
+      "golang.org/x/tools/go/types/typeutil",
+      "log",
+      "os"
+    ],
+    "gotypes/hello/hello.go": [
+      "fmt"
+    ],
+    "gotypes/lookup/lookup.go": [
+      "fmt",
+      "go/ast",
+      "go/importer",
+      "go/parser",
+      "go/token",
+      "go/types",
+      "log",
+      "strings"
+    ]
+  }
+}

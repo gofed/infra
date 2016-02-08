@@ -76,6 +76,7 @@ class GoSymbolExtractor(MetaProcessor):
 		"""set implicit states"""
 		self.input_validated = False
 		self.directory = ""
+		self.input_schema = "%s/input_schema.json" % getScriptDir(__file__)
 
 	def setVerbose(self):
 		self.verbose = True
@@ -85,8 +86,7 @@ class GoSymbolExtractor(MetaProcessor):
 
 	def _validateInput(self, data):
 		validator = SchemaValidator()
-		schema = "%s/input_schema.json" % getScriptDir(__file__)
-		self.input_validated = validator.validateFromFile(schema, data)
+		self.input_validated = validator.validateFromFile(self.input_schema, data)
 		return self.input_validated
 
 	def setData(self, data):
