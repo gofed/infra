@@ -1,0 +1,29 @@
+{
+        "$schema": "http://json-schema.org/draft-04/schema#",
+        "title": "Golang project to package name",
+        "description": "Package name of project in distribution",
+        "type": "object",
+        "properties": {
+                "artefact": {
+                        "description": "Artefact name",
+                        "type": "string"
+                },
+                "product": {
+                        "description": "Product name",
+                        "type": "string"
+                },
+                "distribution": {
+                        "description": "Distribution name",
+                        "type" : "string"
+                },
+                "project": {
+                        "description": "Project name",
+                        "type": "string"
+                },
+                "name": {
+                        "description": "Package name",
+                        "type": "string"
+                }
+        },
+        "required": ["artefact", "product", "distribution", "project", "name"]
+}

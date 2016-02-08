@@ -1,0 +1,29 @@
+{
+	"$schema": "http://json-schema.org/draft-04/schema#",
+	"title": "Golang project distribution information",
+	"description": "General distribution related information about a project",
+	"type": "object",
+	"properties": {
+		"artefact": {
+			"description": "Artefact name",
+			"type": "string"
+		},
+		"distribution": {
+			"description": "Distribution",
+			"type": "string"
+		},
+		"project": {
+			"description": "Project name",
+			"type": "string"
+		},
+		"commit": {
+			"description": "Project's commit",
+			"type": "string"
+		},
+		"last-updated": {
+			"description": "Last date updated",
+			"type": "string"
+		}
+	},
+	"required": ["artefact", "distribution", "project", "commit", "last-updated"]
+}
