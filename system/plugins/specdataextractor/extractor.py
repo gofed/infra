@@ -91,7 +91,7 @@ class SpecDataExtractor(MetaProcessor):
 		artefact["product"] = self.product
 		artefact["distribution"] = self.distribution
 		artefact["project"] = self.project
-		artefact["package"] = self.package
+		artefact["name"] = self.package
 
 		return artefact
 
@@ -103,7 +103,9 @@ class SpecDataExtractor(MetaProcessor):
 		artefact["product"] = self.product
 		artefact["distribution"] = self.distribution
 		artefact["ipprefix"] = self.ipprefix
-		artefact["package"] = self.package
+		artefact["name"] = self.package
+
+		return artefact
 
 	def execute(self):
 		"""Impementation of concrete data processor"""
