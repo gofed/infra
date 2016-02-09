@@ -21,7 +21,7 @@ class FakeDistributionGoSymbolExtractor(FakeGoSymbolExtractor):
 		self.distribution = "f23"
 		self.build = "example-2.2.4-1.fc24"
 		self.rpm = "example-devel-2.2.4-1.fc24.noarch.rpm"
-		FakeGoSymbolExtractor.setData(self, data)
+		return FakeGoSymbolExtractor.setData(self, data)
 
 	def getData(self):
 		if not self.input_validated:
@@ -65,5 +65,4 @@ class FakeDistributionGoSymbolExtractor(FakeGoSymbolExtractor):
 		return artefact
 
 	def execute(self):
-		FakeGoSymbolExtractor.execute(self)
-		return True
+		return FakeGoSymbolExtractor.execute(self)

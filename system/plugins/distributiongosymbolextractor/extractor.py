@@ -25,7 +25,7 @@ class DistributionGoSymbolExtractor(GoSymbolExtractor):
 		self.distribution = data["distribution"]
 		self.build = data["build"]
 		self.rpm = data["rpm"]
-		GoSymbolExtractor.setData(self,data)
+		return GoSymbolExtractor.setData(self,data)
 
 	def getData(self):
 		if not self.input_validated:
@@ -68,4 +68,4 @@ class DistributionGoSymbolExtractor(GoSymbolExtractor):
 		return artefact
 
 	def execute(self):
-		GoSymbolExtractor.execute(self)
+		return GoSymbolExtractor.execute(self)
