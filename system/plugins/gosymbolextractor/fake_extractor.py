@@ -16,6 +16,8 @@ class FakeGoSymbolExtractor(GoSymbolExtractor):
 		self.input_validated = True
 		self.godeps_on = False
 
+		return True
+
 	def getData(self):
 		return GoSymbolExtractor.getData(self)
 
