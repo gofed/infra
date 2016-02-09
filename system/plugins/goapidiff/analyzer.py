@@ -346,10 +346,10 @@ class GoApiDiff(MetaProcessor):
 		com_fields = list(fields1_set & fields2_set)
 
 		for field in new_fields:
-			self.diff.append("+struct %s: new field '%s'" % (name, field))
+			self.diffs.append("+struct %s: new field '%s'" % (name, field))
 
 		for field in rem_fields:
-			self.diff.append("-struct %s: '%s' field removed" % (name, field))
+			self.diffs.append("-struct %s: '%s' field removed" % (name, field))
 
 		for field in com_fields:
 			self._compareDataType(fields1_types[field]["def"], fields2_types[field]["def"])
@@ -380,7 +380,7 @@ class GoApiDiff(MetaProcessor):
 	def _compareSelectors(self, selector1, selector2):
 		#
 		if selector1["item"] != selector2["item"]:
-			self.diff.append("-Selector differs in expression: %s != %s" % (selector1["item"], selector2["item"]))
+			self.diffs.append("-Selector differs in expression: %s != %s" % (selector1["item"], selector2["item"]))
 
 		self._compareDataType(selector1["prefix"], selector2["prefix"])
 
@@ -389,7 +389,7 @@ class GoApiDiff(MetaProcessor):
 		l1 = len(function1["params"])
 		l2 = len(function2["params"])
 		if l1 != l2:
-			self.diff.append("-function %s: parameter count changed: %s -> %s" % (name, l1, l2))
+			self.diffs.append("-function %s: parameter count changed: %s -> %s" % (name, l1, l2))
 			return
 
 		for i in range(0, l1):
@@ -399,7 +399,7 @@ class GoApiDiff(MetaProcessor):
 		l1 = len(function1["results"])
 		l2 = len(function2["results"])
 		if l1 != l2:
-			self.diff.append("-function %s: results count changed: %s -> %s" % (name, l1, l2))
+			self.diffs.append("-function %s: results count changed: %s -> %s" % (name, l1, l2))
 			return
 
 		for i in range(0, l1):
@@ -423,7 +423,7 @@ class GoApiDiff(MetaProcessor):
 
 	def _compareChannels(self, channel1, channel2):
 		if channel1["dir"] != channel2["dir"]:
-			self.diff.append("-Channels has different direction: %s -> %s" % (channel1["dir"], channel2["dir"]))
+			self.diffs.append("-Channels has different direction: %s -> %s" % (channel1["dir"], channel2["dir"]))
 
 		self._compareDataType(channel1["value"], channel2["value"])
 
