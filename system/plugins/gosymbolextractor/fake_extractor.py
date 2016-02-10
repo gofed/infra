@@ -2,6 +2,8 @@ from system.plugins.gosymbolextractor.extractor import GoSymbolExtractor
 from system.helpers.utils import getScriptDir
 import json
 import os
+
+
 class FakeGoSymbolExtractor(GoSymbolExtractor):
 	def __init__(self):
 		GoSymbolExtractor.__init__(self)

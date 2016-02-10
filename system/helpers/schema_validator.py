@@ -13,7 +13,7 @@ class SchemaValidator:
 		try:
 			with open(schema_file, "r") as f:
 				schema = json.load(f)
- 		except IOError, e:
+ 		except IOError as e:
 			logging.error("Unable to load schema from %s" % schema_file)
 			return False
 
@@ -24,7 +24,7 @@ class SchemaValidator:
 				jsonschema.Draft4Validator(schema, resolver=resolver).validate(json_data)
 			else:
 				jsonschema.validate(json_data, schema)
-		except jsonschema.ValidationError, e:
+		except jsonschema.ValidationError as e:
 			logging.error("Validation error: %s" % e)
 			return False
 
