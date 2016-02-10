@@ -85,13 +85,13 @@ class SpecModelDataProviderAct(MetaAct):
 					break
 
 		except FunctionNotFoundError as e:
-			print "spec-model-data-provider-act: %s" % e.err
+			print("spec-model-data-provider-act: %s" % e.err)
 			return False
 		except FunctionFailedError as e:
-			print "spec-model-data-provider-act: %s" % e.err
+			print("spec-model-data-provider-act: %s" % e.err)
 			return False
 		except types.ResourceNotFoundError as e:
-			print "spec-model-data-provider-act: %s" % e.err
+			print("spec-model-data-provider-act: %s" % e.err)
 			return False
 
 		return True

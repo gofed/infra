@@ -91,4 +91,4 @@ ff = FunctionFactory()
 data = ff.bake("goapidiff").call(data)
 ff.bake("etcdstoragewritter").call(data)
 
-print json.dumps(data)
+print(json.dumps(data))

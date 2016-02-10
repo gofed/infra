@@ -299,7 +299,7 @@ class SpecParser:
 				_, value = self.parseTag(line)
 				return value
 
-		print ""
+		print("")
 
 	def getRawSpecLines(self, spec):
 		"""
@@ -308,7 +308,7 @@ class SpecParser:
 		try:
 			with open(spec, 'r') as file:
 				return file.read().split('\n')
-		except IOError, e:
+		except IOError as e:
 			logging.error(e)
 			return []
 
