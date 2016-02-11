@@ -1,6 +1,7 @@
 from system.resources.client import ResourceClient
 from system.resources.types import RESOURCE_FIELD, ResourceNotFoundError
 from types import FunctionFailedError
+from gofed_resources.proposal.providerbuilder import ProviderBuilder
 
 class BasicFunction:
 	"""
@@ -24,8 +25,8 @@ class BasicFunction:
 		"""
 		# retrieve resource from resource client
 		if RESOURCE_FIELD in data:
-			client = ResourceClient(data[RESOURCE_FIELD])
-			if not client.retrieve():
+			client = ResourceClient(ProviderBuilder())
+			if not client.retrieve(data[RESOURCE_FIELD]):
 				raise ResourceNotFoundError("Unable to retrieve resource: %s" % data[RESOURCE_FIELD])
 
 			data[RESOURCE_FIELD] = client.getSubresource()
