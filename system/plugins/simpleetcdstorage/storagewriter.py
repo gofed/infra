@@ -3,12 +3,12 @@ import json
 from system.core.meta.metastoragewritter import MetaStorageWritter
 from artefactdriverfactory import ArtefactDriverFactory
 
-class StorageWritter(MetaStorageWritter):
+class StorageWriter(MetaStorageWritter):
 
 	def store(self, data):
 		"""Store artefact into storage
 
-		param data: artefact writtable to storage
+		param data: artefact writable to storage
 		type  data: dictionary
 		"""
 		if "artefact" not in data:

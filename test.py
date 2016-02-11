@@ -54,6 +54,9 @@ def storeExportedAPI():
 	ff.bake("etcdstoragewritter").call(exported_api1[1])
 	ff.bake("etcdstoragewritter").call(exported_api2[1])
 
+	ff.bake("etcdstoragewritter").call(exported_api1[0])
+	ff.bake("etcdstoragewritter").call(exported_api2[0])
+
 def retrieveExportedAPI():
 	data = {
 		"artefact": "golang-project-exported-api",
@@ -79,7 +82,7 @@ def retrieveExportedAPI():
 #driver.store(data[1])
 #exit(1)
 
-#storeExportedAPI()
+storeExportedAPI()
 
 exported_api1, exported_api2 = retrieveExportedAPI()
 data = {
@@ -89,6 +92,6 @@ data = {
 
 ff = FunctionFactory()
 data = ff.bake("goapidiff").call(data)
-ff.bake("etcdstoragewritter").call(data)
+ff.bake("etcdstoragewriter").call(data)
 
 print(json.dumps(data))

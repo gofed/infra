@@ -66,32 +66,36 @@ class SpecModelDataProviderAct(MetaAct):
 		"""Impementation of concrete data processor"""
 		try:
 			if self.input_type == INPUT_TYPE_UPSTREAM_SOURCE_CODE:
-				# TODO(jchaloup): check if the data are store in db
-				ok, data = self.ff.bake("etcdstoragereader").call({
+				ok, self.golang_project_packages = self.ff.bake("etcdstoragereader").call({
 					"artefact": ARTEFACT_GOLANG_PROJECT_PACKAGES,
 					"project": self.data["project"],
 					"commit": self.data["commit"]
 				})
-				print (ok, data)
-				exit(1)
-
-			# extract data from resource
-			data = self.ff.bake("gosymbolsextractor").call(self.data)
-			# get ARTEFACT_GOLANG_PROJECT_PACKAGES artefact
-			self.golang_project_packages = {}
-			for item in data:
-				if item["artefact"] == ARTEFACT_GOLANG_PROJECT_PACKAGES:
-					self.golang_project_packages = item
+				if not ok:
+					data = self.ff.bake("gosymbolsextractor").call(self.data)
+					self.golang_project_packages = data[0]
+					# store the data
+					# TODO(jchaloup): check it was actually successful
+					# TODO(jchaloup): this is for testing only, remove after switching to production
+					self.ff.bake("etcdstoragewriter").call(self.golang_project_packages)
+			else:
+				# extract data from resource
+				data = self.ff.bake("gosymbolsextractor").call(self.data)
+				for item in data:
+					if item["artefact"] == ARTEFACT_GOLANG_PROJECT_PACKAGES:
+						self.golang_project_packages = item
 					break
 
+				# TODO(jchaloup): check self.golang_project_packages != {}
+
 		except FunctionNotFoundError as e:
-			print("spec-model-data-provider-act: %s" % e.err)
+			print "spec-model-data-provider-act: %s" % e
 			return False
 		except FunctionFailedError as e:
-			print("spec-model-data-provider-act: %s" % e.err)
+			print "spec-model-data-provider-act: %s" % e
 			return False
 		except types.ResourceNotFoundError as e:
-			print("spec-model-data-provider-act: %s" % e.err)
+			print "spec-model-data-provider-act: %s" % e
 			return False
 
 		return True
