@@ -6,7 +6,7 @@
 },
 {
 "id": "etcdstoragewritter",
-"class": "StorageWritter",
-"file": "storagewritter.py",
+"class": "StorageWriter",
+"file": "storagewriter.py",
 "version": "1.0-alpha1"
 }]
