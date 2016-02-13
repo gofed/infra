@@ -5,8 +5,6 @@ import json
 from system.helpers.artefact_schema_validator import ArtefactSchemaValidator
 from system.helpers.schema_validator import SchemaValidator
 from system.helpers.utils import getScriptDir, runCommand
-from coder import GoTypeCoder
-
 from gofed_lib import gosymbolsextractor
 
 CONFIG_SOURCE_CODE_DIRECTORY = "resource"

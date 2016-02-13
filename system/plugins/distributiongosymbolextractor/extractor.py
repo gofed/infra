@@ -7,7 +7,6 @@ from system.artefacts.artefacts import (
 	ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_EXPORTED_API
 )
 
-
 class DistributionGoSymbolExtractor(GoSymbolExtractor):
 
 	def __init__(self):
@@ -17,15 +16,19 @@ class DistributionGoSymbolExtractor(GoSymbolExtractor):
 		self.distribution = ""
 		self.rpm = ""
 		self.build = ""
-		self.noGodeps = []
 		self.input_schema = "%s/input_schema.json" % getScriptDir(__file__)
 
 	def setData(self, data):
+		if not GoSymbolExtractor.setData(self, data):
+			return False
+
 		self.product = data["product"]
 		self.distribution = data["distribution"]
 		self.build = data["build"]
 		self.rpm = data["rpm"]
-		return GoSymbolExtractor.setData(self,data)
+		self.commit = data["commit"]
+
+		return True
 
 	def getData(self):
 		if not self.input_validated:
@@ -54,6 +57,7 @@ class DistributionGoSymbolExtractor(GoSymbolExtractor):
 		artefact["distribution"] = self.product
 		artefact["rpm"] = self.rpm
 		artefact["build"] = self.build
+		artefact["commit"] = self.commit
 
 		return artefact
 
@@ -64,6 +68,7 @@ class DistributionGoSymbolExtractor(GoSymbolExtractor):
 		artefact["distribution"] = self.product
 		artefact["rpm"] = self.rpm
 		artefact["build"] = self.build
+		artefact["commit"] = self.commit
 
 		return artefact
 

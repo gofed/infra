@@ -1,0 +1,6 @@
+{
+"id": "distributiongosymbolsextractor",
+"class": "DistributionGoSymbolExtractor",
+"file": "extractor.py",
+"version": "1.0-alpha1"
+}

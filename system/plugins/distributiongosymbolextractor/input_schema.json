@@ -34,7 +34,7 @@
 			"description": "Project name",
 			"type": "string"
 		},
-		"source_code_directory": {
+		"resource": {
 			"description": "Directory with Go source codes",
 			"type": "string"
 		},
@@ -55,7 +55,7 @@
 		"build",
 		"rpm",
 		"project",
-		"source_code_directory",
+		"resource",
 		"commit"
 	]
 }
