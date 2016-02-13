@@ -7,13 +7,17 @@ from system.artefacts.artefacts import (
 	ARTEFACT_GOLANG_IPPREFIX_TO_PACKAGE_NAME
 )
 from system.helpers.artefact_schema_validator import ArtefactSchemaValidator
-from system.helpers.schema_validator import SchemaValidator
 from system.helpers.utils import getScriptDir
 from SpecParser import SpecParser
 
 class SpecDataExtractor(MetaProcessor):
 
 	def __init__(self):
+		MetaProcessor.__init__(
+			self,
+			"%s/input_schema.json" % getScriptDir(__file__)
+		)
+
 		# received data
 		self.specfile = ""
 		self.distribution = ""
@@ -26,19 +30,12 @@ class SpecDataExtractor(MetaProcessor):
 		self.ipprefix = ""
 		self.lastupdated = ""
 
-	def _validateInput(self, data):
-		validator = SchemaValidator()
-		schema = "%s/input_schema.json" % getScriptDir(__file__)
-		self.input_validated = validator.validateFromFile(schema, data)
-		return self.input_validated
-
 	def setData(self, data):
 		"""Validation and data pre-processing"""
-		self.input_validated = False
-		self.data = data
-
 		if not self._validateInput(data):
 			return False
+
+		self.data = data
 
 		self.product = data["product"]
 		self.distribution = data["distribution"]
@@ -52,18 +49,21 @@ class SpecDataExtractor(MetaProcessor):
 		data = []
 
 		data.append(self._generateGolangProjectInfoFedora())
+		# TODO(jchaloup): move validation to unit-tests
 		validator = ArtefactSchemaValidator(ARTEFACT_GOLANG_PROJECT_INFO_FEDORA)
 		if not validator.validate(data[0]):
 			logging.error("%s is not valid" % ARTEFACT_GOLANG_PROJECT_INFO_FEDORA)
 			return {}
 
 		data.append(self._generateGolangProjectToPackageName())
+		# TODO(jchaloup): move validation to unit-tests
 		validator = ArtefactSchemaValidator(ARTEFACT_GOLANG_PROJECT_TO_PACKAGE_NAME)
 		if not validator.validate(data[1]):
 			logging.error("%s is not valid" % ARTEFACT_GOLANG_PROJECT_TO_PACKAGE_NAME)
 			return {}
 
 		data.append(self._generateGolangIPPrefixToPackageName())
+		# TODO(jchaloup): move validation to unit-tests
 		validator = ArtefactSchemaValidator(ARTEFACT_GOLANG_IPPREFIX_TO_PACKAGE_NAME)
 		if not validator.validate(data[2]):
 			logging.error("%s is not valid" % ARTEFACT_GOLANG_IPPREFIX_TO_PACKAGE_NAME)

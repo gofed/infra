@@ -3,7 +3,6 @@ from system.artefacts.artefacts import ARTEFACT_GOLANG_PROJECT_PACKAGES, ARTEFAC
 import logging
 import json
 from system.helpers.artefact_schema_validator import ArtefactSchemaValidator
-from system.helpers.schema_validator import SchemaValidator
 from system.helpers.utils import getScriptDir, runCommand
 from gofed_lib import gosymbolsextractor
 
@@ -37,8 +36,12 @@ class GoSymbolsExtractor(MetaProcessor):
 	 are passed via class methods.
 	"""
 
+	def __init__(self, input_schema = "%s/input_schema.json" % getScriptDir(__file__)):
+		MetaProcessor.__init__(
+			self,
+			input_schema
+		)
 
-	def __init__(self):
 		"""Setting implicit flags"""
 		self.verbose = False
 		self.skip_errors = False
@@ -52,9 +55,7 @@ class GoSymbolsExtractor(MetaProcessor):
 		self.ipprefix = ""
 
 		"""set implicit states"""
-		self.input_validated = False
 		self.directory = ""
-		self.input_schema = "%s/input_schema.json" % getScriptDir(__file__)
 
 		self.gosymbolsextractor = None
 
@@ -64,13 +65,7 @@ class GoSymbolsExtractor(MetaProcessor):
 	def setSkipErrors(self):
 		self.skip_errors = True
 
-	def _validateInput(self, data):
-		validator = SchemaValidator()
-		self.input_validated = validator.validateFromFile(self.input_schema, data)
-		return self.input_validated
-
 	def setData(self, data):
-		self.input_validated = False
 		self.data = data
 
 		if not self._validateInput(data):
@@ -103,9 +98,6 @@ class GoSymbolsExtractor(MetaProcessor):
 		return True
 
 	def getData(self):
-		if not self.input_validated:
-			return []
-
 		data = []
 
 		data.append(self._generateGolangProjectPackagesArtefact())

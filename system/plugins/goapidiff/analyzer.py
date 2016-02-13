@@ -1,6 +1,5 @@
 from system.core.meta.metaprocessor import MetaProcessor
 from system.helpers.artefact_schema_validator import ArtefactSchemaValidator
-from system.helpers.schema_validator import SchemaValidator
 from system.artefacts.artefacts import ARTEFACT_GOLANG_PROJECTS_API_DIFF
 import logging
 from system.helpers.utils import getScriptDir
@@ -20,13 +19,15 @@ class GoApiDiff(MetaProcessor):
 	"""
 
 	def __init__(self):
-		self.input_validated = False
+		MetaProcessor.__init__(
+			self,
+			"%s/input_schema.json" % getScriptDir(__file__),
+			ref_schema_directory = "%s/../../artefacts/schemas" % getScriptDir(__file__)
+		)
 		self.apidiff = None
 
 	def _validateInput(self, data):
-		validator = SchemaValidator("%s/../../artefacts/schemas" % getScriptDir(__file__))
-		schema_file = "%s/input_schema.json" % getScriptDir(__file__)
-		if not validator.validateFromFile(schema_file, data):
+		if not MetaProcessor._validateInput(self, data):
 			return False
 
 		# projects must be the same
@@ -39,8 +40,7 @@ class GoApiDiff(MetaProcessor):
 
 	def setData(self, data):
 		"""Validation and data pre-processing"""
-		self.input_validated = self._validateInput(data)
-		if not self.input_validated:
+		if not self._validateInput(data):
 			return False
 
 		self.apidiff = goapidiff.GoApiDiff(
@@ -56,14 +56,10 @@ class GoApiDiff(MetaProcessor):
 
 	def getData(self):
 		"""Validation and data post-processing"""
-		if not self.input_validated:
-			return {}
-
 		return self._generateGolangProjectsAPIDiffArtefact()
 
 	def _generateGolangProjectsAPIDiffArtefact(self):
-
-		apidiff_obj = {
+		return {
 			"artefact": ARTEFACT_GOLANG_PROJECTS_API_DIFF,
 			"project": self.project,
 			"commit1": self.commit1,
@@ -71,13 +67,7 @@ class GoApiDiff(MetaProcessor):
 			"data": self.apidiff.getProjectsApiDiff()
 		}
 
-		return apidiff_obj
-
 	def execute(self):
 		"""Impementation of concrete data processor"""
-		if not self.input_validated:
-			logging.error("goapidiff: invalid input")
-			return False
-
 		return self.apidiff.runDiff()
 

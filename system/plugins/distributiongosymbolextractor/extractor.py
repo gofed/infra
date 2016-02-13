@@ -10,13 +10,15 @@ from system.artefacts.artefacts import (
 class DistributionGoSymbolExtractor(GoSymbolsExtractor):
 
 	def __init__(self):
-		GoSymbolsExtractor.__init__(self)
+		GoSymbolsExtractor.__init__(
+			self,
+			"%s/input_schema.json" % getScriptDir(__file__)
+		)
 
 		self.product = ""
 		self.distribution = ""
 		self.rpm = ""
 		self.build = ""
-		self.input_schema = "%s/input_schema.json" % getScriptDir(__file__)
 
 	def setData(self, data):
 		if not GoSymbolsExtractor.setData(self, data):
@@ -31,18 +33,17 @@ class DistributionGoSymbolExtractor(GoSymbolsExtractor):
 		return True
 
 	def getData(self):
-		if not self.input_validated:
-			return []
-
 		data = []
 
 		data.append(self._generateGolangProjectDistributionPackagesArtefact())
+		# TODO(jchaloup): move validation to unit-tests
 		validator = ArtefactSchemaValidator(ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_PACKAGES)
 		if not validator.validate(data[0]):
 			logging.error("%s is not valid" % ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_PACKAGES)
 			return {}
 
 		data.append(self._generateGolangProjectDistributionExportedAPI())
+		# TODO(jchaloup): move validation to unit-tests
 		validator = ArtefactSchemaValidator(ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_EXPORTED_API)
 		if not validator.validate(data[1]):
 			logging.error("%s is not valid" % ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_EXPORTED_API)

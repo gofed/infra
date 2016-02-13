@@ -1,3 +1,5 @@
+from system.helpers.schema_validator import SchemaValidator
+
 class MetaProcessor:
 	"""
 	Abstract class that each analysis, extractor
@@ -14,6 +16,13 @@ class MetaProcessor:
 	https://github.com/gofed/infra/issues/8
 	"""
 
+	def __init__(self, schema, ref_schema_directory = ""):
+		self.schema = schema
+		if ref_schema_directory != "":
+			self.validator = SchemaValidator(ref_schema_directory)
+		else:
+			self.validator = SchemaValidator()
+
 	def setData(self, data):
 		"""Validation and data pre-processing"""
 		raise NotImplementedError
@@ -26,4 +35,6 @@ class MetaProcessor:
 		"""Impementation of concrete data processor"""
 		raise NotImplementedError
 
+	def _validateInput(self, data):
+		return self.validator.validateFromFile(self.schema, data)
 
