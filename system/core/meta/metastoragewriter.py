@@ -1,4 +1,4 @@
-class MetaStorageWritter:
+class MetaStorageWriter:
 
 	def store(self, data):
 		"""Store artefact into storage

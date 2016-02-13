@@ -1,9 +1,9 @@
 import logging
 import json
-from system.core.meta.metastoragewritter import MetaStorageWritter
+from system.core.meta.metastoragewriter import MetaStorageWriter
 from artefactdriverfactory import ArtefactDriverFactory
 
-class StorageWriter(MetaStorageWritter):
+class StorageWriter(MetaStorageWriter):
 
 	def store(self, data):
 		"""Store artefact into storage

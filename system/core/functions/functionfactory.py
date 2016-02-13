@@ -3,7 +3,7 @@ from storagefunction import StorageFunction
 from system.helpers.utils import getScriptDir
 from system.core.meta.metaprocessor import MetaProcessor
 from system.core.meta.metastoragereader import MetaStorageReader
-from system.core.meta.metastoragewritter import MetaStorageWritter
+from system.core.meta.metastoragewriter import MetaStorageWriter
 from types import FunctionNotFoundError
 
 import os
@@ -67,7 +67,7 @@ class FunctionFactory:
 		obj = getattr(module, self.recipes[function_ID]["class"])()
 		if isinstance(obj, MetaProcessor):
 			return BasicFunction(obj)
-		elif isinstance(obj, MetaStorageReader) or isinstance(obj, MetaStorageWritter):
+		elif isinstance(obj, MetaStorageReader) or isinstance(obj, MetaStorageWriter):
 			return StorageFunction(obj)
 
 		raise FunctionNotFoundError("function %s not bakeable: function kind not supported" % function_ID)
