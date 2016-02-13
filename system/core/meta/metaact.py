@@ -1,3 +1,6 @@
+from system.helpers.schema_validator import SchemaValidator
+from system.core.functions.functionfactory import FunctionFactory
+
 class MetaAct:
 	"""
 	Abstract class for all acts.
@@ -14,6 +17,10 @@ class MetaAct:
 	TODO:
 	[  ] - specify request and response for each act
 	"""
+
+	def __init__(self, schema):
+		self.schema = schema
+		self.ff = FunctionFactory()
 
 	def process(self):
 		"""Implementation of request handler"""
@@ -38,3 +45,8 @@ class MetaAct:
 		"""TODO: how to get data from act? Is this general enough?"""
 		raise NotImplementedError
 
+	def _validateInput(self, data):
+		return SchemaValidator().validateFromFile(
+			self.schema,
+			data
+		)
