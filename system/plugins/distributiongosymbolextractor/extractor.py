@@ -1,4 +1,4 @@
-from system.plugins.gosymbolextractor.extractor import GoSymbolExtractor
+from system.plugins.gosymbolextractor.extractor import GoSymbolsExtractor
 from system.helpers.artefact_schema_validator import ArtefactSchemaValidator
 import logging
 from system.helpers.utils import getScriptDir
@@ -7,10 +7,10 @@ from system.artefacts.artefacts import (
 	ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_EXPORTED_API
 )
 
-class DistributionGoSymbolExtractor(GoSymbolExtractor):
+class DistributionGoSymbolExtractor(GoSymbolsExtractor):
 
 	def __init__(self):
-		GoSymbolExtractor.__init__(self)
+		GoSymbolsExtractor.__init__(self)
 
 		self.product = ""
 		self.distribution = ""
@@ -19,7 +19,7 @@ class DistributionGoSymbolExtractor(GoSymbolExtractor):
 		self.input_schema = "%s/input_schema.json" % getScriptDir(__file__)
 
 	def setData(self, data):
-		if not GoSymbolExtractor.setData(self, data):
+		if not GoSymbolsExtractor.setData(self, data):
 			return False
 
 		self.product = data["product"]
@@ -51,7 +51,7 @@ class DistributionGoSymbolExtractor(GoSymbolExtractor):
 		return data
 
 	def _generateGolangProjectDistributionPackagesArtefact(self):
-		artefact = GoSymbolExtractor._generateGolangProjectPackagesArtefact(self)
+		artefact = GoSymbolsExtractor._generateGolangProjectPackagesArtefact(self)
 
 		artefact["artefact"] = ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_PACKAGES
 		artefact["product"] = self.distribution
@@ -63,7 +63,7 @@ class DistributionGoSymbolExtractor(GoSymbolExtractor):
 		return artefact
 
 	def _generateGolangProjectDistributionExportedAPI(self):
-		artefact = GoSymbolExtractor._generateGolangProjectExportedAPI(self)
+		artefact = GoSymbolsExtractor._generateGolangProjectExportedAPI(self)
 
 		artefact["artefact"] = ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_EXPORTED_API
 		artefact["product"] = self.distribution
@@ -75,4 +75,4 @@ class DistributionGoSymbolExtractor(GoSymbolExtractor):
 		return artefact
 
 	def execute(self):
-		return GoSymbolExtractor.execute(self)
+		return GoSymbolsExtractor.execute(self)
