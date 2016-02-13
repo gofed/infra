@@ -53,6 +53,7 @@ class DistributionGoSymbolExtractor(GoSymbolExtractor):
 	def _generateGolangProjectDistributionPackagesArtefact(self):
 		artefact = GoSymbolExtractor._generateGolangProjectPackagesArtefact(self)
 
+		artefact["artefact"] = ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_PACKAGES
 		artefact["product"] = self.distribution
 		artefact["distribution"] = self.product
 		artefact["rpm"] = self.rpm
@@ -64,6 +65,7 @@ class DistributionGoSymbolExtractor(GoSymbolExtractor):
 	def _generateGolangProjectDistributionExportedAPI(self):
 		artefact = GoSymbolExtractor._generateGolangProjectExportedAPI(self)
 
+		artefact["artefact"] = ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_EXPORTED_API
 		artefact["product"] = self.distribution
 		artefact["distribution"] = self.product
 		artefact["rpm"] = self.rpm

@@ -13,7 +13,7 @@ DATA_PROJECT = "project"
 DATA_COMMIT = "commit"
 DATA_IPPREFIX = "ipprefix"
 
-class GoSymbolExtractor(MetaProcessor):
+class GoSymbolsExtractor(MetaProcessor):
 	"""
 	Input:
 	 - directory to parse
