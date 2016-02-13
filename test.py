@@ -1,5 +1,7 @@
 from system.artefacts import artefacts
 from system.core.functions.functionfactory import FunctionFactory
+from system.resources.specifier import ResourceSpecifier
+from system.resources import types
 
 import logging
 import json
@@ -16,6 +18,8 @@ def getAPI():
 		"ipprefix": "github.com/bradfitz/http2"
 	}
 
+	data["resource"] = ResourceSpecifier().generateUserDirectory(data["resource"], type = types.RESOURCE_TYPE_DIRECTORY)
+
 	ff = FunctionFactory()
 	return ff.bake("gosymbolsextractor").call(data)
 
@@ -28,6 +32,8 @@ def getAPI1():
 		"commit": "b4bddf685b26b4aa70e939445044bdeac822d042",
 		"ipprefix": "github.com/coreos/etcd"
 	}
+
+	data["resource"] = ResourceSpecifier().generateUserDirectory(data["resource"], type = types.RESOURCE_TYPE_DIRECTORY)
 
 	ff = FunctionFactory()
 	return ff.bake("gosymbolsextractor").call(data)
@@ -42,6 +48,8 @@ def getAPI2():
 		"ipprefix": "github.com/coreos/etcd"
 	}
 
+	data["resource"] = ResourceSpecifier().generateUserDirectory(data["resource"], type = types.RESOURCE_TYPE_DIRECTORY)
+
 	ff = FunctionFactory()
 	return ff.bake("gosymbolsextractor").call(data)
 
@@ -51,11 +59,11 @@ def storeExportedAPI():
 
 	# store the data
 	ff = FunctionFactory()
-	ff.bake("etcdstoragewritter").call(exported_api1[1])
-	ff.bake("etcdstoragewritter").call(exported_api2[1])
+	ff.bake("etcdstoragewriter").call(exported_api1[1])
+	ff.bake("etcdstoragewriter").call(exported_api2[1])
 
-	ff.bake("etcdstoragewritter").call(exported_api1[0])
-	ff.bake("etcdstoragewritter").call(exported_api2[0])
+	ff.bake("etcdstoragewriter").call(exported_api1[0])
+	ff.bake("etcdstoragewriter").call(exported_api2[0])
 
 def retrieveExportedAPI():
 	data = {
@@ -82,13 +90,16 @@ def retrieveExportedAPI():
 #driver.store(data[1])
 #exit(1)
 
-storeExportedAPI()
+#storeExportedAPI()
 
 exported_api1, exported_api2 = retrieveExportedAPI()
 data = {
 	"exported_api_1": exported_api1,
 	"exported_api_2": exported_api2
 }
+
+#print json.dumps(exported_api2)
+#exit(1)
 
 ff = FunctionFactory()
 data = ff.bake("goapidiff").call(data)
