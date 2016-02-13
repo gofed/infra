@@ -26,6 +26,7 @@ class SchemaValidator:
 				jsonschema.validate(json_data, schema)
 		except jsonschema.ValidationError as e:
 			logging.error("Validation error: %s" % e)
+			# TODO(jchaloup): raise InvalidData or something
 			return False
 
 		return True
