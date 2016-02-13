@@ -11,6 +11,13 @@
 			"type": "object",
 			"description": "Upstream source codes",
 			"properties": {
+				"type": {
+					"type": "string",
+					"description": "Input type",
+					"oneOf": [
+						{"enum": ["upstream_source_code"]}
+					]
+				},
 				"project": {
 					"type": "string",
 					"description": "Project name",
@@ -37,13 +44,20 @@
 					"uniqueItems": true
 				}
 			},
-			"required": ["project", "commit", "ipprefix", "directories_to_skip"],
+			"required": ["type", "project", "commit", "ipprefix", "directories_to_skip"],
 			"additionalProperties": false
 		},
 		"user_directory": {
 			"type": "object",
 			"description": "Upstream source codes",
 			"properties": {
+				"type": {
+					"type": "string",
+					"description": "Input type",
+					"oneOf": [
+						{"enum": ["user_directory"]}
+					]
+				},
 				"ipprefix": {
 					"type": "string",
 					"description": "Import path prefix",
@@ -65,7 +79,7 @@
 					"minLength": 1
 				}
 			},
-			"required": ["ipprefix", "directories_to_skip", "resource"],
+			"required": ["type", "ipprefix", "directories_to_skip", "resource"],
 			"additionalProperties": false
 		}
 	}
