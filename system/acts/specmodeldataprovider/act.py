@@ -84,7 +84,7 @@ class SpecModelDataProviderAct(MetaAct):
 					self.golang_project_packages = item
 				break
 
-		if self.golang_project_packages != {}:
+		if self.golang_project_packages == {}:
 			return False
 
 		# TODO(jchaloup): move exception handling to act user
