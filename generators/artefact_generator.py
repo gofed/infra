@@ -19,32 +19,8 @@ class %s(MetaArtefactKeyGenerator):
 		return delimiter.join(keys)
 """
 
-class KeyClassGenerator:
-
-	def __init__(self, key_spec):
-		self.key_spec = key_spec
-		self._generate()
-
-	def _generate(self):
-		self._class_name = "%sKeyGenerator" % "".join(map(lambda i: i.capitalize(), self.key_spec["id"].split("-")))
-		self._class_keys = '["' + '", "'.join(self.key_spec["keys"]) + '"]'
-		self._class_filename_ext = "%s.py" % self.key_spec["id"].replace("-", "")
-		self._class_filename = self.key_spec["id"].replace("-", "")
-
-	def class_name(self):
-		return self._class_name
-
-	def class_keys(self):
-		return self._class_keys
-
-	def class_filename(self):
-		return self._class_filename
-
-	def class_filename_ext(self):
-		return self._class_filename_ext
-
-def generateClass(key_spec):
-	obj = KeyClassGenerator(key_spec)
+def generateKeyClass(key_spec):
+	obj = ClassGenerator(key_spec)
 
 	if "delimiter" not in key_spec:
 		delimiter = ":"
@@ -53,19 +29,19 @@ def generateClass(key_spec):
 
 	return class_template % (obj.class_name(), delimiter, obj.class_keys(), key_spec["id"])
 
-def generateFF(key_spec):
+def generateKeyFF(key_spec):
 	lines = []
 	lines.append("from system.artefacts import artefacts")
 
 	for key in key_spec:
-		obj = KeyClassGenerator(key)
+		obj = ClassGenerator(key)
 		lines.append("from %s import %s" % (obj.class_filename(), obj.class_name()))
 
 	lines.append("\nclass KeyGeneratorFactory:\n")
 	lines.append("\tdef build(self, artefact):\n")
 
 	for key in key_spec:
-		obj = KeyClassGenerator(key)
+		obj = ClassGenerator(key)
 
 		lines.append("\t\tif artefact == artefacts.%s:" % key["artefact"])
 		lines.append("\t\t\treturn %s()\n" % obj.class_name())
@@ -75,10 +51,11 @@ def generateFF(key_spec):
 	return "\n".join(lines)
 
 if __name__ == "__main__":
-	with open("keys.json", "r") as f:
+	with open("artefacts.json", "r") as f:
 		keys = json.load(f)
 
-	with open("keygenerator.py", "w") as f:
+	# generate key generator
+	with open("system/helpers/artefactkeygenerator/keygenerator.py", "w") as f:
 		f.write(generateFF(keys))
 	exit(1)
 

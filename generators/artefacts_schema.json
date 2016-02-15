@@ -1,7 +1,7 @@
 {
 	"$schema": "http://json-schema.org/draft-04/schema#",
-	"title": "Artefact keys specification",
-	"description": "Specication for auto generated artefact key generators",
+	"title": "Artefacts specification",
+	"description": "Specication for auto generated artefact classes, e.g. key generators, drivers",
 	"type": "array",
 	"items": {
 		"type": "object",
