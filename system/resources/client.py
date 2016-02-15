@@ -3,6 +3,9 @@ import tarfile
 import tempfile
 import uuid
 from shutil import move
+from gofed_lib.utils import runCommand
+from gofed_lib.helpers import Build
+import os
 
 class ResourceClient:
 	"""Communication with resource provider and retrieve requested resources.
@@ -27,41 +30,48 @@ class ResourceClient:
 		"""
 		raise NotImplementedError
 
-	def retrieve(self, descriptor):
-		"""Retrieve subresource specified in descriptor
-		"""
-		# self._validate()
-		print descriptor
-		if descriptor["resource"] == types.RESOURCE_USER_DIRECTORY:
-			# No need to download and extract the directory
-			# It is located on a host
-			if descriptor["location"].startswith("file://"):
-				if descriptor["resource-type"] == types.RESOURCE_TYPE_DIRECTORY:
-					# TODO(jchaloup): check if the directory exists
-					self.subresource = descriptor["location"][7:]
-					return True
-				# Extract the directory
-				#elif self.descriptor["resource-type"] == types.RESOURCE_TYPE_TARBALL:
-		elif descriptor["resource"] == types.RESOURCE_UPSTREAM_SOURCE_CODES:
-			provider = self.provider.buildGithubSourceCodeProvider()
-			# TODO(jchaloup): catch exceptions from provide(...)
-			resource_location =  provider.provide(descriptor["project"], descriptor["commit"])
-			# if the provider runs locally, provider is responsible for deleting resource_location
-			# if the provider runs remotelly, client is responsible for deleting resource_location
+	def _handleUpstreamSourceCode(self, project, commit):
+		provider = self.provider.buildGithubSourceCodeProvider()
+		# TODO(jchaloup): catch exceptions from provide(...)
+		resource_location =  provider.provide(project, commit)
+		# if the provider runs locally, provider is responsible for deleting resource_location
+		# if the provider runs remotelly, client is responsible for deleting resource_location
+		# resource_location is expected as a tarball
+		# resource_location is read only, don't delete it!!!
+		# extract the tarball
+		# TODO(jchaloup): catch exceptions for tarfile
+		tar = tarfile.open(resource_location)
+		dirpath = tempfile.mkdtemp()
+		tar.extractall(dirpath)
+		rootdir = ""
+		for member in tar.getmembers():
+			rootdir = member.name.split("/")[0]
+			break
+		tar.close()
 
-			# resource_location is expected as a tarball
-			print resource_location
-			# resource_location is read only, don't delete it!!!
-			# extract the tarball
-			# TODO(jchaloup): catch exceptions for tarfile
-			tar = tarfile.open(resource_location)
+		# move the temp directory under working directory
+		resource_dest = "%s/%s_%s%s" % (
+			self.working_directory,
+			self.__class__.__name__.lower(),
+			uuid.uuid4().hex,
+			uuid.uuid4().hex
+		)
+		# TODO(jchaloup): catch exception and raise better one with more info
+		move(dirpath, resource_dest)
+		return "%s/%s" % (resource_dest, rootdir)
+
+	def _handleRpm(self, product, distribution, build, rpm, subresource):
+			provider = self.provider.buildRpmProvider()
+			# TODO(jchaloup): catch exceptions from provide(...)
+			# product, distribution, build, rpm
+			resource_location =  provider.provide(product, distribution, build, rpm)
+
+			# TODO(jchaloup): use python module (e.g. github.com/srossross/rpmfile)
 			dirpath = tempfile.mkdtemp()
-			tar.extractall(dirpath)
-			rootdir = ""
-			for member in tar.getmembers():
-				rootdir = member.name.split("/")[0]
-				break
-			tar.close()
+			cwd = os.getcwd()
+			os.chdir(dirpath)
+			runCommand("rpm2cpio %s | cpio -idmv" % resource_location)
+			os.chdir(cwd)
 
 			# move the temp directory under working directory
 			resource_dest = "%s/%s_%s%s" % (
@@ -73,7 +83,44 @@ class ResourceClient:
 			# TODO(jchaloup): catch exception and raise better one with more info
 			move(dirpath, resource_dest)
 
-			self.subresource = "%s/%s" % (resource_dest, rootdir)
+			if subresource == types.SUBRESOURCE_SPECFILE:
+				return "%s/%s.spec" % (resource_dest, Build(build).name())
+			elif subresource == types.SUBRESOURCE_DIRECTORY_TREE:
+				# TODO(jchaloup): return correct directory under /usr/share/gocode/src
+				#	src can contain more projects as rpm can ship more source codes
+				#	with different ipprefixes.
+				return resource_dest
+
+			raise ValueError("Invalid resource specification")
+
+
+	def retrieve(self, descriptor):
+		"""Retrieve subresource specified in descriptor
+		"""
+		# self._validate()
+		resource_type = descriptor["resource"]
+		if resource_type == types.RESOURCE_USER_DIRECTORY:
+			# No need to download and extract the directory
+			# It is located on a host
+			if descriptor["location"].startswith("file://"):
+				if descriptor["resource-type"] == types.RESOURCE_TYPE_DIRECTORY:
+					# TODO(jchaloup): check if the directory exists
+					self.subresource = descriptor["location"][7:]
+					return True
+				# Extract the directory
+				#elif self.descriptor["resource-type"] == types.RESOURCE_TYPE_TARBALL:
+		elif resource_type == types.RESOURCE_UPSTREAM_SOURCE_CODES:
+			self.subresource = self._handleUpstreamSourceCode(descriptor["project"], descriptor["commit"])
+			return True
+
+		elif resource_type == types.RESOURCE_RPM:
+			self.subresource = self._handleRpm(
+				descriptor["product"],
+				descriptor["distribution"],
+				descriptor["build"],
+				descriptor["rpm"],
+				descriptor["subresource"]
+			)
 			return True
 
 		raise NotImplementedError()

@@ -9,6 +9,17 @@
 			"description": "Product, e.g Fedora, CentOS, etc.",
 			"minLength": 1
 		},
+		"distribution": {
+			"description": "Distribution name",
+			"type": "string",
+			"minLength": 1
+
+		},
+		"build": {
+			"description": "Build name",
+			"type": "string",
+			"minLength": 1
+		},
 		"rpm": {
 			"type": "string",
 			"description": "Requested rpm",

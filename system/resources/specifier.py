@@ -7,7 +7,7 @@ class ResourceSpecifier:
 	It only specifies what resource is request
 	and what is expecting form of its subresource.
 	"""
-	def generateRpm(self, product, distribution, rpm, subresource = types.SUBRESOURCE_DIRECTORY_TREE):
+	def generateRpm(self, product, distribution, build, rpm, subresource = types.SUBRESOURCE_DIRECTORY_TREE):
 		"""Generate resource specifier for distribution rpm.
 
 		:param product: OS Product (e.g. Fedora, CentOS, etc.).
@@ -21,6 +21,8 @@ class ResourceSpecifier:
 		"""
 		return {
 			"product": product,	# Fedora => Koji, CentOs => CentOS Koji, etc.
+			"distribution": distribution,
+			"build": build,
 			"rpm": rpm,
 			"resource": types.RESOURCE_RPM,
 			"resource-type": types.RESOURCE_TYPE_RPM,

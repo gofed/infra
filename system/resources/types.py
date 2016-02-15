@@ -7,6 +7,7 @@ RESOURCE_TYPE_RPM = "rpm"
 RESOURCE_TYPE_TARBALL = "tarball"
 
 SUBRESOURCE_DIRECTORY_TREE = "directory-tree"
+SUBRESOURCE_SPECFILE = "specfile"
 
 RESOURCE_FIELD = "resource"
 
