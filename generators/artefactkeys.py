@@ -1,10 +1,10 @@
 import json
+from classhelper import ClassHelper
 
-class_template = """
-from system.core.meta.metaartefactkeygenerator import MetaArtefactKeyGenerator
+class_template = """from system.core.meta.metaartefactkeygenerator import MetaArtefactKeyGenerator
 import logging
 
-class %s(MetaArtefactKeyGenerator):
+class %sKeyGenerator(MetaArtefactKeyGenerator):
 
 	def generate(self, data, delimiter = "%s"):
 		# return a list of fields
@@ -20,7 +20,7 @@ class %s(MetaArtefactKeyGenerator):
 """
 
 def generateKeyClass(key_spec):
-	obj = ClassGenerator(key_spec)
+	obj = ClassHelper(key_spec)
 
 	if "delimiter" not in key_spec:
 		delimiter = ":"
@@ -34,35 +34,35 @@ def generateKeyFF(key_spec):
 	lines.append("from system.artefacts import artefacts")
 
 	for key in key_spec:
-		obj = ClassGenerator(key)
-		lines.append("from %s import %s" % (obj.class_filename(), obj.class_name()))
+		obj = ClassHelper(key)
+		lines.append("from %s import %sKeyGenerator" % (obj.class_filename(), obj.class_name()))
 
 	lines.append("\nclass KeyGeneratorFactory:\n")
 	lines.append("\tdef build(self, artefact):\n")
 
 	for key in key_spec:
-		obj = ClassGenerator(key)
+		obj = ClassHelper(key)
 
 		lines.append("\t\tif artefact == artefacts.%s:" % key["artefact"])
-		lines.append("\t\t\treturn %s()\n" % obj.class_name())
+		lines.append("\t\t\treturn %sKeyGenerator()\n" % obj.class_name())
 
 	lines.append("\t\traise ValueError(\"Invalid artefact: %s\" % artefact)")
 
 	return "\n".join(lines)
 
 if __name__ == "__main__":
-	with open("artefacts.json", "r") as f:
+	with open("generators/artefacts.json", "r") as f:
 		keys = json.load(f)
 
-	# generate key generator
+	# generate key factory
 	with open("system/helpers/artefactkeygenerator/keygenerator.py", "w") as f:
-		f.write(generateFF(keys))
-	exit(1)
+		f.write(generateKeyFF(keys))
+		print "system/helpers/artefactkeygenerator/keygenerator.py"
 
+	# generate artefact key generators
 	for key in keys:
-		class_def = generateClass(key)
-		class_file_name = "%s.py" % key["id"].replace("-", "")
-		with open(class_file_name, "w") as f:
+		obj = ClassHelper(key)
+		class_def = generateKeyClass(key)
+		with open("system/helpers/artefactkeygenerator/%s" % obj.class_filename_ext(), "w") as f:
 			f.write(class_def)
-			class_name = "%sKeyGenerator" % "".join(map(lambda i: i.capitalize(), key["id"].split("-")))
-			print "class %s written into %s" % (class_name, class_file_name)
+			print "system/helpers/artefactkeygenerator/%s" % obj.class_filename_ext()

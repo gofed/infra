@@ -5,7 +5,7 @@ class ClassHelper:
 		self._generate()
 
 	def _generate(self):
-		self._class_name = "%sKeyGenerator" % "".join(map(lambda i: i.capitalize(), self.key_spec["id"].split("-")))
+		self._class_name = "".join(map(lambda i: i.capitalize(), self.key_spec["id"].split("-")))
 		self._class_keys = '["' + '", "'.join(self.key_spec["keys"]) + '"]'
 		self._class_filename_ext = "%s.py" % self.key_spec["id"].replace("-", "")
 		self._class_filename = self.key_spec["id"].replace("-", "")
