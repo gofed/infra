@@ -56,6 +56,7 @@ class GoSymbolsExtractor(MetaProcessor):
 
 		"""set implicit states"""
 		self.directory = ""
+		self.noGodeps = []
 
 		self.gosymbolsextractor = None
 
