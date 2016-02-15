@@ -5,9 +5,7 @@ from system.core.functions.types import FunctionNotFoundError, FunctionFailedErr
 from system.helpers.schema_validator import SchemaValidator
 from system.helpers.utils import getScriptDir
 from system.artefacts.artefacts import ARTEFACT_GOLANG_PROJECT_INFO_FEDORA, ARTEFACT_GOLANG_IPPREFIX_TO_PACKAGE_NAME
-
-from gofed_lib.helpers import Rpm, Build
-
+from gofed_lib.helpers import Build
 import json
 
 class ScanDistributionBuildAct(MetaAct):
@@ -77,7 +75,13 @@ class ScanDistributionBuildAct(MetaAct):
 		# extract api for each rpm
 		for rpm in self.rpms:
 			# generate resource specification for rpm
-			resource = ResourceSpecifier().generateRpm(self.product, self.distribution, self.build, rpm["name"])
+			resource = ResourceSpecifier().generateRpm(
+				self.product,
+				self.distribution,
+				self.build,
+				rpm["name"]
+			)
+
 			data = {
 				"product": self.product,
 				"directories_to_skip": rpm["skipped_directories"],

@@ -14,6 +14,8 @@ class ResourceSpecifier:
 		:type  product: str
 		:param distribution: distribution of OS (e.g. F22, centos7, etc.).
 		:type  distribution: str
+		:param build: build which contain required rpm.
+		:type  build: str
 		:param rpm: rpm which contain required subresource.
 		:type  rpm: str
 		:param subresource: demanded subresource (e.g. directory tree, spec file, etc.)
