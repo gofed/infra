@@ -1,0 +1,40 @@
+[{
+	"id": "golang-project-distribution-exported-api",
+	"artefact": "ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_EXPORTED_API",
+	"keys": ["artefact", "product", "distribution", "build", "rpm"]
+},
+{
+	"id": "golang-project-distribution-packages",
+	"artefact": "ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_PACKAGES",
+	"keys": ["artefact", "product", "distribution", "build", "rpm"]
+},
+{
+	"id": "golang-ipprefix-to-package-name",
+	"artefact": "ARTEFACT_GOLANG_IPPREFIX_TO_PACKAGE_NAME",
+	"keys": ["artefact", "product", "distribution", "ipprefix"]
+},
+{
+	"id": "golang-project-exported-api",
+	"artefact": "ARTEFACT_GOLANG_PROJECT_EXPORTED_API",
+	"keys": ["artefact", "project", "commit"]
+},
+{
+	"id": "golang-project-packages",
+	"artefact": "ARTEFACT_GOLANG_PROJECT_PACKAGES",
+	"keys": ["artefact", "project", "commit"]
+},
+{
+	"id": "golang-project-info-fedora",
+	"artefact": "ARTEFACT_GOLANG_PROJECT_INFO_FEDORA",
+	"keys": ["artefact", "project", "distribution"]
+},
+{
+	"id": "golang-project-api-diff",
+	"artefact": "ARTEFACT_GOLANG_PROJECTS_API_DIFF",
+	"keys": ["artefact", "project", "commit1", "commit2"]
+},
+{
+	"id": "golang-project-to-package-name",
+	"artefact": "ARTEFACT_GOLANG_PROJECT_TO_PACKAGE_NAME",
+	"keys": ["artefact", "product", "distribution", "project"]
+}]

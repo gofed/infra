@@ -1,0 +1,39 @@
+{
+	"$schema": "http://json-schema.org/draft-04/schema#",
+	"title": "Artefact keys specification",
+	"description": "Specication for auto generated artefact key generators",
+	"type": "array",
+	"items": {
+		"type": "object",
+		"properties": {
+			"id": {
+				"type": "string",
+				"description": "Artefact ID",
+				"minLength": 1
+			},
+			"artefact": {
+				"type": "object",
+				"description": "Artefact constant",
+				"minLength": 1
+			},
+			"keys": {
+				"type": "array",
+				"description": "Ordered list of keys for artefact key generator",
+				"items": {
+					"type": "string",
+					"description": "Key",
+					"minLength": 1
+				},
+				"uniqueItems": true
+			},
+			"delimiter": {
+				"type": "string",
+				"description": "Delimiter",
+				"minLength": 1,
+				"maxLength": 1
+			}
+		},
+		"requires": ["id", "artefact", "keys"]
+	},
+	"uniqueItems": true
+}

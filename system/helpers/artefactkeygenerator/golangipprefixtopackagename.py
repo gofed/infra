@@ -1,17 +1,8 @@
+
 from system.core.meta.metaartefactkeygenerator import MetaArtefactKeyGenerator
 import logging
 
-class GolangIPPrefixToPackageNameKeyGenerator(MetaArtefactKeyGenerator):
-	"""
-	Artefact in question:
-	{
-	"artefact": "golang-project-to-package-name",
-	"product": "Fedora|RHEL",
-	"distribution": "f21|f22|rhel-7.2|centos-7",
-	"ipprefix": "github.com/coreos/etcd",
-	"name": "etcd"
-	}
-	"""
+class GolangIpprefixToPackageNameKeyGenerator(MetaArtefactKeyGenerator):
 
 	def generate(self, data, delimiter = ":"):
 		# return a list of fields
@@ -24,5 +15,3 @@ class GolangIPPrefixToPackageNameKeyGenerator(MetaArtefactKeyGenerator):
 			keys.append(data[key])
 
 		return delimiter.join(keys)
-
-
