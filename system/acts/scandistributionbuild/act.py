@@ -4,7 +4,12 @@ from system.resources import types
 from system.core.functions.types import FunctionNotFoundError, FunctionFailedError
 from system.helpers.schema_validator import SchemaValidator
 from system.helpers.utils import getScriptDir
-from system.artefacts.artefacts import ARTEFACT_GOLANG_PROJECT_INFO_FEDORA, ARTEFACT_GOLANG_IPPREFIX_TO_PACKAGE_NAME
+from system.artefacts.artefacts import (
+	ARTEFACT_GOLANG_PROJECT_INFO_FEDORA,
+	ARTEFACT_GOLANG_IPPREFIX_TO_PACKAGE_NAME,
+	ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_PACKAGES,
+	ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_EXPORTED_API
+)
 from gofed_lib.helpers import Build
 import json
 
@@ -17,6 +22,7 @@ class ScanDistributionBuildAct(MetaAct):
 		)
 
 		self.exported_api = {}
+		self.packages = {}
 
 	def setData(self, data):
 		"""Validation and data pre-processing"""
@@ -36,6 +42,36 @@ class ScanDistributionBuildAct(MetaAct):
 
 	def execute(self):
 		"""Impementation of concrete data processor"""
+
+		# check storage
+		# I can not check for spec file specific macros as I need project
+		# to get artefact from a storage. Without the project I can not
+		# get artefact from a storage.
+
+		missing_rpms = []
+		for rpm in self.rpms:
+			rpm_name = rpm["name"]
+			data = {
+				"artefact": ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_PACKAGES,
+				"product": self.product,
+				"distribution": self.distribution,
+				"build": self.build,
+				"rpm": rpm_name,
+			}
+
+			ok, self.packages[rpm_name] = self.ff.bake("etcdstoragereader").call(data)
+			if not ok:
+				missing_rpms.append(rpm)
+				continue
+
+			data["artefact"] = ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_EXPORTED_API
+			ok, self.exported_api[rpm_name] = self.ff.bake("etcdstoragereader").call(data)
+			if not ok:
+				missing_rpms.append(rpm)
+				continue
+
+		if missing_rpms == []:
+			return True
 
 		# parse build's srpm
 		srpm = Build(self.build).srpm()
@@ -72,8 +108,8 @@ class ScanDistributionBuildAct(MetaAct):
 				ipprefix = artefact["ipprefix"]
 				continue
 
-		# extract api for each rpm
-		for rpm in self.rpms:
+		# extract api for each missing rpm
+		for rpm in missing_rpms:
 			# generate resource specification for rpm
 			resource = ResourceSpecifier().generateRpm(
 				self.product,
@@ -96,5 +132,8 @@ class ScanDistributionBuildAct(MetaAct):
 
 			data = self.ff.bake("distributiongosymbolsextractor").call(data)
 			self.exported_api[rpm["name"]] = data
+			# TODO(jchaloup): only for testing purposes
+			for artefact in data:
+				data = self.ff.bake("etcdstoragewriter").call(artefact)
 
 		return True
