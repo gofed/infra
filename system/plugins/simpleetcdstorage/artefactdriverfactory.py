@@ -1,31 +1,39 @@
 from system.artefacts import artefacts
-from golang_ipprefix_to_package_name_driver import GolangIPPrefixToPackageNameDriver
-from golang_project_exported_api_driver import GolangProjectExportedAPIDriver
-from golang_project_info_fedora_driver import GolangProjectInfoFedoraDriver
-from golang_projects_api_diff_driver import GolangProjectsAPIDiffDriver
-from golang_project_to_package_name_driver import GolangProjectToPackageNameDriver
-from golang_project_packages_driver import GolangProjectPackagesDriver
+from golangprojectdistributionexportedapi import GolangProjectDistributionExportedApiDriver
+from golangprojectdistributionpackages import GolangProjectDistributionPackagesDriver
+from golangipprefixtopackagename import GolangIpprefixToPackageNameDriver
+from golangprojectexportedapi import GolangProjectExportedApiDriver
+from golangprojectpackages import GolangProjectPackagesDriver
+from golangprojectinfofedora import GolangProjectInfoFedoraDriver
+from golangprojectapidiff import GolangProjectApiDiffDriver
+from golangprojecttopackagename import GolangProjectToPackageNameDriver
 
 class ArtefactDriverFactory:
 
 	def build(self, artefact):
 
+		if artefact == artefacts.ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_EXPORTED_API:
+			return GolangProjectDistributionExportedApiDriver()
+
+		if artefact == artefacts.ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_PACKAGES:
+			return GolangProjectDistributionPackagesDriver()
+
 		if artefact == artefacts.ARTEFACT_GOLANG_IPPREFIX_TO_PACKAGE_NAME:
-			return GolangIPPrefixToPackageNameDriver()
+			return GolangIpprefixToPackageNameDriver()
 
 		if artefact == artefacts.ARTEFACT_GOLANG_PROJECT_EXPORTED_API:
-			return GolangProjectExportedAPIDriver()
-
-		if artefact == artefacts.ARTEFACT_GOLANG_PROJECT_INFO_FEDORA:
-			return GolangProjectInfoFedoraDriver()
-
-		if artefact == artefacts.ARTEFACT_GOLANG_PROJECT_TO_PACKAGE_NAME:
-			return GolangProjectToPackageNameDriver()
-
-		if artefact == artefacts.ARTEFACT_GOLANG_PROJECTS_API_DIFF:
-			return GolangProjectsAPIDiffDriver()
+			return GolangProjectExportedApiDriver()
 
 		if artefact == artefacts.ARTEFACT_GOLANG_PROJECT_PACKAGES:
 			return GolangProjectPackagesDriver()
 
-		return None
+		if artefact == artefacts.ARTEFACT_GOLANG_PROJECT_INFO_FEDORA:
+			return GolangProjectInfoFedoraDriver()
+
+		if artefact == artefacts.ARTEFACT_GOLANG_PROJECTS_API_DIFF:
+			return GolangProjectApiDiffDriver()
+
+		if artefact == artefacts.ARTEFACT_GOLANG_PROJECT_TO_PACKAGE_NAME:
+			return GolangProjectToPackageNameDriver()
+
+		raise ValueError("Invalid artefact: %s" % artefact)
