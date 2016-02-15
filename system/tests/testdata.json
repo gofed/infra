@@ -1,0 +1,75 @@
+{
+    "testdatadir": "testdata",
+    "projects": [
+        {
+            "name": "github.com/coreos/etcd",
+            "clone_url": "https://github.com/coreos/etcd",
+            "commits": [
+                "b4bddf685b26b4aa70e939445044bdeac822d042",
+                "bdee27b19e8601ffd7bd4f0481abe9bbae04bd09"
+            ],
+            "skip_dirs": ["Godeps", "hack"]
+        },
+        {
+            "name": "github.com/eBay/fabio",
+            "clone_url": "https://github.com/eBay/fabio",
+            "commits": ["5e24a09752a75f30448f43773cb529e8ce02ce93"],
+            "skip_dirs": ["_third_party"]
+        },
+        {
+            "name": "github.com/PuerkitoBio/agora",
+            "clone_url": "https://github.com/PuerkitoBio/agora",
+            "commits": ["fc5914daad197185f2b2fc1873b2084f0e86b6b4"],
+            "skip_dirs": []
+        },
+        {
+            "name": "github.com/hectane/hectane",
+            "clone_url": "https://github.com/hectane/hectane",
+            "commits": ["87062ba605491392423da3e75b1512cfe6350337"],
+            "skip_dirs": []
+        },
+        {
+            "name": "github.com/mozilla-services/heka",
+            "clone_url": "https://github.com/mozilla-services/heka",
+            "commits": ["149c483a52f0f4c9ea50b73805feebed1b7c45c3"],
+            "skip_dirs": []
+        },
+        {
+            "name": "github.com/pingcap/tidb",
+            "clone_url": "https://github.com/pingcap/tidb",
+            "commits": ["482dc3f06c438c320e1fc64ff02a5479d2a989fb"],
+            "skip_dirs": ["Godeps"]
+        },
+        {
+            "name": "github.com/cznic/ql",
+            "clone_url": "https://github.com/cznic/ql",
+            "commits": ["77545ff365ff426dfab06c46d70fa77600cd55af"],
+            "skip_dirs": []
+        },
+        {
+            "name": "github.com/google/cayley",
+            "clone_url": "https://github.com/google/cayley",
+            "commits": ["792fe5d42c4dd4d967c3db2e30bd380fcdfb3151"],
+            "skip_dirs": ["Godeps"]
+        },
+        {
+            "name": "github.com/influxdata/influxdb",
+            "clone_url": "https://github.com/influxdata/influxdb",
+            "commits": [
+                "f326c6c0e4349a6f9bca056571b01ded81a2887c",
+                "688bc7a2f1877b524a3c915ae1ff7981267fcb49",
+                "d771eb72f708c523bb2bec35a97f6bb83ae4ef1d"
+            ],
+            "skip_dirs": []
+        },
+        {
+            "name": "github.com/google/martian",
+            "clone_url": "https://github.com/google/martian",
+            "commits": [
+                "4d4cb10a32e7f1237228d58ecf95c571b0947a11",
+                "1afb734cc2eb3a5dab708a901ee07106a94a9186"
+            ],
+            "skip_dirs": []
+        }
+    ]
+}
