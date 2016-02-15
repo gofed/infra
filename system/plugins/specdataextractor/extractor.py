@@ -40,7 +40,7 @@ class SpecDataExtractor(MetaProcessor):
 		self.product = data["product"]
 		self.distribution = data["distribution"]
 		self.package = data ["package"]
-		self.specfile = data["specfile"]
+		self.specfile = data["resource"]
 
 		return True
 
@@ -139,7 +139,9 @@ class SpecDataExtractor(MetaProcessor):
 			logging.error("last changelog not found")
 			return False
 		try:
-			self.lastupdated = datetime.strptime(header.split('-')[0],"* %a %b %d %Y ").strftime("%Y-%m-%d")
+			# TODO(jchaloup): preprocess the line before converting to date
+			date_data = " ".join(header.split('-')[0].split(" ")[:-5])
+			self.lastupdated = datetime.strptime(date_data,"* %a %b %d %Y").strftime("%Y-%m-%d")
 		except ValueError as e:
 			logging.error("invalid changelog header format")
 			return False
