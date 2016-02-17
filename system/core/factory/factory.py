@@ -1,4 +1,4 @@
-from system.helpers.utils import getScriptDir
+from infra.system.helpers.utils import getScriptDir
 
 import os
 import json

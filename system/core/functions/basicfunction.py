@@ -1,5 +1,5 @@
-from system.resources.client import ResourceClient
-from system.resources.types import RESOURCE_FIELD, ResourceNotFoundError
+from infra.system.resources.client import ResourceClient
+from infra.system.resources.types import RESOURCE_FIELD, ResourceNotFoundError
 from types import FunctionFailedError
 from gofed_resources.proposal.providerbuilder import ProviderBuilder
 

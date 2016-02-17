@@ -1,5 +1,5 @@
 from artefactdriver import ArtefactDriver
-from system.artefacts.artefacts import ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_EXPORTED_API
+from infra.system.artefacts.artefacts import ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_EXPORTED_API
 
 class GolangProjectDistributionExportedApiDriver(ArtefactDriver):
 

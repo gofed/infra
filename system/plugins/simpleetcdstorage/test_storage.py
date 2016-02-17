@@ -1,6 +1,6 @@
-from system.artefacts import artefacts
+from infra.system.artefacts import artefacts
 from artefactdriverfactory import ArtefactDriverFactory
-from system.helpers.jsoncomparator import DirectJSONComparator
+from infra.system.helpers.jsoncomparator import DirectJSONComparator
 
 import unittest
 import json

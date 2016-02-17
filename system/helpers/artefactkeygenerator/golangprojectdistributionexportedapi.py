@@ -1,4 +1,4 @@
-from system.core.meta.metaartefactkeygenerator import MetaArtefactKeyGenerator
+from infra.system.core.meta.metaartefactkeygenerator import MetaArtefactKeyGenerator
 import logging
 
 class GolangProjectDistributionExportedApiKeyGenerator(MetaArtefactKeyGenerator):

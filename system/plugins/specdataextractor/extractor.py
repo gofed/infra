@@ -1,13 +1,13 @@
-from system.core.meta.metaprocessor import MetaProcessor
+from infra.system.core.meta.metaprocessor import MetaProcessor
 import logging
 from datetime import datetime
-from system.artefacts.artefacts import (
+from infra.system.artefacts.artefacts import (
 	ARTEFACT_GOLANG_PROJECT_TO_PACKAGE_NAME,
 	ARTEFACT_GOLANG_PROJECT_INFO_FEDORA,
 	ARTEFACT_GOLANG_IPPREFIX_TO_PACKAGE_NAME
 )
-from system.helpers.artefact_schema_validator import ArtefactSchemaValidator
-from system.helpers.utils import getScriptDir
+from infra.system.helpers.artefact_schema_validator import ArtefactSchemaValidator
+from infra.system.helpers.utils import getScriptDir
 from SpecParser import SpecParser
 
 class SpecDataExtractor(MetaProcessor):

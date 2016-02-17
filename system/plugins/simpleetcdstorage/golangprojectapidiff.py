@@ -1,5 +1,5 @@
 from artefactdriver import ArtefactDriver
-from system.artefacts.artefacts import ARTEFACT_GOLANG_PROJECTS_API_DIFF
+from infra.system.artefacts.artefacts import ARTEFACT_GOLANG_PROJECTS_API_DIFF
 
 class GolangProjectApiDiffDriver(ArtefactDriver):
 

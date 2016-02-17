@@ -7,8 +7,8 @@ import tempfile
 
 import git
 
-from system.tests.utils import ProjectID
-from system.plugins.gosymbolextractor.extractor import GoSymbolExtractor
+from infra.system.tests.utils import ProjectID
+from infra.system.plugins.gosymbolextractor.extractor import GoSymbolExtractor
 
 
 CONFIG_FILE_NAME = 'testdata.json'

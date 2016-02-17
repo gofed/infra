@@ -1,5 +1,5 @@
 from artefactdriver import ArtefactDriver
-from system.artefacts.artefacts import ARTEFACT_GOLANG_IPPREFIX_TO_PACKAGE_NAME
+from infra.system.artefacts.artefacts import ARTEFACT_GOLANG_IPPREFIX_TO_PACKAGE_NAME
 
 class GolangIpprefixToPackageNameDriver(ArtefactDriver):
 

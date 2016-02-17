@@ -1,9 +1,9 @@
 import unittest
-from system.artefacts.artefacts import ARTEFACT_GOLANG_PROJECT_PACKAGES
-from system.artefacts.artefacts import ARTEFACT_GOLANG_PROJECT_EXPORTED_API
-from system.artefacts.artefacts import ARTEFACT_GOLANG_PROJECT_INFO_FEDORA
-from system.artefacts.artefacts import ARTEFACT_GOLANG_PROJECT_TO_PACKAGE_NAME
-from system.artefacts.artefacts import ARTEFACT_GOLANG_IPPREFIX_TO_PACKAGE_NAME
+from infra.system.artefacts.artefacts import ARTEFACT_GOLANG_PROJECT_PACKAGES
+from infra.system.artefacts.artefacts import ARTEFACT_GOLANG_PROJECT_EXPORTED_API
+from infra.system.artefacts.artefacts import ARTEFACT_GOLANG_PROJECT_INFO_FEDORA
+from infra.system.artefacts.artefacts import ARTEFACT_GOLANG_PROJECT_TO_PACKAGE_NAME
+from infra.system.artefacts.artefacts import ARTEFACT_GOLANG_IPPREFIX_TO_PACKAGE_NAME
 
 from keygenerator import KeyGeneratorFactory
 

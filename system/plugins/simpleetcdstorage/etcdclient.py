@@ -1,4 +1,4 @@
-from system.helpers.utils import runCommand
+from infra.system.helpers.utils import runCommand
 import logging
 import tempfile
 

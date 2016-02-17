@@ -1,9 +1,9 @@
-from system.core.meta.metaartefactdriver import MetaArtefactDriver
+from infra.system.core.meta.metaartefactdriver import MetaArtefactDriver
 from etcdclient import EtcdClient
 import json
 import logging
-from system.helpers.artefactkeygenerator.keygenerator import KeyGeneratorFactory
-from system.artefacts import artefacts
+from infra.system.helpers.artefactkeygenerator.keygenerator import KeyGeneratorFactory
+from infra.system.artefacts import artefacts
 
 class ArtefactDriver(MetaArtefactDriver):
 

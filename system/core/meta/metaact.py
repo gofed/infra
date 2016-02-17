@@ -1,5 +1,5 @@
-from system.helpers.schema_validator import SchemaValidator
-from system.core.factory.functionfactory import FunctionFactory
+from infra.system.helpers.schema_validator import SchemaValidator
+from infra.system.core.factory.functionfactory import FunctionFactory
 
 class MetaAct:
 	"""

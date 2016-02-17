@@ -1,10 +1,10 @@
-from system.helpers.artefact_schema_validator import ArtefactSchemaValidator
+from infra.system.helpers.artefact_schema_validator import ArtefactSchemaValidator
 import logging
-from system.artefacts.artefacts import (
+from infra.system.artefacts.artefacts import (
 	ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_PACKAGES,
 	ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_EXPORTED_API
 )
-from system.plugins.gosymbolextractor.fake_extractor import FakeGoSymbolExtractor
+from infra.system.plugins.gosymbolextractor.fake_extractor import FakeGoSymbolExtractor
 
 
 class FakeDistributionGoSymbolExtractor(FakeGoSymbolExtractor):

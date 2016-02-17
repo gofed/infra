@@ -1,4 +1,4 @@
-from system.artefacts import artefacts
+from infra.system.artefacts import artefacts
 from golangprojectdistributionexportedapi import GolangProjectDistributionExportedApiKeyGenerator
 from golangprojectdistributionpackages import GolangProjectDistributionPackagesKeyGenerator
 from golangipprefixtopackagename import GolangIpprefixToPackageNameKeyGenerator

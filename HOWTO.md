@@ -3,7 +3,7 @@
 From root directory run:
 
 ```vim
-PYTHONPATH=$(pwd)/third_party python test.py
+PYTHONPATH=$(pwd)/third_party:$(pwd)/../ python test.py
 ```
 
 ## Integrating new plugin

@@ -1,4 +1,4 @@
-from system.plugins.specdataextractor.extractor import SpecDataExtractor
+from infra.system.plugins.specdataextractor.extractor import SpecDataExtractor
 
 
 class FakeSpecDataExtractor(SpecDataExtractor):

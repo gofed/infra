@@ -1,6 +1,6 @@
 import logging
 import json
-from system.core.meta.metastoragewriter import MetaStorageWriter
+from infra.system.core.meta.metastoragewriter import MetaStorageWriter
 from artefactdriverfactory import ArtefactDriverFactory
 
 class StorageWriter(MetaStorageWriter):

@@ -1,5 +1,5 @@
-from system.core.meta.metastoragereader import MetaStorageReader
-from system.core.meta.metastoragewriter import MetaStorageWriter
+from infra.system.core.meta.metastoragereader import MetaStorageReader
+from infra.system.core.meta.metastoragewriter import MetaStorageWriter
 from types import FunctionFailedError
 
 class StorageFunction:

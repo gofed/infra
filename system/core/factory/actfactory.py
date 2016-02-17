@@ -1,6 +1,6 @@
 from factory import Factory
-from system.helpers.utils import getScriptDir
-from system.core.meta.metaact import MetaAct
+from infra.system.helpers.utils import getScriptDir
+from infra.system.core.meta.metaact import MetaAct
 
 class ActFactory(Factory):
 	"""

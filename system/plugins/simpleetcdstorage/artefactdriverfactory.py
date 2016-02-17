@@ -1,4 +1,4 @@
-from system.artefacts import artefacts
+from infra.system.artefacts import artefacts
 from golangprojectdistributionexportedapi import GolangProjectDistributionExportedApiDriver
 from golangprojectdistributionpackages import GolangProjectDistributionPackagesDriver
 from golangipprefixtopackagename import GolangIpprefixToPackageNameDriver

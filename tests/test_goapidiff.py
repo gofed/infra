@@ -3,8 +3,8 @@ import os
 
 import pytest
 
-from system.tests.utils import ProjectID
-from system.plugins.goapidiff.analyzer import GoApiDiff
+from infra.system.tests.utils import ProjectID
+from infra.system.plugins.goapidiff.analyzer import GoApiDiff
 
 
 CONFIG_FILE_NAME = 'goapidiff.json'

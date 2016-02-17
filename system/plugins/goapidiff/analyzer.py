@@ -1,8 +1,8 @@
-from system.core.meta.metaprocessor import MetaProcessor
-from system.helpers.artefact_schema_validator import ArtefactSchemaValidator
-from system.artefacts.artefacts import ARTEFACT_GOLANG_PROJECTS_API_DIFF
+from infra.system.core.meta.metaprocessor import MetaProcessor
+from infra.system.helpers.artefact_schema_validator import ArtefactSchemaValidator
+from infra.system.artefacts.artefacts import ARTEFACT_GOLANG_PROJECTS_API_DIFF
 import logging
-from system.helpers.utils import getScriptDir
+from infra.system.helpers.utils import getScriptDir
 from gofed_lib import goapidiff
 
 class GoApiDiff(MetaProcessor):

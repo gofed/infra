@@ -1,8 +1,8 @@
-from system.plugins.gosymbolextractor.extractor import GoSymbolsExtractor
-from system.helpers.artefact_schema_validator import ArtefactSchemaValidator
+from infra.system.plugins.gosymbolextractor.extractor import GoSymbolsExtractor
+from infra.system.helpers.artefact_schema_validator import ArtefactSchemaValidator
 import logging
-from system.helpers.utils import getScriptDir
-from system.artefacts.artefacts import (
+from infra.system.helpers.utils import getScriptDir
+from infra.system.artefacts.artefacts import (
 	ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_PACKAGES,
 	ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_EXPORTED_API
 )

@@ -1,4 +1,4 @@
-from system.helpers.schema_validator import SchemaValidator
+from infra.system.helpers.schema_validator import SchemaValidator
 
 class MetaProcessor:
 	"""

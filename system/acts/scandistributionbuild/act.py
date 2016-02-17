@@ -1,10 +1,10 @@
-from system.core.meta.metaact import MetaAct
-from system.resources.specifier import ResourceSpecifier
-from system.resources import types
-from system.core.functions.types import FunctionNotFoundError, FunctionFailedError
-from system.helpers.schema_validator import SchemaValidator
-from system.helpers.utils import getScriptDir
-from system.artefacts.artefacts import (
+from infra.system.core.meta.metaact import MetaAct
+from infra.system.resources.specifier import ResourceSpecifier
+from infra.system.resources import types
+from infra.system.core.functions.types import FunctionNotFoundError, FunctionFailedError
+from infra.system.helpers.schema_validator import SchemaValidator
+from infra.system.helpers.utils import getScriptDir
+from infra.system.artefacts.artefacts import (
 	ARTEFACT_GOLANG_PROJECT_INFO_FEDORA,
 	ARTEFACT_GOLANG_IPPREFIX_TO_PACKAGE_NAME,
 	ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_PACKAGES,
