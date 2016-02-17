@@ -17,17 +17,11 @@ class SchemaValidator:
 			logging.error("Unable to load schema from %s" % schema_file)
 			return False
 
-		# validate
-		try:
-			if self.base_directory != "":
-				resolver = jsonschema.RefResolver('file://' + self.base_directory + '/', schema)
-				jsonschema.Draft4Validator(schema, resolver=resolver).validate(json_data)
-			else:
-				jsonschema.validate(json_data, schema)
-		except jsonschema.ValidationError as e:
-			logging.error("Validation error: %s" % e)
-			# TODO(jchaloup): raise InvalidData or something
-			return False
+		if self.base_directory != "":
+			resolver = jsonschema.RefResolver('file://' + self.base_directory + '/', schema)
+			jsonschema.Draft4Validator(schema, resolver=resolver).validate(json_data)
+		else:
+			jsonschema.validate(json_data, schema)
 
 		return True
 
