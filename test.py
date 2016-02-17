@@ -1,5 +1,5 @@
 from system.artefacts import artefacts
-from system.core.functions.functionfactory import FunctionFactory
+from system.core.factory.functionfactory import FunctionFactory
 from system.resources.specifier import ResourceSpecifier
 from system.resources import types
 
