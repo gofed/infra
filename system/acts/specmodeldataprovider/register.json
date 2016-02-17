@@ -1,0 +1,6 @@
+{
+"id": "spec-model-data-provider",
+"class": "SpecModelDataProviderAct",
+"file": "act.py",
+"version": "1.0-alpha1"
+}

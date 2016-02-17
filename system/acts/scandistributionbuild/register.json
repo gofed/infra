@@ -1,0 +1,6 @@
+{
+"id": "scan-distribution-build",
+"class": "ScanDistributionBuildAct",
+"file": "act.py",
+"version": "1.0-alpha1"
+}
