@@ -67,22 +67,20 @@ class SpecModelDataProviderAct(MetaAct):
 				"commit": self.data["commit"]
 			})
 			if not ok:
-				data = self.ff.bake("gosymbolsextractor").call(self.data)
-				for item in data:
-					if item["artefact"] == ARTEFACT_GOLANG_PROJECT_PACKAGES:
-						self.golang_project_packages = item
-					break
+				self.golang_project_packages = self._getArtefactFromData(
+					ARTEFACT_GOLANG_PROJECT_PACKAGES,
+					self.ff.bake("gosymbolsextractor").call(self.data)
+				)
 
 				# store the data
 				# TODO(jchaloup): check it was actually successful
 				# TODO(jchaloup): this is for testing only, remove after switching to production
 				self.ff.bake("etcdstoragewriter").call(self.golang_project_packages)
 		else:
-			data = self.ff.bake("gosymbolsextractor").call(self.data)
-			for item in data:
-				if item["artefact"] == ARTEFACT_GOLANG_PROJECT_PACKAGES:
-					self.golang_project_packages = item
-				break
+			self.golang_project_packages = self._getArtefactFromData(
+				ARTEFACT_GOLANG_PROJECT_PACKAGES,
+				self.ff.bake("gosymbolsextractor").call(self.data)
+			)
 
 		if self.golang_project_packages == {}:
 			return False

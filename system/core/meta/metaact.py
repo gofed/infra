@@ -50,3 +50,10 @@ class MetaAct:
 			self.schema,
 			data
 		)
+
+	def _getArtefactFromData(self, artefact, data):
+		for item in data:
+			if item["artefact"] == artefact:
+				return  item
+
+		return {}
