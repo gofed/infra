@@ -1,0 +1,6 @@
+{
+"id": "go-code-inspection",
+"class": "GoCodeInspectionAct",
+"file": "act.py",
+"version": "1.0-alpha1"
+}

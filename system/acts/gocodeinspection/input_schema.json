@@ -1,0 +1,86 @@
+{
+	"$schema": "http://json-schema.org/draft-04/schema#",
+	"title": "Go code inspection act",
+	"description": "Definition of act providing data from inspected code",
+	"anyOf": [
+		{ "$ref": "#/definitions/upstream_source_code" },
+		{ "$ref": "#/definitions/user_directory" }
+	],
+	"definitions": {
+		"upstream_source_code": {
+			"type": "object",
+			"description": "Upstream source codes",
+			"properties": {
+				"type": {
+					"type": "string",
+					"description": "Input type",
+					"oneOf": [
+						{"enum": ["upstream_source_code"]}
+					]
+				},
+				"project": {
+					"type": "string",
+					"description": "Project name",
+					"minLength": 1
+				},
+				"commit": {
+					"type": "string",
+					"description": "Repository commit",
+					"minLength": 1
+				},
+				"ipprefix": {
+					"type": "string",
+					"description": "Import path prefix",
+					"minLength": 1
+				},
+				"directories_to_skip": {
+					"type": "array",
+					"description": "List of directories to skip",
+					"items": {
+						"type": "string",
+						"description": "Directory",
+						"minLength": 1
+					},
+					"uniqueItems": true
+				}
+			},
+			"required": ["type", "project", "commit", "ipprefix", "directories_to_skip"],
+			"additionalProperties": false
+		},
+		"user_directory": {
+			"type": "object",
+			"description": "Upstream source codes",
+			"properties": {
+				"type": {
+					"type": "string",
+					"description": "Input type",
+					"oneOf": [
+						{"enum": ["user_directory"]}
+					]
+				},
+				"ipprefix": {
+					"type": "string",
+					"description": "Import path prefix",
+					"minLength": 1
+				},
+				"directories_to_skip": {
+					"type": "array",
+					"description": "List of directories to skip",
+					"items": {
+						"type": "string",
+						"description": "Directory",
+						"minLength": 1
+					},
+					"uniqueItems": true
+				},
+				"resource": {
+					"type": "string",
+					"description": "User directory location",
+					"minLength": 1
+				}
+			},
+			"required": ["type", "ipprefix", "directories_to_skip", "resource"],
+			"additionalProperties": false
+		}
+	}
+}
