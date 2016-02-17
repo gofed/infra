@@ -10,8 +10,9 @@ class Factory:
 	"""
 	"""
 
-	def __init__(self, registration_directory):
+	def __init__(self, registration_directory, module_path):
 		self._registration_directory = registration_directory
+		self._module_path = module_path
 
 		self.recipes = {}
 		self._detectPlugins()
@@ -52,7 +53,7 @@ class Factory:
 			raise ValueError("Unable to find '%s' ID" % item_ID)
 
 		# TODO(jchaloup): catch exception, does the class exists, ... other checks
-		module = importlib.import_module("system.plugins.%s" % self.recipes[item_ID]["import"])
+		module = importlib.import_module("%s.%s" % (self._module_path, self.recipes[item_ID]["import"]))
 		if not hasattr(module, self.recipes[item_ID]["class"]):
 			raise ValueError("Unable to bake '%s': class '%s' not found" % (item_ID, self.recipes[item_ID]["class"]))
 

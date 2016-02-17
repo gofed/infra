@@ -8,7 +8,11 @@ class ActFactory(Factory):
 
 	def __init__(self):
 		# TODO(jchaloup): put plugins_dir into config file
-		Factory.__init__(self, "%s/../../acts" % getScriptDir(__file__))
+		Factory.__init__(
+			self,
+			"%s/../../acts" % getScriptDir(__file__),
+			"infra.system.acts"
+		)
 
 	def bake(self, item_ID):
 		obj = Factory.bake(self, item_ID)
