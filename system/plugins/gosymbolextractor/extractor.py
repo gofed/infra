@@ -92,6 +92,7 @@ class GoSymbolsExtractor(MetaProcessor):
 		self.gosymbolsextractor = gosymbolsextractor.GoSymbolsExtractor(
 			self.directory,
 			self.noGodeps,
+			self.ipprefix,
 			verbose = self.verbose,
 			skip_errors = self.skip_errors
 		)
