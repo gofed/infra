@@ -1,7 +1,5 @@
-class FunctionNotFoundError(RuntimeError):
-   def __init__(self, err):
-      self.err = err
+class FunctionNotFoundError(Exception):
+	pass
 
-class FunctionFailedError(RuntimeError):
-   def __init__(self, err):
-      self.err = err
+class FunctionFailedError(Exception):
+	pass
