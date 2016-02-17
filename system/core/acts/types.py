@@ -1,0 +1,2 @@
+class ActFailedError(Exception):
+	pass

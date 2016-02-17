@@ -1,6 +1,7 @@
 from factory import Factory
 from infra.system.helpers.utils import getScriptDir
 from infra.system.core.meta.metaact import MetaAct
+from infra.system.core.acts.basicact import BasicAct
 
 class ActFactory(Factory):
 	"""
@@ -17,6 +18,6 @@ class ActFactory(Factory):
 	def bake(self, item_ID):
 		obj = Factory.bake(self, item_ID)
 		if isinstance(obj, MetaAct):
-			return obj
+			return BasicAct(obj)
 
 		raise ValueError("act '%s' not bakeable: act kind not supported" % item_ID)
