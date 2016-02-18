@@ -6,6 +6,7 @@ import sys
 import tempfile
 
 import git
+import pycurl
 
 from infra.system.tests.utils import ProjectID
 from infra.system.plugins.gosymbolextractor.extractor import GoSymbolsExtractor
@@ -94,11 +95,37 @@ class TestDataFetcher(object):
         finally:
             shutil.rmtree(workdir, ignore_errors=True)
 
-    def fetch(self, targetdir, projects):
+    def _fetchPackage(self, targetdir, specfile_url, specfile, name):
+        self.logger.info('Fetching package "{}"'.format(name))
+        specfile = os.path.join(targetdir, specfile)
+        try:
+            with open(specfile, 'wb') as f:
+                curl = pycurl.Curl()
+                curl.setopt(pycurl.URL, specfile_url)
+                curl.setopt(pycurl.CONNECTTIMEOUT, 30)
+                curl.setopt(pycurl.FOLLOWLOCATION, 1)
+                curl.setopt(pycurl.MAXREDIRS, 5)
+                curl.setopt(pycurl.TIMEOUT, 300)
+                curl.setopt(pycurl.WRITEDATA, f)
+                curl.perform()
+                curl.close()
+        except (IOError, pycurl.error):
+            self.logger.error(
+                'Cannot download URL "{}" to "{}"'.format(
+                    specfile_url, specfile))
+            return
+
+    def fetchProjects(self, targetdir, projects):
         for project in projects:
             self._fetchProject(
                 targetdir, project['clone_url'], project['name'],
                 project['commits'], project['skip_dirs'])
+
+    def fetchPackages(self, targetdir, packages):
+        for package in packages:
+            self._fetchPackage(
+                targetdir, package['specfile_url'], package['specfile'],
+                package['name'])
 
 
 if __name__ == '__main__':
@@ -120,4 +147,7 @@ if __name__ == '__main__':
                 'Cannot create target directory "{}"'.format(
                     configuration['testdatadir']))
             sys.exit(1)
-    fetcher.fetch(configuration['testdatadir'], configuration['projects'])
+    fetcher.fetchProjects(
+        configuration['testdatadir'], configuration['projects'])
+    fetcher.fetchPackages(
+        configuration['testdatadir'], configuration['packages'])
