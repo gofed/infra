@@ -1,5 +1,5 @@
-from system.core.meta.metaartefactkeygenerator import MetaArtefactKeyGenerator
-from system.artefacts.artefacts import ARTEFACT_GOLANG_PROJECT_REPOSITORY_INFO
+from infra.system.core.meta.metaartefactkeygenerator import MetaArtefactKeyGenerator
+from infra.system.artefacts.artefacts import ARTEFACT_GOLANG_PROJECT_REPOSITORY_INFO
 import logging
 
 
