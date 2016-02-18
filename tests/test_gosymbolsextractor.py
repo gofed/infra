@@ -7,11 +7,11 @@ import tempfile
 import pytest
 
 from infra.system.tests.utils import ProjectID
-from infra.system.plugins.gosymbolextractor.extractor import GoSymbolExtractor
+from infra.system.plugins.gosymbolextractor.extractor import GoSymbolsExtractor
 from infra.system.helpers.artefact_schema_validator import ArtefactSchemaValidator
 
 
-CONFIG_FILE_NAME = 'gosymbolextractor.json'
+CONFIG_FILE_NAME = 'gosymbolsextractor.json'
 
 
 configuration = {}
@@ -41,7 +41,7 @@ def initialize(request):
     request.addfinalizer(cleanup)
 
 
-class TestGoSymbolExtractor(object):
+class TestGoSymbolsExtractor(object):
 
     @pytest.fixture(autouse=True)
     def prepare(self, request, project):
@@ -56,7 +56,7 @@ class TestGoSymbolExtractor(object):
         except tarfile.TarError:
             raise RuntimeError('Cannot extract archive "{}"'.format(archive))
         self.input_data = {
-            'source_code_directory': targetdir,
+            'resource': targetdir,
             'directories_to_skip': project['directories_to_skip'],
             'project': project['name'],
             'commit': project['commit'],
@@ -64,7 +64,7 @@ class TestGoSymbolExtractor(object):
         }
 
     def test_valid_output(self, project):
-        plugin = GoSymbolExtractor()
+        plugin = GoSymbolsExtractor()
         assert plugin.setData(self.input_data)
         assert plugin.execute()
         output_data = plugin.getData()

@@ -8,7 +8,7 @@ import tempfile
 import git
 
 from infra.system.tests.utils import ProjectID
-from infra.system.plugins.gosymbolextractor.extractor import GoSymbolExtractor
+from infra.system.plugins.gosymbolextractor.extractor import GoSymbolsExtractor
 
 
 CONFIG_FILE_NAME = 'testdata.json'
@@ -48,7 +48,7 @@ class TestDataFetcher(object):
                     with open(archive, 'wb') as f:
                         repo.archive(f, commit, prefix, format='tar.gz')
                 except (IOError, git.exc.GitCommandError):
-                    self.logger.error(
+                    self.logger.warn(
                         'Cannot create archive "{}"'.format(archive))
                     continue
                 try:
@@ -58,30 +58,30 @@ class TestDataFetcher(object):
                         'Cannot checkout to commit "{}"'.format(commit))
                     continue
                 input_data = {
-                    'source_code_directory': workdir,
+                    'resource': workdir,
                     'directories_to_skip': skip_dirs,
                     'project': name,
                     'commit': commit,
                     'ipprefix': name,
                 }
                 try:
-                    plugin = GoSymbolExtractor()
+                    plugin = GoSymbolsExtractor()
                     if not plugin.setData(input_data):
                         self.logger.warn('Failed to set input data to ' +
-                            'GoSymbolExtractor plugin')
+                            'GoSymbolsExtractor plugin')
                         continue
                     if not plugin.execute():
                         self.logger.warn('Failed to execute ' +
-                            'GoSymbolExtractor plugin')
+                            'GoSymbolsExtractor plugin')
                         continue
                     output_data = plugin.getData()
                     if not output_data:
                         self.logger.warn('Failed to get output data from ' +
-                            'GoSymbolExtractor plugin')
+                            'GoSymbolsExtractor plugin')
                         continue
                 except:
                     self.logger.warn('Unhandled exception occured during ' +
-                        'execution of GoSymbolExtractor plugin')
+                        'execution of GoSymbolsExtractor plugin')
                     continue
                 api = os.path.join(targetdir, pid) + '-api.json'
                 try:
@@ -93,7 +93,7 @@ class TestDataFetcher(object):
                     continue
         finally:
             shutil.rmtree(workdir, ignore_errors=True)
-        
+
     def fetch(self, targetdir, projects):
         for project in projects:
             self._fetchProject(
