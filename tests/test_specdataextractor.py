@@ -44,9 +44,7 @@ class TestSpecDataExtractor(object):
         assert plugin.setData(self.input_data)
         assert plugin.execute()
         output_data = plugin.getData()
-        validator = ArtefactSchemaValidator('golang-project-info-fedora')
-        assert validator.validate(output_data[0])
-        validator = ArtefactSchemaValidator('golang-project-to-package-name')
-        assert validator.validate(output_data[1])
-        validator = ArtefactSchemaValidator('golang-ipprefix-to-package-name')
-        assert validator.validate(output_data[2])
+        assert output_data
+        for data in output_data:
+            validator = ArtefactSchemaValidator(data['artefact'])
+            assert validator.validate(data)

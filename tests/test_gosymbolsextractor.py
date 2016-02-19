@@ -68,7 +68,7 @@ class TestGoSymbolsExtractor(object):
         assert plugin.setData(self.input_data)
         assert plugin.execute()
         output_data = plugin.getData()
-        validator = ArtefactSchemaValidator('golang-project-packages')
-        assert validator.validate(output_data[0])
-        validator = ArtefactSchemaValidator('golang-project-exported-api')
-        assert validator.validate(output_data[1])
+        assert output_data
+        for data in output_data:
+            validator = ArtefactSchemaValidator(data['artefact'])
+            assert validator.validate(data)
