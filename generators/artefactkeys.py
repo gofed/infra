@@ -1,7 +1,7 @@
 import json
 from classhelper import ClassHelper
 
-class_template = """from system.core.meta.metaartefactkeygenerator import MetaArtefactKeyGenerator
+class_template = """from infra.system.core.meta.metaartefactkeygenerator import MetaArtefactKeyGenerator
 import logging
 
 class %sKeyGenerator(MetaArtefactKeyGenerator):
@@ -31,7 +31,7 @@ def generateKeyClass(key_spec):
 
 def generateKeyFF(key_spec):
 	lines = []
-	lines.append("from system.artefacts import artefacts")
+	lines.append("from infra.system.artefacts import artefacts")
 
 	for key in key_spec:
 		obj = ClassHelper(key)

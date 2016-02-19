@@ -4,7 +4,7 @@ from classhelper import ClassHelper
 def generateDriver(key):
 	lines = []
 	lines.append("from artefactdriver import ArtefactDriver")
-	lines.append("from system.artefacts.artefacts import %s" % key["artefact"])
+	lines.append("from infra.system.artefacts.artefacts import %s" % key["artefact"])
 
 	obj = ClassHelper(key)
 	lines.append("\nclass %sDriver(ArtefactDriver):\n" % obj.class_name())
@@ -17,7 +17,7 @@ def generateDriver(key):
 
 def generateFF(key_spec):
 	lines = []
-	lines.append("from system.artefacts import artefacts")
+	lines.append("from infra.system.artefacts import artefacts")
 
 	for key in key_spec:
 		obj = ClassHelper(key)
