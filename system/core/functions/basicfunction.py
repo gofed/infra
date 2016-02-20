@@ -2,6 +2,7 @@ from infra.system.resources.client import ResourceClient
 from infra.system.resources.types import RESOURCE_FIELD, ResourceNotFoundError
 from types import FunctionFailedError
 from gofed_resources.proposal.providerbuilder import ProviderBuilder
+import copy
 
 class BasicFunction:
 	"""
@@ -23,6 +24,7 @@ class BasicFunction:
 
 		:type data: data to forward to a plugin
 		"""
+		m_data = copy.deepcopy(data)
 		# retrieve resource from resource client
 		if RESOURCE_FIELD in data:
 			# TODO(jchaloup): get client from client builder
@@ -30,9 +32,9 @@ class BasicFunction:
 			if not client.retrieve(data[RESOURCE_FIELD]):
 				raise ResourceNotFoundError("Unable to retrieve resource: %s" % data[RESOURCE_FIELD])
 
-			data[RESOURCE_FIELD] = client.getSubresource()
+			m_data[RESOURCE_FIELD] = client.getSubresource()
 
-		if not self.obj.setData(data):
+		if not self.obj.setData(m_data):
 			raise FunctionFailedError("Unable to set data")
 
 		if not self.obj.execute():

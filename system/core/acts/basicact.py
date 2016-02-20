@@ -13,6 +13,6 @@ class BasicAct:
 			raise ValueError("Invalid input: %s" % data)
 
 		if not self.obj.execute():
-			raise ActFailedError("Act %s failed" % self.__name__)
+			raise ActFailedError("Act %s failed" % self.__class__.__name__)
 
 		return self.obj.getData()
