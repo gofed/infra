@@ -7,6 +7,7 @@ from golangprojectpackages import GolangProjectPackagesDriver
 from golangprojectinfofedora import GolangProjectInfoFedoraDriver
 from golangprojectapidiff import GolangProjectApiDiffDriver
 from golangprojecttopackagename import GolangProjectToPackageNameDriver
+from golangprojectcontentmetadata import GolangProjectContentMetadataDriver
 
 class ArtefactDriverFactory:
 
@@ -35,5 +36,8 @@ class ArtefactDriverFactory:
 
 		if artefact == artefacts.ARTEFACT_GOLANG_PROJECT_TO_PACKAGE_NAME:
 			return GolangProjectToPackageNameDriver()
+
+		if artefact == artefacts.ARTEFACT_GOLANG_PROJECT_CONTENT_METADATA:
+			return GolangProjectContentMetadataDriver()
 
 		raise ValueError("Invalid artefact: %s" % artefact)

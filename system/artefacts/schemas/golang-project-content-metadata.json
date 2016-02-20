@@ -1,0 +1,78 @@
+{
+	"$schema": "http://json-schema.org/draft-04/schema#",
+	"title": "Golang project content metadata",
+	"description": "Metadata about project source code, e.g. license, docs, non-go directories",
+	"type": "object",
+	"properties": {
+		"artefact": {
+			"description": "Artefact name",
+			"type": "string",
+			"oneOf": [
+				{"enum": ["golang-project-content-metadata"]}
+			]
+		},
+		"project": {
+			"description": "Repository project name",
+			"type": "string"
+		},
+		"commit": {
+			"description": "Repository project commit",
+			"type": "string"
+		},
+		"metadata": {
+			"type": "object",
+			"description": "Project content metadata",
+			"properties": {
+				"license": {
+					"type": "object",
+					"description": "License",
+					"properties": {
+						"file": {
+							"type": "string",
+							"description": "License file",
+							"minLength": 1
+						},
+						"type": {
+							"type": "string",
+							"description": "License file",
+							"minLength": 1
+						}
+					},
+					"required": ["file", "type"]
+				},
+				"docs": {
+					"type": "array",
+					"description": "Document files",
+					"items": {
+						"type": "string",
+						"description": "Document",
+						"minLength": 1
+					},
+					"uniqueItems": true
+				},
+				"deps_directories": {
+					"type": "array",
+					"description": "Dependency directories",
+					"items": {
+						"type": "string",
+						"description": "Directory",
+						"minLength": 1
+					},
+					"uniqueItems": true
+				}
+				"non_go_directories": {
+					"type": "array",
+					"description": "Non-golang directories",
+					"items": {
+						"type": "string",
+						"description": "Directory",
+						"minLength": 1
+					},
+					"uniqueItems": true
+				}
+			},
+			"required": ["license", "docs", "deps_directories", "non_go_directories"]
+		}
+	},
+	"required": ["artefact", "project", "commit", "metadata"]
+}

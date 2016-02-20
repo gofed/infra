@@ -7,6 +7,7 @@ from golangprojectpackages import GolangProjectPackagesKeyGenerator
 from golangprojectinfofedora import GolangProjectInfoFedoraKeyGenerator
 from golangprojectapidiff import GolangProjectApiDiffKeyGenerator
 from golangprojecttopackagename import GolangProjectToPackageNameKeyGenerator
+from golangprojectcontentmetadata import GolangProjectContentMetadataKeyGenerator
 
 class KeyGeneratorFactory:
 
@@ -35,5 +36,8 @@ class KeyGeneratorFactory:
 
 		if artefact == artefacts.ARTEFACT_GOLANG_PROJECT_TO_PACKAGE_NAME:
 			return GolangProjectToPackageNameKeyGenerator()
+
+		if artefact == artefacts.ARTEFACT_GOLANG_PROJECT_CONTENT_METADATA:
+			return GolangProjectContentMetadataKeyGenerator()
 
 		raise ValueError("Invalid artefact: %s" % artefact)

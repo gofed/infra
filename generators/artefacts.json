@@ -37,4 +37,10 @@
 	"id": "golang-project-to-package-name",
 	"artefact": "ARTEFACT_GOLANG_PROJECT_TO_PACKAGE_NAME",
 	"keys": ["artefact", "product", "distribution", "project"]
-}]
+},
+{
+	"id": "golang-project-content-metadata",
+	"artefact": "ARTEFACT_GOLANG_PROJECT_CONTENT_METADATA",
+	"keys": ["artefact", "project", "commit"]
+}
+]

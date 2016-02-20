@@ -1,10 +1,12 @@
 from infra.system.core.meta.metaact import MetaAct
 from infra.system.resources.specifier import ResourceSpecifier
 from infra.system.resources import types
-from infra.system.artefacts.artefacts import ARTEFACT_GOLANG_PROJECT_PACKAGES
+from infra.system.core.acts import types as acttypes
+from infra.system.artefacts.artefacts import ARTEFACT_GOLANG_PROJECT_PACKAGES, ARTEFACT_GOLANG_PROJECT_CONTENT_METADATA
 from infra.system.core.functions.types import FunctionNotFoundError, FunctionFailedError
 from infra.system.helpers.schema_validator import SchemaValidator
 from infra.system.helpers.utils import getScriptDir
+from gofed_lib.data2specmodeldata import Data2SpecModelData
 
 import json
 
@@ -27,6 +29,7 @@ class SpecModelDataProviderAct(MetaAct):
 
 		# extracted data
 		self.golang_project_packages = {}
+		self.golang_project_content_metadata = {}
 
 	def setData(self, data):
 		"""Validation and data pre-processing"""
@@ -56,11 +59,15 @@ class SpecModelDataProviderAct(MetaAct):
 
 	def getData(self):
 		"""Validation and data post-processing"""
-		return self.golang_project_packages
+		return [
+			self.golang_project_packages,
+			self.golang_project_content_metadata
+		]
 
 	def execute(self):
 		"""Impementation of concrete data processor"""
 		if self.data["type"] == INPUT_TYPE_UPSTREAM_SOURCE_CODE:
+			# Get golang-project-packages artefact
 			ok, self.golang_project_packages = self.ff.bake("etcdstoragereader").call({
 				"artefact": ARTEFACT_GOLANG_PROJECT_PACKAGES,
 				"project": self.data["project"],
@@ -76,24 +83,42 @@ class SpecModelDataProviderAct(MetaAct):
 				# TODO(jchaloup): check it was actually successful
 				# TODO(jchaloup): this is for testing only, remove after switching to production
 				self.ff.bake("etcdstoragewriter").call(self.golang_project_packages)
+
+			# Get golang-project-content-metadata
+			ok, self.golang_project_content_metadata = self.ff.bake("etcdstoragereader").call({
+				"artefact": ARTEFACT_GOLANG_PROJECT_CONTENT_METADATA,
+				"project": self.data["project"],
+				"commit": self.data["commit"]
+			})
+			if ok:			
+				data = {
+					"resource": self.data["resource"],
+					"project": self.data["project"],
+					"commit": self.data["commit"]
+				}
+				self.golang_project_content_metadata = self.ff.bake("goprojectcontentmetadataextractor").call(data)
+				# store the data
+				# TODO(jchaloup): check it was actually successful
+				# TODO(jchaloup): this is for testing only, remove after switching to production
+				self.ff.bake("etcdstoragewriter").call(self.golang_project_content_metadata)
+
 		else:
+			# Get golang-project-packages artefact
 			self.golang_project_packages = self._getArtefactFromData(
 				ARTEFACT_GOLANG_PROJECT_PACKAGES,
 				self.ff.bake("gosymbolsextractor").call(self.data)
 			)
 
-		if self.golang_project_packages == {}:
-			return False
+			# Get golang-project-content-metadata artefact
+			data = {
+				"resource": self.data["resource"]
+			}
+			self.golang_project_content_metadata = self.ff.bake("goprojectcontentmetadataextractor").call(data)
 
-		# TODO(jchaloup): move exception handling to act user
-		#except FunctionNotFoundError as e:
-		#	logging.error("spec-model-data-provider-act: %s" % e)
-		#	return False
-		#except FunctionFailedError as e:
-		#	logging.error("spec-model-data-provider-act: %s" % e)
-		#	return False
-		#except types.ResourceNotFoundError as e:
-		#	logging.error("spec-model-data-provider-act: %s" % e)
-		#	return False
+		if self.golang_project_packages == {}:
+			raise acttypes.ActDataError("Unable to get 'golang-project-packages' artefact")
+
+		if self.golang_project_content_metadata == {}:
+			raise acttypes.ActDataError("Unable to get 'golang-project-content-metadata' artefact")
 
 		return True

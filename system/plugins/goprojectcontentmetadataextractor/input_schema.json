@@ -1,0 +1,24 @@
+{
+	"$schema": "http://json-schema.org/draft-04/schema#",
+	"title": "Golang symbols extractor plugin",
+	"description": "Definition of packages of a golang project",
+	"type": "object",
+	"properties": {
+		"resource": {
+			"type": "string",
+			"description": "Directory with Go source codes",
+			"minLength": 1
+		},
+		"project": {
+			"type": "string",
+			"description": "Repository project name",
+			"minLength": 1
+		},
+		"commit": {
+			"type": "string",
+			"description": "Repository project commit",
+			"minLength": 1
+		}
+	},
+	"required": ["resource"]
+}
