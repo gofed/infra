@@ -9,11 +9,11 @@
 			"type": "string"
 		},
 		"project": {
-			"description": "Project name",
+			"description": "Repository project name",
 			"type": "string"
 		},
 		"commit": {
-			"description": "Project's commit",
+			"description": "Repository project commit",
 			"type": "string"
 		},
 		"ipprefix": {
