@@ -6,9 +6,10 @@ import sys
 import tempfile
 
 import git
+import pycurl
 
 from infra.system.tests.utils import ProjectID
-from infra.system.plugins.gosymbolextractor.extractor import GoSymbolExtractor
+from infra.system.plugins.gosymbolextractor.extractor import GoSymbolsExtractor
 
 
 CONFIG_FILE_NAME = 'testdata.json'
@@ -48,7 +49,7 @@ class TestDataFetcher(object):
                     with open(archive, 'wb') as f:
                         repo.archive(f, commit, prefix, format='tar.gz')
                 except (IOError, git.exc.GitCommandError):
-                    self.logger.error(
+                    self.logger.warn(
                         'Cannot create archive "{}"'.format(archive))
                     continue
                 try:
@@ -58,30 +59,30 @@ class TestDataFetcher(object):
                         'Cannot checkout to commit "{}"'.format(commit))
                     continue
                 input_data = {
-                    'source_code_directory': workdir,
+                    'resource': workdir,
                     'directories_to_skip': skip_dirs,
                     'project': name,
                     'commit': commit,
                     'ipprefix': name,
                 }
                 try:
-                    plugin = GoSymbolExtractor()
+                    plugin = GoSymbolsExtractor()
                     if not plugin.setData(input_data):
                         self.logger.warn('Failed to set input data to ' +
-                            'GoSymbolExtractor plugin')
+                            'GoSymbolsExtractor plugin')
                         continue
                     if not plugin.execute():
                         self.logger.warn('Failed to execute ' +
-                            'GoSymbolExtractor plugin')
+                            'GoSymbolsExtractor plugin')
                         continue
                     output_data = plugin.getData()
                     if not output_data:
                         self.logger.warn('Failed to get output data from ' +
-                            'GoSymbolExtractor plugin')
+                            'GoSymbolsExtractor plugin')
                         continue
                 except:
                     self.logger.warn('Unhandled exception occured during ' +
-                        'execution of GoSymbolExtractor plugin')
+                        'execution of GoSymbolsExtractor plugin')
                     continue
                 api = os.path.join(targetdir, pid) + '-api.json'
                 try:
@@ -93,12 +94,38 @@ class TestDataFetcher(object):
                     continue
         finally:
             shutil.rmtree(workdir, ignore_errors=True)
-        
-    def fetch(self, targetdir, projects):
+
+    def _fetchPackage(self, targetdir, specfile_url, specfile, name):
+        self.logger.info('Fetching package "{}"'.format(name))
+        specfile = os.path.join(targetdir, specfile)
+        try:
+            with open(specfile, 'wb') as f:
+                curl = pycurl.Curl()
+                curl.setopt(pycurl.URL, specfile_url)
+                curl.setopt(pycurl.CONNECTTIMEOUT, 30)
+                curl.setopt(pycurl.FOLLOWLOCATION, 1)
+                curl.setopt(pycurl.MAXREDIRS, 5)
+                curl.setopt(pycurl.TIMEOUT, 300)
+                curl.setopt(pycurl.WRITEDATA, f)
+                curl.perform()
+                curl.close()
+        except (IOError, pycurl.error):
+            self.logger.error(
+                'Cannot download URL "{}" to "{}"'.format(
+                    specfile_url, specfile))
+            return
+
+    def fetchProjects(self, targetdir, projects):
         for project in projects:
             self._fetchProject(
                 targetdir, project['clone_url'], project['name'],
                 project['commits'], project['skip_dirs'])
+
+    def fetchPackages(self, targetdir, packages):
+        for package in packages:
+            self._fetchPackage(
+                targetdir, package['specfile_url'], package['specfile'],
+                package['name'])
 
 
 if __name__ == '__main__':
@@ -120,4 +147,7 @@ if __name__ == '__main__':
                 'Cannot create target directory "{}"'.format(
                     configuration['testdatadir']))
             sys.exit(1)
-    fetcher.fetch(configuration['testdatadir'], configuration['projects'])
+    fetcher.fetchProjects(
+        configuration['testdatadir'], configuration['projects'])
+    fetcher.fetchPackages(
+        configuration['testdatadir'], configuration['packages'])

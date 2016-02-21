@@ -1,0 +1,65 @@
+{
+    "testdatadir": "testdata",
+    "packages": [
+        {
+            "name": "golang-github-armon-go-radix",
+            "product": "Fedora",
+            "distribution": "Fedora",
+            "specfile": "golang-github-armon-go-radix.spec"
+        },
+        {
+            "name": "golang-github-spacemonkeygo-spacelog",
+            "product": "Fedora",
+            "distribution": "Fedora",
+            "specfile": "golang-github-spacemonkeygo-spacelog.spec"
+        },
+        {
+            "name": "golang-github-prometheus-prometheus",
+            "product": "Fedora",
+            "distribution": "Fedora",
+            "specfile": "golang-github-prometheus-prometheus.spec"
+        },
+        {
+            "name": "golang-github-golang-glog",
+            "product": "Fedora",
+            "distribution": "Fedora",
+            "specfile": "golang-github-golang-glog.spec"
+        },
+        {
+            "name": "golang-github-onsi-ginkgo",
+            "product": "Fedora",
+            "distribution": "Fedora",
+            "specfile": "golang-github-onsi-ginkgo.spec"
+        },
+        {
+            "name": "golang-github-influxdb-influxdb",
+            "product": "Fedora",
+            "distribution": "Fedora",
+            "specfile": "golang-github-influxdb-influxdb.spec"
+        },
+        {
+            "name": "golang-github-google-btree",
+            "product": "Fedora",
+            "distribution": "Fedora",
+            "specfile": "golang-github-google-btree.spec"
+        },
+        {
+            "name": "golang-github-golang-appengine",
+            "product": "Fedora",
+            "distribution": "Fedora",
+            "specfile": "golang-github-golang-appengine.spec"
+        },
+        {
+            "name": "golang-github-docker-libcontainer",
+            "product": "Fedora",
+            "distribution": "Fedora",
+            "specfile": "golang-github-docker-libcontainer.spec"
+        },
+        {
+            "name": "golang-github-10gen-openssl",
+            "product": "Fedora",
+            "distribution": "Fedora",
+            "specfile": "golang-github-10gen-openssl.spec"
+        }
+    ]
+}
