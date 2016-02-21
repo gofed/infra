@@ -90,7 +90,7 @@ class SpecModelDataProviderAct(MetaAct):
 				"project": self.data["project"],
 				"commit": self.data["commit"]
 			})
-			if ok:			
+			if not ok:
 				data = {
 					"resource": self.data["resource"],
 					"project": self.data["project"],
