@@ -71,5 +71,57 @@
             ],
             "skip_dirs": []
         }
+    ],
+    "packages": [
+        {
+            "name": "golang-github-armon-go-radix",
+            "specfile_url": "http://pkgs.fedoraproject.org/cgit/rpms/golang-github-armon-go-radix.git/plain/golang-github-armon-go-radix.spec",
+            "specfile": "golang-github-armon-go-radix.spec"
+        },
+        {
+            "name": "golang-github-spacemonkeygo-spacelog",
+            "specfile_url": "http://pkgs.fedoraproject.org/cgit/rpms/golang-github-spacemonkeygo-spacelog.git/plain/golang-github-spacemonkeygo-spacelog.spec",
+            "specfile": "golang-github-spacemonkeygo-spacelog.spec"
+        },
+        {
+            "name": "golang-github-prometheus-prometheus",
+            "specfile_url": "http://pkgs.fedoraproject.org/cgit/rpms/golang-github-prometheus-prometheus.git/plain/golang-github-prometheus-prometheus.spec",
+            "specfile": "golang-github-prometheus-prometheus.spec"
+        },
+        {
+            "name": "golang-github-golang-glog",
+            "specfile_url": "http://pkgs.fedoraproject.org/cgit/rpms/golang-github-golang-glog.git/plain/golang-github-golang-glog.spec",
+            "specfile": "golang-github-golang-glog.spec"
+        },
+        {
+            "name": "golang-github-onsi-ginkgo",
+            "specfile_url": "http://pkgs.fedoraproject.org/cgit/rpms/golang-github-onsi-ginkgo.git/plain/golang-github-onsi-ginkgo.spec",
+            "specfile": "golang-github-onsi-ginkgo.spec"
+        },
+        {
+            "name": "golang-github-influxdb-influxdb",
+            "specfile_url": "http://pkgs.fedoraproject.org/cgit/rpms/golang-github-influxdb-influxdb.git/plain/golang-github-influxdb-influxdb.spec",
+            "specfile": "golang-github-influxdb-influxdb.spec"
+        },
+        {
+            "name": "golang-github-google-btree",
+            "specfile_url": "http://pkgs.fedoraproject.org/cgit/rpms/golang-github-google-btree.git/plain/golang-github-google-btree.spec",
+            "specfile": "golang-github-google-btree.spec"
+        },
+        {
+            "name": "golang-github-golang-appengine",
+            "specfile_url": "http://pkgs.fedoraproject.org/cgit/rpms/golang-github-golang-appengine.git/plain/golang-github-golang-appengine.spec",
+            "specfile": "golang-github-golang-appengine.spec"
+        },
+        {
+            "name": "golang-github-docker-libcontainer",
+            "specfile_url": "http://pkgs.fedoraproject.org/cgit/rpms/golang-github-docker-libcontainer.git/plain/golang-github-docker-libcontainer.spec",
+            "specfile": "golang-github-docker-libcontainer.spec"
+        },
+        {
+            "name": "golang-github-10gen-openssl",
+            "specfile_url": "http://pkgs.fedoraproject.org/cgit/rpms/golang-github-10gen-openssl.git/plain/golang-github-10gen-openssl.spec",
+            "specfile": "golang-github-10gen-openssl.spec"
+        }
     ]
 }
