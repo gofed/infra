@@ -2,5 +2,6 @@
 "id": "spec-model-data-provider",
 "class": "SpecModelDataProviderAct",
 "file": "act.py",
-"version": "1.0-alpha1"
+"version": "1.0-alpha1",
+"output": ["golang-project-package", "golang-project-content-metadata"]
 }
