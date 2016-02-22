@@ -44,8 +44,8 @@ class GoApiDiff(MetaProcessor):
 			return False
 
 		self.apidiff = goapidiff.GoApiDiff(
-			data["exported_api_1"],
-			data["exported_api_2"]
+			data["exported_api_1"]["packages"],
+			data["exported_api_2"]["packages"]
 		)
 
 		self.project = data["exported_api_1"]["project"]
