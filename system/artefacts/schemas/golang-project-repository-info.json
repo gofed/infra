@@ -38,6 +38,7 @@
       }
     },
   "required": [
+    "artefact",
     "project",
     "repository",
     "clone_url",
