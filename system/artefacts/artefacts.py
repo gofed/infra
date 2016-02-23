@@ -10,3 +10,6 @@ ARTEFACT_GOLANG_PROJECTS_API_DIFF = "golang-projects-api-diff"
 ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_PACKAGES = "golang-project-distribution-packages"
 ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_EXPORTED_API = "golang-project-distribution-exported-api"
 ARTEFACT_GOLANG_PROJECT_CONTENT_METADATA = "golang-project-content-metadata"
+ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_BUILD = "golang-project-distribution-build"
+ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_INFO = "golang-project-distribution-info"
+

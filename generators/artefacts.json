@@ -42,5 +42,15 @@
 	"id": "golang-project-content-metadata",
 	"artefact": "ARTEFACT_GOLANG_PROJECT_CONTENT_METADATA",
 	"keys": ["artefact", "project", "commit"]
+},
+{
+	"id": "golang-project-repository-info",
+	"artefact": "ARTEFACT_GOLANG_PROJECT_REPOSITORY_INFO",
+	"keys": ["artefact","project"]
+},
+{
+	"id": "golang-project-repository-commit",
+	"artefact": "ARTEFACT_GOLANG_PROJECT_REPOSITORY_COMMIT",
+	"keys": ["artefact", "repository", "commit"]
 }
 ]
