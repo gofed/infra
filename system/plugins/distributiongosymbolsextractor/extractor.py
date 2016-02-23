@@ -7,7 +7,7 @@ from infra.system.artefacts.artefacts import (
 	ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_EXPORTED_API
 )
 
-class DistributionGoSymbolExtractor(GoSymbolsExtractor):
+class DistributionGoSymbolsExtractor(GoSymbolsExtractor):
 
 	def __init__(self):
 		GoSymbolsExtractor.__init__(
