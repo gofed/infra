@@ -1,0 +1,46 @@
+
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title" : "Golang project repository commit",
+  "description": "Commit information",
+  "type": "object",
+  "properties": {
+    "artefact": {
+      "description": "Artefact name",
+      "type": "string"
+    },
+    "repository": {
+      "description": "Repository name",
+      "type": "string"
+    },
+    "commit": {
+      "description": "ID of the commit",
+      "type": "string"
+    },
+    "adate": {
+      "description": "Author date",
+      "type": "string"
+    },
+    "cdate": {
+      "description": "Commit date",
+      "type": "string"
+    },
+    "author": {
+      "description": "Author of commit",
+      "type": "string"
+    },
+    "message": {
+      "description": "Commit message",
+      "type": "string"
+    }
+  },
+  "required": [
+    "artefact",
+    "repository",
+    "commit",
+    "adate",
+    "cdate",
+    "author",
+    "message"
+  ]
+}

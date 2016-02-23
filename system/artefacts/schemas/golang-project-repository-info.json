@@ -1,0 +1,48 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Golang project repository info",
+  "description": "Repository basic information and list of commits",
+  "type": "object",
+  "properties": {
+    "artefact": {
+      "description": "Artefact name",
+      "type": "string"
+    },
+    "project": {
+      "description": "Project name",
+      "type": "string"
+    },
+    "repository": {
+      "description": "Repository name",
+      "type": "string"
+    },
+    "clone_url": {
+      "description": "Repository clone url",
+      "type": "string"
+    },
+    "branches": {
+      "description": "List of branches",
+      "type": "array",
+      "items": {
+        "description": "Branch name",
+        "type": "string"
+      }
+    },
+      "commits": {
+        "description": "List of commits",
+        "type": "array",
+        "items": {
+          "description": "Commit id",
+          "type": "string"
+        }
+      }
+    },
+  "required": [
+    "artefact",
+    "project",
+    "repository",
+    "clone_url",
+    "branches",
+    "commits"
+  ]
+}
