@@ -1,0 +1,40 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "description": "Repository information and commit search criteria",
+  "title": "Git commit extractor plugin",
+  "type": "object",
+  "properties": {
+    "project": {
+      "description": "ID of a project",
+      "type": "string"
+    },
+    "repository": {
+      "description": "ID of a repository",
+      "type": "string"
+    },
+    "repository_directory": {
+      "description": "Repository directory",
+      "type": "string"
+    },
+    "clone_url": {
+      "description": "Repository clone url",
+      "type": "string"
+    },
+    "start_date": {
+      "description": "Commits since date",
+      "type": "string"
+    },
+    "end_date": {
+      "description": "Commits to date",
+      "type": "string"
+    }
+  },
+  "required": [
+    "project",
+    "repository",
+    "repository_directory",
+    "clone_url",
+    "start_date",
+    "end_date"
+  ]
+}
