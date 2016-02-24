@@ -8,6 +8,10 @@ from golangprojectinfofedora import GolangProjectInfoFedoraDriver
 from golangprojectapidiff import GolangProjectApiDiffDriver
 from golangprojecttopackagename import GolangProjectToPackageNameDriver
 from golangprojectcontentmetadata import GolangProjectContentMetadataDriver
+from golangprojectrepositoryinfo import GolangProjectRepositoryInfoDriver
+from golangprojectrepositorycommit import GolangProjectRepositoryCommitDriver
+from golangprojectdistributioninfo import GolangProjectDistributionInfoDriver
+from golangprojectdistributionbuild import GolangProjectDistributionBuildDriver
 
 class ArtefactDriverFactory:
 
@@ -39,5 +43,17 @@ class ArtefactDriverFactory:
 
 		if artefact == artefacts.ARTEFACT_GOLANG_PROJECT_CONTENT_METADATA:
 			return GolangProjectContentMetadataDriver()
+
+		if artefact == artefacts.ARTEFACT_GOLANG_PROJECT_REPOSITORY_INFO:
+			return GolangProjectRepositoryInfoDriver()
+
+		if artefact == artefacts.ARTEFACT_GOLANG_PROJECT_REPOSITORY_COMMIT:
+			return GolangProjectRepositoryCommitDriver()
+
+		if artefact == artefacts.ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_INFO:
+			return GolangProjectDistributionInfoDriver()
+
+		if artefact == artefacts.ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_BUILS:
+			return GolangProjectDistributionBuildDriver()
 
 		raise ValueError("Invalid artefact: %s" % artefact)
