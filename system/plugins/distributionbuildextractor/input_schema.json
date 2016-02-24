@@ -1,0 +1,43 @@
+{
+  "$schema": "//json-schema.org/draft-04/schema#",
+  "description": "Repository information and build search criteria",
+  "title": "Distribution build extractor plugin",
+  "type": "object",
+  "properties": {
+    "project": {
+      "description": "ID of a project",
+      "type": "string"
+    },
+    "product": {
+      "description": "Product name",
+      "type": "string"
+    },
+    "distribution": {
+      "description": "Distribution name",
+      "type": "string"
+    },
+    "repository": {
+      "description": "ID of a repository",
+      "type": "string"
+    },
+    "clone_url": {
+      "description": "repository clone_url",
+      "type": "string"
+    },
+    "start_date": {
+      "description": "Builds from date",
+      "type": "string"
+    },
+    "end_date": {
+      "description": "Builds to date",
+      "type": "string"
+    }
+  },
+  "required": [
+    "project",
+    "product",
+    "distribution",
+    "repository",
+    "clone_url"
+  ]
+}

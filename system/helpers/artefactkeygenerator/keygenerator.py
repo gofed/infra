@@ -10,6 +10,8 @@ from golangprojecttopackagename import GolangProjectToPackageNameKeyGenerator
 from golangprojectcontentmetadata import GolangProjectContentMetadataKeyGenerator
 from golangprojectrepositoryinfo import GolangProjectRepositoryInfoKeyGenerator
 from golangprojectrepositorycommit import GolangProjectRepositoryCommitKeyGenerator
+from golangprojectdistributioninfo import GolangProjectDistributionInfoKeyGenerator
+from golangprojectdistributionbuild import GolangProjectDistributionBuildKeyGenerator
 
 class KeyGeneratorFactory:
 
@@ -47,5 +49,11 @@ class KeyGeneratorFactory:
 
 		if artefact == artefacts.ARTEFACT_GOLANG_PROJECT_REPOSITORY_COMMIT:
 			return GolangProjectRepositoryCommitKeyGenerator()
+
+		if artefact == artefacts.ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_INFO:
+			return GolangProjectDistributionInfoKeyGenerator()
+
+		if artefact == artefacts.ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_BUILS:
+			return GolangProjectDistributionBuildKeyGenerator()
 
 		raise ValueError("Invalid artefact: %s" % artefact)

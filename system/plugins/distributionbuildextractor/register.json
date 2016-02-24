@@ -1,0 +1,6 @@
+{
+  "id": "distributionbuildextractor",
+  "class": "DistributionBuildExtractor",
+  "file": "extractor.py",
+  "version": "1.0-alpha"
+}

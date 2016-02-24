@@ -12,4 +12,5 @@ ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_EXPORTED_API = "golang-project-distribution
 ARTEFACT_GOLANG_PROJECT_CONTENT_METADATA = "golang-project-content-metadata"
 ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_BUILD = "golang-project-distribution-build"
 ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_INFO = "golang-project-distribution-info"
-
+ARTEFACT_GOLANG_PROJECT_REPOSITORY_COMMIT = "golang-project-repository-commit"
+ARTEFACT_GOLANG_PROJECT_REPOSITORY_INFO = "golang-project-repository-info"
