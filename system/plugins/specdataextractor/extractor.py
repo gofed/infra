@@ -140,7 +140,7 @@ class SpecDataExtractor(MetaProcessor):
 			return False
 		try:
 			# TODO(jchaloup): preprocess the line before converting to date
-			date_data = " ".join(header.split('-')[0].split(" ")[:-5])
+			date_data = " ".join(header.split('-')[0].split(" ")[:5])
 			self.lastupdated = datetime.strptime(date_data,"* %a %b %d %Y").strftime("%Y-%m-%d")
 		except ValueError as e:
 			logging.error("invalid changelog header format")
