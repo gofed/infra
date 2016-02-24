@@ -9,7 +9,7 @@ import git
 import pycurl
 
 from infra.system.tests.utils import ProjectID
-from infra.system.plugins.gosymbolextractor.extractor import GoSymbolsExtractor
+from infra.system.plugins.gosymbolsextractor.extractor import GoSymbolsExtractor
 
 
 CONFIG_FILE_NAME = 'testdata.json'

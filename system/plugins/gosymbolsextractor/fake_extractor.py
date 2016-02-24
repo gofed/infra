@@ -1,4 +1,4 @@
-from infra.system.plugins.gosymbolextractor.extractor import GoSymbolExtractor
+from infra.system.plugins.gosymbolsextractor.extractor import GoSymbolExtractor
 from infra.system.helpers.utils import getScriptDir
 import json
 import os

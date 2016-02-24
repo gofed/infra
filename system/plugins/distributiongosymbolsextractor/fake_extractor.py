@@ -4,7 +4,7 @@ from infra.system.artefacts.artefacts import (
 	ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_PACKAGES,
 	ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_EXPORTED_API
 )
-from infra.system.plugins.gosymbolextractor.fake_extractor import FakeGoSymbolExtractor
+from infra.system.plugins.gosymbolsextractor.fake_extractor import FakeGoSymbolExtractor
 
 
 class FakeDistributionGoSymbolExtractor(FakeGoSymbolExtractor):
