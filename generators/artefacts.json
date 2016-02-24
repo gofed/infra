@@ -52,5 +52,15 @@
 	"id": "golang-project-repository-commit",
 	"artefact": "ARTEFACT_GOLANG_PROJECT_REPOSITORY_COMMIT",
 	"keys": ["artefact", "repository", "commit"]
+},
+	{
+	"id": "golang-project-distribution-info",
+	"artefact": "ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_INFO",
+	"keys": ["artefact", "product", "distribution", "build"]
+},
+{
+	"id": "golang-project-distribution-build",
+	"artefact": "ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_BUILS",
+	"keys": ["artefact", "product", "distribution", "project"]
 }
 ]
