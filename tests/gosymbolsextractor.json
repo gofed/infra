@@ -4,52 +4,92 @@
         {
             "name": "github.com/coreos/etcd",
             "commit": "b4bddf685b26b4aa70e939445044bdeac822d042",
-            "directories_to_skip": ["Godeps", "hack"]
+            "directories_to_skip": ["Godeps", "hack"],
+            "product": "Fedora",
+            "distribution": "f24",
+            "build": "etcd-2.2.5-2.fc24",
+            "rpm": "etcd-devel-2.2.5-2.fc24.noarch.rpm"
         },
         {
             "name": "github.com/eBay/fabio",
             "commit": "5e24a09752a75f30448f43773cb529e8ce02ce93",
-            "directories_to_skip": ["_third_party"]
+            "directories_to_skip": ["_third_party"],
+            "product": "Fedora",
+            "distribution": "f24",
+            "build": "fabio-1.1.1-1.fc24",
+            "rpm": "fabio-devel-1.1.1-1.fc24.noarch.rpm"
         },
         {
             "name": "github.com/PuerkitoBio/agora",
             "commit": "fc5914daad197185f2b2fc1873b2084f0e86b6b4",
-            "directories_to_skip": []
+            "directories_to_skip": [],
+            "product": "Fedora",
+            "distribution": "f24",
+            "build": "agora-0.2-1.fc24",
+            "rpm": "agora-devel-0.2-1.fc24.noarch.rpm"
         },
         {
             "name": "github.com/hectane/hectane",
             "commit": "87062ba605491392423da3e75b1512cfe6350337",
-            "directories_to_skip": []
+            "directories_to_skip": [],
+            "product": "Fedora",
+            "distribution": "f24",
+            "build": "hectane-0.3.0-1.fc24",
+            "rpm": "hectane-devel-0.3.0-1.fc24.noarch.rpm"
         },
         {
             "name": "github.com/mozilla-services/heka",
             "commit": "149c483a52f0f4c9ea50b73805feebed1b7c45c3",
-            "directories_to_skip": []
+            "directories_to_skip": [],
+            "product": "Fedora",
+            "distribution": "f24",
+            "build": "heka-0.10.0-1.fc24",
+            "rpm": "heka-devel-0.10.0-1.fc24.noarch.rpm"
         },
         {
             "name": "github.com/pingcap/tidb",
             "commit": "482dc3f06c438c320e1fc64ff02a5479d2a989fb",
-            "directories_to_skip": ["Godeps"]
+            "directories_to_skip": ["Godeps"],
+            "product": "Fedora",
+            "distribution": "f24",
+            "build": "tidb-0.5alpha-1.fc24",
+            "rpm": "tidb-devel-0.5alpha-1.fc24.noarch.rpm"
         },
         {
             "name": "github.com/cznic/ql",
             "commit": "77545ff365ff426dfab06c46d70fa77600cd55af",
-            "directories_to_skip": []
+            "directories_to_skip": [],
+            "product": "Fedora",
+            "distribution": "f24",
+            "build": "ql-0-0.1git77545f.fc24",
+            "rpm": "ql-devel-0-0.1git77545f.fc24.noarch.rpm"
         },
         {
             "name": "github.com/google/cayley",
             "commit": "792fe5d42c4dd4d967c3db2e30bd380fcdfb3151",
-            "directories_to_skip": ["Godeps"]
+            "directories_to_skip": ["Godeps"],
+            "product": "Fedora",
+            "distribution": "f24",
+            "build": "cayley-0.4.1-1.fc24",
+            "rpm": "cayley-devel-0.4.1-1.fc24.noarch.rpm"
         },
         {
             "name": "github.com/influxdata/influxdb",
             "commit": "d771eb72f708c523bb2bec35a97f6bb83ae4ef1d",
-            "directories_to_skip": []
+            "directories_to_skip": [],
+            "product": "Fedora",
+            "distribution": "f24",
+            "build": "golang-github-influxdb-influxdb-0.8.5-0.6.git9485e99.fc24",
+            "rpm": "golang-github-influxdb-influxdb-devel-0.8.5-0.6.git9485e99.fc24.noarch.rpm"
         },
         {
             "name": "github.com/google/martian",
             "commit": "1afb734cc2eb3a5dab708a901ee07106a94a9186",
-            "directories_to_skip": []
+            "directories_to_skip": [],
+            "product": "Fedora",
+            "distribution": "f24",
+            "build": "martian-2.0.0beta2-1.fc24",
+            "rpm": "martian-devel-2.0.0beta2-1.fc24.noarch.rpm"
         }
     ]
 }

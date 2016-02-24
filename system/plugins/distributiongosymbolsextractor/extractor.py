@@ -1,4 +1,4 @@
-from infra.system.plugins.gosymbolextractor.extractor import GoSymbolsExtractor
+from infra.system.plugins.gosymbolsextractor.extractor import GoSymbolsExtractor
 from infra.system.helpers.artefact_schema_validator import ArtefactSchemaValidator
 import logging
 from infra.system.helpers.utils import getScriptDir
