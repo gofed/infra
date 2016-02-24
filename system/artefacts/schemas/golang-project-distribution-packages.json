@@ -92,7 +92,7 @@
 								"uniqueItems": true
 							}
 						},
-						"required": ["package", "qualifier", "dependencies"]
+						"required": ["package", "quantifier", "dependencies"]
 					},
 					"minItems": 1,
 					"uniqueItems": true
