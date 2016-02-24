@@ -7,7 +7,7 @@ import tempfile
 import pytest
 
 from infra.system.tests.utils import ProjectID
-from infra.system.plugins.gosymbolextractor.extractor import GoSymbolsExtractor
+from infra.system.plugins.gosymbolsextractor.extractor import GoSymbolsExtractor
 from infra.system.plugins.distributiongosymbolsextractor.extractor import DistributionGoSymbolsExtractor
 from infra.system.helpers.artefact_schema_validator import ArtefactSchemaValidator
 
