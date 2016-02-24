@@ -6,7 +6,7 @@ class GolangProjectDistributionBuildKeyGenerator(MetaArtefactKeyGenerator):
 	def generate(self, data, delimiter = ":"):
 		# return a list of fields
 		keys = []
-		for key in ["artefact", "product", "distribution", "project"]:
+		for key in ["artefact", "product", "distribution", "build"]:
 			if key not in data:
 				logging.error("golang-project-distribution-build: %s key missing" % key)
 				return ""
