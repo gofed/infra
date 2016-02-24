@@ -20,7 +20,7 @@ It is designed to provide:
 
 ## Requirements
 
-* python2.7 (see requirements.txt)
+* python2.7 (see [requirements.txt](requirements.txt))
 * etcd
 
 ## How to start
