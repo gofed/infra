@@ -61,17 +61,38 @@
 								"type": "string",
 								"description": "package name"
 							},
+							"quantifier": {
+								"type": "string",
+								"description": "imported package qualifier"
+							},
 							"dependencies": {
 								"type": "array",
 								"description": "dependencies",
 								"items": {
-									"type": "string",
-									"description": "dependency"
+									"type": "object",
+									"description": "dependency data",
+									"properties": {
+										"name": {
+											"type": "string",
+											"description": "dependency"
+										},
+										"location": {
+											"type": "array",
+											"description": "list of files importing dependency",
+											"items": {
+												"type": "string",
+												"description": "file",
+												"minLength": 1
+											},
+											"uniqueItems": true
+										}
+									},
+									"required": ["name"]
 								},
 								"uniqueItems": true
 							}
 						},
-						"required": ["package", "dependencies"]
+						"required": ["package", "qualifier", "dependencies"]
 					},
 					"minItems": 1,
 					"uniqueItems": true
