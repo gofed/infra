@@ -1,1 +1,7 @@
 jsonschema
+koji
+git
+jsonschema
+pycurl
+urllib2
+tarfile
