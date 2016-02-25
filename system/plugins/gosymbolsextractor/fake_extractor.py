@@ -1,12 +1,12 @@
-from infra.system.plugins.gosymbolsextractor.extractor import GoSymbolExtractor
+from infra.system.plugins.gosymbolsextractor.extractor import GoSymbolsExtractor
 from infra.system.helpers.utils import getScriptDir
 import json
 import os
 
 
-class FakeGoSymbolExtractor(GoSymbolExtractor):
+class FakeGoSymbolExtractor(GoSymbolsExtractor):
 	def __init__(self):
-		GoSymbolExtractor.__init__(self)
+		GoSymbolsExtractor.__init__(self)
 
 	def setData(self, data):
 		self.project = "github.com/golang/example"
@@ -21,7 +21,7 @@ class FakeGoSymbolExtractor(GoSymbolExtractor):
 		return True
 
 	def getData(self):
-		return GoSymbolExtractor.getData(self)
+		return GoSymbolsExtractor.getData(self)
 
 	def execute(self):
 

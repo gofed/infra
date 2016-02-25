@@ -1,4 +1,4 @@
-from artefactdriver import ArtefactDriver
+from .artefactdriver import ArtefactDriver
 from infra.system.artefacts.artefacts import ARTEFACT_GOLANG_PROJECT_EXPORTED_API
 
 class GolangProjectExportedApiDriver(ArtefactDriver):

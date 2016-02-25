@@ -1,7 +1,6 @@
-from system.artefacts import artefacts
-from system.core.factory.functionfactory import FunctionFactory
-from system.resources.specifier import ResourceSpecifier
-from system.resources import types
+from infra.system.core.factory.functionfactory import FunctionFactory
+from infra.system.resources.specifier import ResourceSpecifier
+from infra.system.resources import types
 
 import logging
 import json

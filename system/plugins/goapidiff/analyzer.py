@@ -1,5 +1,4 @@
 from infra.system.core.meta.metaprocessor import MetaProcessor
-from infra.system.helpers.artefact_schema_validator import ArtefactSchemaValidator
 from infra.system.artefacts.artefacts import ARTEFACT_GOLANG_PROJECTS_API_DIFF
 import logging
 from infra.system.helpers.utils import getScriptDir

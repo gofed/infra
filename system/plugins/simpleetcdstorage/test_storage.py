@@ -1,10 +1,8 @@
 from infra.system.artefacts import artefacts
-from artefactdriverfactory import ArtefactDriverFactory
+from .artefactdriverfactory import ArtefactDriverFactory
 from infra.system.helpers.jsoncomparator import DirectJSONComparator
 
 import unittest
-import json
-
 class ArtefactDriverTest(unittest.TestCase):
 
 	def runTest(self, input, artefact = ""):

@@ -1,4 +1,4 @@
-from types import ActFailedError
+from .types import ActFailedError
 
 class BasicAct:
 	"""Wrapper for basic acts.

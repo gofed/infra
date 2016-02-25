@@ -83,8 +83,11 @@ def format_output(fmt, out, fancy = False):
 		return column
 
 	def normal_format_str(fmt):
+		try:
 			ret = ''.join(['{} ' for num in xrange(len(fmt))])
-			return ret[:-1] # omit space at the end of line
+		except NameError:
+			ret = ''.join(['{} ' for num in range(len(fmt))])
+		return ret[:-1] # omit space at the end of line
 
 	ret = ""
 	fmt = fmt.split(':')

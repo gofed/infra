@@ -1,9 +1,8 @@
 from infra.system.core.meta.metaprocessor import MetaProcessor
 from infra.system.artefacts.artefacts import ARTEFACT_GOLANG_PROJECT_PACKAGES, ARTEFACT_GOLANG_PROJECT_EXPORTED_API
 import logging
-import json
 from infra.system.helpers.artefact_schema_validator import ArtefactSchemaValidator
-from infra.system.helpers.utils import getScriptDir, runCommand
+from infra.system.helpers.utils import getScriptDir
 from gofed_lib import gosymbolsextractor
 
 CONFIG_SOURCE_CODE_DIRECTORY = "resource"

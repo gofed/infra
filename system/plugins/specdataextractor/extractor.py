@@ -8,7 +8,7 @@ from infra.system.artefacts.artefacts import (
 )
 from infra.system.helpers.artefact_schema_validator import ArtefactSchemaValidator
 from infra.system.helpers.utils import getScriptDir
-from SpecParser import SpecParser
+from .SpecParser import SpecParser
 
 class SpecDataExtractor(MetaProcessor):
 

@@ -1,4 +1,4 @@
-import types
+from .types import *
 
 class ResourceSpecifier:
 	"""
@@ -7,7 +7,7 @@ class ResourceSpecifier:
 	It only specifies what resource is request
 	and what is expecting form of its subresource.
 	"""
-	def generateRpm(self, product, distribution, build, rpm, subresource = types.SUBRESOURCE_DIRECTORY_TREE):
+	def generateRpm(self, product, distribution, build, rpm, subresource = SUBRESOURCE_DIRECTORY_TREE):
 		"""Generate resource specifier for distribution rpm.
 
 		:param product: OS Product (e.g. Fedora, CentOS, etc.).
@@ -26,12 +26,12 @@ class ResourceSpecifier:
 			"distribution": distribution,
 			"build": build,
 			"rpm": rpm,
-			"resource": types.RESOURCE_RPM,
-			"resource-type": types.RESOURCE_TYPE_RPM,
+			"resource": RESOURCE_RPM,
+			"resource-type": RESOURCE_TYPE_RPM,
 			"subresource": subresource
 		}
 
-	def generateUserDirectory(self, location, type = types.RESOURCE_TYPE_TARBALL, subresource = types.SUBRESOURCE_DIRECTORY_TREE):
+	def generateUserDirectory(self, location, type = RESOURCE_TYPE_TARBALL, subresource = SUBRESOURCE_DIRECTORY_TREE):
 		"""Generate resource specifier for user directory.
 
 		:param location: location of directory (e.g local path, ftp, http, etc.).
@@ -45,13 +45,13 @@ class ResourceSpecifier:
 			location = "file://%s" % location
 
 		return {
-			"resource": types.RESOURCE_USER_DIRECTORY,
+			"resource": RESOURCE_USER_DIRECTORY,
 			"subresource": subresource,
 			"resource-type": type,
 			"location": location
 		}
 
-	def generateUpstreamSourceCode(self, project, commit, subresource = types.SUBRESOURCE_DIRECTORY_TREE):
+	def generateUpstreamSourceCode(self, project, commit, subresource = SUBRESOURCE_DIRECTORY_TREE):
 		"""Generate resource specifier for source codes for given upstream project
 
 		:param project: unique project name
@@ -64,7 +64,7 @@ class ResourceSpecifier:
 		return {
 			"project": project,
 			"commit": commit,
-			"resource": types.RESOURCE_UPSTREAM_SOURCE_CODES,
+			"resource": RESOURCE_UPSTREAM_SOURCE_CODES,
 			"subresource": subresource
 		}
 
