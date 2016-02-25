@@ -46,7 +46,7 @@
 								"description": "importable package name/path",
 								"minLength": 1
 							},
-							"quantifier": {
+							"qualifier": {
 								"type": "string",
 								"description": "imported package qualifier"
 							},
@@ -77,7 +77,7 @@
 								"uniqueItems": true
 							}
 						},
-						"required": ["package", "quantifier", "dependencies"]
+						"required": ["package", "qualifier", "dependencies"]
 					},
 					"minItems": 1,
 					"uniqueItems": true
