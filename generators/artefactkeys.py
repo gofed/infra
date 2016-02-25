@@ -35,7 +35,7 @@ def generateKeyFF(key_spec):
 
 	for key in key_spec:
 		obj = ClassHelper(key)
-		lines.append("from %s import %sKeyGenerator" % (obj.class_filename(), obj.class_name()))
+		lines.append("from .%s import %sKeyGenerator" % (obj.class_filename(), obj.class_name()))
 
 	lines.append("\nclass KeyGeneratorFactory:\n")
 	lines.append("\tdef build(self, artefact):\n")

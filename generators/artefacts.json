@@ -60,7 +60,7 @@
 },
 {
 	"id": "golang-project-distribution-build",
-	"artefact": "ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_BUILS",
+	"artefact": "ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_BUILD",
 	"keys": ["artefact", "product", "distribution", "build"]
 }
 ]
