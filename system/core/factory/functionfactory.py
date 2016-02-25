@@ -1,4 +1,4 @@
-from factory import Factory
+from .factory import Factory
 from infra.system.core.functions.basicfunction import BasicFunction
 from infra.system.core.functions.storagefunction import StorageFunction
 from infra.system.helpers.utils import getScriptDir

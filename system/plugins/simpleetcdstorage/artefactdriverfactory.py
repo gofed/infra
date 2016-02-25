@@ -1,17 +1,17 @@
 from infra.system.artefacts import artefacts
-from golangprojectdistributionexportedapi import GolangProjectDistributionExportedApiDriver
-from golangprojectdistributionpackages import GolangProjectDistributionPackagesDriver
-from golangipprefixtopackagename import GolangIpprefixToPackageNameDriver
-from golangprojectexportedapi import GolangProjectExportedApiDriver
-from golangprojectpackages import GolangProjectPackagesDriver
-from golangprojectinfofedora import GolangProjectInfoFedoraDriver
-from golangprojectapidiff import GolangProjectApiDiffDriver
-from golangprojecttopackagename import GolangProjectToPackageNameDriver
-from golangprojectcontentmetadata import GolangProjectContentMetadataDriver
-from golangprojectrepositoryinfo import GolangProjectRepositoryInfoDriver
-from golangprojectrepositorycommit import GolangProjectRepositoryCommitDriver
-from golangprojectdistributioninfo import GolangProjectDistributionInfoDriver
-from golangprojectdistributionbuild import GolangProjectDistributionBuildDriver
+from .golangprojectdistributionexportedapi import GolangProjectDistributionExportedApiDriver
+from .golangprojectdistributionpackages import GolangProjectDistributionPackagesDriver
+from .golangipprefixtopackagename import GolangIpprefixToPackageNameDriver
+from .golangprojectexportedapi import GolangProjectExportedApiDriver
+from .golangprojectpackages import GolangProjectPackagesDriver
+from .golangprojectinfofedora import GolangProjectInfoFedoraDriver
+from .golangprojectapidiff import GolangProjectApiDiffDriver
+from .golangprojecttopackagename import GolangProjectToPackageNameDriver
+from .golangprojectcontentmetadata import GolangProjectContentMetadataDriver
+from .golangprojectrepositoryinfo import GolangProjectRepositoryInfoDriver
+from .golangprojectrepositorycommit import GolangProjectRepositoryCommitDriver
+from .golangprojectdistributioninfo import GolangProjectDistributionInfoDriver
+from .golangprojectdistributionbuild import GolangProjectDistributionBuildDriver
 
 class ArtefactDriverFactory:
 
@@ -53,7 +53,7 @@ class ArtefactDriverFactory:
 		if artefact == artefacts.ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_INFO:
 			return GolangProjectDistributionInfoDriver()
 
-		if artefact == artefacts.ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_BUILS:
+		if artefact == artefacts.ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_BUILD:
 			return GolangProjectDistributionBuildDriver()
 
 		raise ValueError("Invalid artefact: %s" % artefact)

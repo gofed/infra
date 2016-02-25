@@ -1,5 +1,5 @@
 import json
-from classhelper import ClassHelper
+from .classhelper import ClassHelper
 
 def generateDriver(key):
 	lines = []
@@ -43,10 +43,10 @@ if __name__ == "__main__":
 	# generate driver factory
 	with open("system/plugins/simpleetcdstorage/artefactdriverfactory.py", "w") as f:
 		f.write(generateFF(keys))
-		print "system/plugins/simpleetcdstorage/artefactdriverfactory.py"
+		print("system/plugins/simpleetcdstorage/artefactdriverfactory.py")
 
 	for key in keys:
 		obj = ClassHelper(key)
 		with open("system/plugins/simpleetcdstorage/%s" % obj.class_filename_ext(), "w") as f:
 			f.write(generateDriver(key))
-			print "system/plugins/simpleetcdstorage/%s" % obj.class_filename_ext()
+			print("system/plugins/simpleetcdstorage/%s" % obj.class_filename_ext())

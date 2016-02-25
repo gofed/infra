@@ -3,7 +3,6 @@ from infra.system.helpers.utils import getScriptDir
 import os
 import json
 import logging
-import imp
 import importlib
 
 class Factory:

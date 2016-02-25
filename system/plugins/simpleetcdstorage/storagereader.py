@@ -1,7 +1,7 @@
 import logging
 import json
 from infra.system.core.meta.metastoragereader import MetaStorageReader
-from artefactdriverfactory import ArtefactDriverFactory
+from .artefactdriverfactory import ArtefactDriverFactory
 
 class StorageReader(MetaStorageReader):
 

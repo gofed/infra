@@ -1,5 +1,5 @@
 from infra.system.core.meta.metaartefactdriver import MetaArtefactDriver
-from etcdclient import EtcdClient
+from .etcdclient import EtcdClient
 import json
 import logging
 from infra.system.helpers.artefactkeygenerator.keygenerator import KeyGeneratorFactory

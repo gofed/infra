@@ -1,6 +1,6 @@
 from infra.system.core.meta.metastoragereader import MetaStorageReader
 from infra.system.core.meta.metastoragewriter import MetaStorageWriter
-from types import FunctionFailedError
+from .types import FunctionNotFoundError
 
 class StorageFunction:
 	"""

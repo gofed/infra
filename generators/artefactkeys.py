@@ -1,5 +1,5 @@
 import json
-from classhelper import ClassHelper
+from .classhelper import ClassHelper
 
 class_template = """from infra.system.core.meta.metaartefactkeygenerator import MetaArtefactKeyGenerator
 import logging
@@ -57,7 +57,7 @@ if __name__ == "__main__":
 	# generate key factory
 	with open("system/helpers/artefactkeygenerator/keygenerator.py", "w") as f:
 		f.write(generateKeyFF(keys))
-		print "system/helpers/artefactkeygenerator/keygenerator.py"
+		print("system/helpers/artefactkeygenerator/keygenerator.py")
 
 	# generate artefact key generators
 	for key in keys:
@@ -65,4 +65,4 @@ if __name__ == "__main__":
 		class_def = generateKeyClass(key)
 		with open("system/helpers/artefactkeygenerator/%s" % obj.class_filename_ext(), "w") as f:
 			f.write(class_def)
-			print "system/helpers/artefactkeygenerator/%s" % obj.class_filename_ext()
+			print("system/helpers/artefactkeygenerator/%s" % obj.class_filename_ext())

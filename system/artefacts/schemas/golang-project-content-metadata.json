@@ -59,7 +59,7 @@
 						"minLength": 1
 					},
 					"uniqueItems": true
-				}
+				},
 				"non_go_directories": {
 					"type": "array",
 					"description": "Non-golang directories",

@@ -1,8 +1,6 @@
 from infra.system.core.meta.metaact import MetaAct
 from infra.system.resources.specifier import ResourceSpecifier
 from infra.system.resources import types
-from infra.system.core.functions.types import FunctionNotFoundError, FunctionFailedError
-from infra.system.helpers.schema_validator import SchemaValidator
 from infra.system.helpers.utils import getScriptDir
 from infra.system.artefacts.artefacts import (
 	ARTEFACT_GOLANG_PROJECT_INFO_FEDORA,
@@ -11,7 +9,6 @@ from infra.system.artefacts.artefacts import (
 	ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_EXPORTED_API
 )
 from gofed_lib.helpers import Build
-import json
 
 class ScanDistributionBuildAct(MetaAct):
 

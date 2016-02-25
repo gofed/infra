@@ -1,4 +1,4 @@
-import types
+from .types import *
 import tarfile
 import tempfile
 import uuid
@@ -83,9 +83,9 @@ class ResourceClient:
 			# TODO(jchaloup): catch exception and raise better one with more info
 			move(dirpath, resource_dest)
 
-			if subresource == types.SUBRESOURCE_SPECFILE:
+			if subresource == SUBRESOURCE_SPECFILE:
 				return "%s/%s.spec" % (resource_dest, Build(build).name())
-			elif subresource == types.SUBRESOURCE_DIRECTORY_TREE:
+			elif subresource == SUBRESOURCE_DIRECTORY_TREE:
 				# TODO(jchaloup): return correct directory under /usr/share/gocode/src
 				#	src can contain more projects as rpm can ship more source codes
 				#	with different ipprefixes.
@@ -99,21 +99,21 @@ class ResourceClient:
 		"""
 		# self._validate()
 		resource_type = descriptor["resource"]
-		if resource_type == types.RESOURCE_USER_DIRECTORY:
+		if resource_type == RESOURCE_USER_DIRECTORY:
 			# No need to download and extract the directory
 			# It is located on a host
 			if descriptor["location"].startswith("file://"):
-				if descriptor["resource-type"] == types.RESOURCE_TYPE_DIRECTORY:
+				if descriptor["resource-type"] == RESOURCE_TYPE_DIRECTORY:
 					# TODO(jchaloup): check if the directory exists
 					self.subresource = descriptor["location"][7:]
 					return True
 				# Extract the directory
-				#elif self.descriptor["resource-type"] == types.RESOURCE_TYPE_TARBALL:
-		elif resource_type == types.RESOURCE_UPSTREAM_SOURCE_CODES:
+				#elif self.descriptor["resource-type"] == RESOURCE_TYPE_TARBALL:
+		elif resource_type == RESOURCE_UPSTREAM_SOURCE_CODES:
 			self.subresource = self._handleUpstreamSourceCode(descriptor["project"], descriptor["commit"])
 			return True
 
-		elif resource_type == types.RESOURCE_RPM:
+		elif resource_type == RESOURCE_RPM:
 			self.subresource = self._handleRpm(
 				descriptor["product"],
 				descriptor["distribution"],

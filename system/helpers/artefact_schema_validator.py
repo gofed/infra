@@ -1,10 +1,5 @@
-from infra.system.artefacts.artefacts import ARTEFACT_GOLANG_PROJECT_PACKAGES, ARTEFACT_GOLANG_PROJECT_EXPORTED_API
-import logging
-import os
-import json
-import jsonschema
-from utils import getScriptDir
-from schema_validator import SchemaValidator
+from .utils import getScriptDir
+from .schema_validator import SchemaValidator
 
 SCHEMA_DIRECTORY="%s/../artefacts/schemas/" % (getScriptDir())
 

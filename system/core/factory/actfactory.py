@@ -1,4 +1,4 @@
-from factory import Factory
+from .factory import Factory
 from infra.system.helpers.utils import getScriptDir
 from infra.system.core.meta.metaact import MetaAct
 from infra.system.core.acts.basicact import BasicAct
