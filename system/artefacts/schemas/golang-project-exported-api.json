@@ -147,8 +147,7 @@
 					}
 				}
 			},
-			"uniqueItems": true,
-			"minItems": 1
+			"uniqueItems": true
 		}
 	},
 	"required": ["artefact", "project", "commit", "packages"],

@@ -31,7 +31,6 @@
 						"type": "string",
 						"description": "Package"
 					},
-					"minItems": 1,
 					"uniqueItems": true
 				},
 				"dependencies": {
@@ -79,7 +78,6 @@
 						},
 						"required": ["package", "qualifier", "dependencies"]
 					},
-					"minItems": 1,
 					"uniqueItems": true
 				},
 				"tests": {
