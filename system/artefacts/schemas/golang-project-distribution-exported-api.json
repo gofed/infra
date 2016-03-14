@@ -34,134 +34,150 @@
                 },
 		"packages": {
 			"type": "array",
-			"description": "definition of exported API for defined packages",
+			"description": "definition of exported API for defined packages with given ipprefix",
 			"items": {
 				"type": "object",
-				"description": "list of packages with exported symbols",
+				"description": "Data for given ipprefix",
 				"properties": {
-					"package": {
-						"type": "string",
-						"description": "Package name",
-						"minLength": 1
+					"ipprefix": {
+						"description": "Import path prefix",
+						"type": "string"
 					},
-					"datatypes": {
-						"description": "Definition of all data types for a given package",
+					"data": {
 						"type": "array",
+						"description": "List of defined packages for given ipprefix",
 						"items": {
 							"type": "object",
-							"description": "Data type definition",
+							"description": "list of packages with exported symbols",
 							"properties": {
-								"name": {
+								"package": {
 									"type": "string",
-									"description": "Data type name",
+									"description": "Package name",
 									"minLength": 1
 								},
-								"def": {
-									"oneOf": [
-										{ "$ref": "#/definitions/identifier" },
-										{ "$ref": "#/definitions/selector" },
-										{ "$ref": "#/definitions/channel" },
-										{ "$ref": "#/definitions/slice" },
-										{ "$ref": "#/definitions/array" },
-										{ "$ref": "#/definitions/map" },
-										{ "$ref": "#/definitions/pointer" },
-										{ "$ref": "#/definitions/ellipsis" },
-										{ "$ref": "#/definitions/function" },
-										{ "$ref": "#/definitions/method" },
-										{ "$ref": "#/definitions/interface" },
-										{ "$ref": "#/definitions/struct" }
-									]
-								}
-							},
-							"required": ["name", "def"]
-						}
-					},
-					"functions": {
-						"description": "Definition of all functions for a given package",
-						"type": "array",
-						"items": {
-							"type": "object",
-							"description": "Function type definition",
-							"properties": {
-								"name": {
-									"type": "string",
-									"description": "Function type name",
-									"minLength": 1
+								"datatypes": {
+									"description": "Definition of all data types for a given package",
+									"type": "array",
+									"items": {
+										"type": "object",
+										"description": "Data type definition",
+										"properties": {
+											"name": {
+												"type": "string",
+												"description": "Data type name",
+												"minLength": 1
+											},
+											"def": {
+												"oneOf": [
+													{ "$ref": "#/definitions/identifier" },
+													{ "$ref": "#/definitions/selector" },
+													{ "$ref": "#/definitions/channel" },
+													{ "$ref": "#/definitions/slice" },
+													{ "$ref": "#/definitions/array" },
+													{ "$ref": "#/definitions/map" },
+													{ "$ref": "#/definitions/pointer" },
+													{ "$ref": "#/definitions/ellipsis" },
+													{ "$ref": "#/definitions/function" },
+													{ "$ref": "#/definitions/method" },
+													{ "$ref": "#/definitions/interface" },
+													{ "$ref": "#/definitions/struct" }
+												]
+											}
+										},
+										"required": ["name", "def"]
+									}
 								},
-								"def": {
-									"oneOf": [
-										{ "$ref": "#/definitions/function" },
-										{ "$ref": "#/definitions/method" }
-									]
-								}
-							},
-							"required": ["name", "def"]
-						}
-
-					},
-					"variables": {
-						"description": "Definition of all exported variables for a given package",
-						"type": "array",
-						"items": {
-							"type": "object",
-							"description": "Variable type definition",
-							"properties": {
-								"name": {
-									"type": "string",
-									"description": "Data type name",
-									"minLength": 1
+								"functions": {
+									"description": "Definition of all functions for a given package",
+									"type": "array",
+									"items": {
+										"type": "object",
+										"description": "Function type definition",
+										"properties": {
+											"name": {
+												"type": "string",
+												"description": "Function type name",
+												"minLength": 1
+											},
+											"def": {
+												"oneOf": [
+													{ "$ref": "#/definitions/function" },
+													{ "$ref": "#/definitions/method" }
+												]
+											}
+										},
+										"required": ["name", "def"]
+									}
 								},
-								"def": {
-									"oneOf": [
-										{ "$ref": "#/definitions/identifier" },
-										{ "$ref": "#/definitions/selector" },
-										{ "$ref": "#/definitions/channel" },
-										{ "$ref": "#/definitions/slice" },
-										{ "$ref": "#/definitions/array" },
-										{ "$ref": "#/definitions/map" },
-										{ "$ref": "#/definitions/pointer" },
-										{ "$ref": "#/definitions/function" },
-										{ "$ref": "#/definitions/method" },
-										{ "$ref": "#/definitions/interface" },
-										{ "$ref": "#/definitions/struct" }
-									]
-								}
-							},
-							"required": ["name"]
-						}
-					},
-					"constants": {
-						"description": "Definition of all exported constants for a given package",
-						"type": "array",
-						"items": {
-							"type": "object",
-							"description": "Variable type definition",
-							"properties": {
-								"name": {
-									"type": "string",
-									"description": "Data type name",
-									"minLength": 1
+								"variables": {
+									"description": "Definition of all exported variables for a given package",
+									"type": "array",
+									"items": {
+										"type": "object",
+										"description": "Variable type definition",
+										"properties": {
+											"name": {
+												"type": "string",
+												"description": "Data type name",
+												"minLength": 1
+											},
+											"def": {
+												"oneOf": [
+													{ "$ref": "#/definitions/identifier" },
+													{ "$ref": "#/definitions/selector" },
+													{ "$ref": "#/definitions/channel" },
+													{ "$ref": "#/definitions/slice" },
+													{ "$ref": "#/definitions/array" },
+													{ "$ref": "#/definitions/map" },
+													{ "$ref": "#/definitions/pointer" },
+													{ "$ref": "#/definitions/function" },
+													{ "$ref": "#/definitions/method" },
+													{ "$ref": "#/definitions/interface" },
+													{ "$ref": "#/definitions/struct" }
+												]
+											}
+										},
+										"required": ["name"]
+									}
 								},
-								"def": {
-									"oneOf": [
-										{ "$ref": "#/definitions/identifier" },
-										{ "$ref": "#/definitions/selector" },
-										{ "$ref": "#/definitions/channel" },
-										{ "$ref": "#/definitions/slice" },
-										{ "$ref": "#/definitions/array" },
-										{ "$ref": "#/definitions/map" },
-										{ "$ref": "#/definitions/pointer" },
-										{ "$ref": "#/definitions/function" },
-										{ "$ref": "#/definitions/method" },
-										{ "$ref": "#/definitions/interface" },
-										{ "$ref": "#/definitions/struct" }
-									]
+								"constants": {
+									"description": "Definition of all exported constants for a given package",
+									"type": "array",
+									"items": {
+										"type": "object",
+										"description": "Variable type definition",
+										"properties": {
+											"name": {
+												"type": "string",
+												"description": "Data type name",
+												"minLength": 1
+											},
+											"def": {
+												"oneOf": [
+													{ "$ref": "#/definitions/identifier" },
+													{ "$ref": "#/definitions/selector" },
+													{ "$ref": "#/definitions/channel" },
+													{ "$ref": "#/definitions/slice" },
+													{ "$ref": "#/definitions/array" },
+													{ "$ref": "#/definitions/map" },
+													{ "$ref": "#/definitions/pointer" },
+													{ "$ref": "#/definitions/function" },
+													{ "$ref": "#/definitions/method" },
+													{ "$ref": "#/definitions/interface" },
+													{ "$ref": "#/definitions/struct" }
+												]
+											}
+										},
+										"required": ["name", "def"]
+									}
 								}
 							},
-							"required": ["name", "def"]
+							"uniqueItems": true
 						}
 					}
-				}
+				},
+				"required": ["ipprefix", "data"]
+
 			},
 			"uniqueItems": true
 		}

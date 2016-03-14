@@ -78,7 +78,8 @@ class DistributionGoSymbolsExtractor(GoSymbolsExtractor):
 		artefact["build"] = self.build
 		artefact["commit"] = self.commit
 
-		return artefact
+		ad = ArtefactDecomposer(ImportPathParserBuilder().buildWithLocalMappingForIPPrefixDecomposer())
+		return ad.decomposeArtefact(artefact)
 
 	def execute(self):
 		return GoSymbolsExtractor.execute(self)
