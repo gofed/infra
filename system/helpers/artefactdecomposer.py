@@ -19,6 +19,42 @@ class ArtefactDecomposer:
 		self.ipparser = ipparser
 		self.classes = {}
 
+	def _artefact_golang_project_distribution_exported_api_distribution_prefix_strategy(self, artefact):
+		pkg_classes = {}
+		for package in artefact["packages"]:
+			# the only supported prefix atm is /usr/share/gocode/src
+			pkg = package["package"]
+			if not pkg.startswith(DISTRO_PREFIX):
+				raise ValueError("Package %s does not start with %s" % (pkg, DISTRO_PREFIX))
+
+			path = pkg[DISTRO_PREFIX_LEN:]
+			key = self.ipparser.parse(path).getPrefix()
+			package["package"] = path
+
+			try:
+				pkg_classes[key].append(package)
+			except KeyError:
+				pkg_classes[key] = [package]
+
+		data = []
+		for prefix in pkg_classes:
+			data.append({
+				"ipprefix": prefix,
+				"data": pkg_classes[prefix]
+			})
+
+		return {
+			"artefact": artefact["artefact"],
+			"packages": data,
+			"product": artefact["product"],
+			"project": artefact["project"],
+			"build": artefact["build"],
+			# commit not always right
+			"commit": artefact["commit"],
+			"distribution": artefact["distribution"],
+			"rpm": artefact["rpm"],
+		}
+
 	def _artefact_golang_project_distribution_packages_distribution_prefix_strategy(self, artefact):
 		"""
 		TODO(jchaloup):
@@ -128,6 +164,9 @@ class ArtefactDecomposer:
 	def decomposeArtefact(self, artefact):
 		if artefact["artefact"] == artefacts.ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_PACKAGES:
 			return self._artefact_golang_project_distribution_packages_distribution_prefix_strategy(artefact)
+		if artefact["artefact"] == artefacts.ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_EXPORTED_API:
+			return self._artefact_golang_project_distribution_exported_api_distribution_prefix_strategy(artefact)
+
 		raise ValueError("artefact '%s' unrecognized" % artefact["artefact"])
 
 	def decompose(self, artefacts):
