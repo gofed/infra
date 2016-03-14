@@ -35,7 +35,10 @@ class ScanDistributionBuildAct(MetaAct):
 
 	def getData(self):
 		"""Validation and data post-processing"""
-		return self.exported_api
+		return {
+			"exported_api": self.exported_api,
+			"packages": self.packages
+		}
 
 	def execute(self):
 		"""Impementation of concrete data processor"""
@@ -114,7 +117,6 @@ class ScanDistributionBuildAct(MetaAct):
 				self.build,
 				rpm["name"]
 			)
-
 			data = {
 				"product": self.product,
 				"directories_to_skip": rpm["skipped_directories"],
@@ -128,8 +130,10 @@ class ScanDistributionBuildAct(MetaAct):
 			}
 
 			data = self.ff.bake("distributiongosymbolsextractor").call(data)
-			self.exported_api[rpm["name"]] = data
-			# TODO(jchaloup): only for testing purposes
+			self.packages[rpm["name"]] = self._getArtefactFromData(ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_PACKAGES, data)
+			self.exported_api[rpm["name"]] = self._getArtefactFromData(ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_EXPORTED_API, data)
+
+			# TODO(jchaloup): only for testing purposes atm, make an option for storing
 			for artefact in data:
 				data = self.ff.bake("etcdstoragewriter").call(artefact)
 

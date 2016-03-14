@@ -7,6 +7,10 @@ from infra.system.artefacts.artefacts import (
 	ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_EXPORTED_API
 )
 
+from infra.system.helpers.artefactdecomposer import ArtefactDecomposer
+from gofed_lib.importpathparserbuilder import ImportPathParserBuilder
+
+
 class DistributionGoSymbolsExtractor(GoSymbolsExtractor):
 
 	def __init__(self):
@@ -61,7 +65,8 @@ class DistributionGoSymbolsExtractor(GoSymbolsExtractor):
 		artefact["build"] = self.build
 		artefact["commit"] = self.commit
 
-		return artefact
+		ad = ArtefactDecomposer(ImportPathParserBuilder().buildWithLocalMappingForIPPrefixDecomposer())
+		return ad.decomposeArtefact(artefact)
 
 	def _generateGolangProjectDistributionExportedAPI(self):
 		artefact = GoSymbolsExtractor._generateGolangProjectExportedAPI(self)

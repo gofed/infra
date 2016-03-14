@@ -38,117 +38,124 @@
                 },
 		"data": {
 			"description": "Data",
-			"type": "object",
-			"properties": {
-				"packages": {
-					"description": "List of defined packages with exported symbols",
-					"type": "array",
-					"items": {
-						"type": "string",
-						"description": "Package"
+			"type": "array",
+			"items": {
+				"type": "object",
+				"properties": {
+					"ipprefix": {
+						"description": "Import path prefix",
+						"type": "string"
 					},
-					"uniqueItems": true
-				},
-				"dependencies": {
-					"description": "List of dependencies for each defined package",
-					"type": "array",
-					"items": {
-						"type": "object",
-						"description": "list of dependencies",
-						"properties": {
-							"package": {
-								"type": "string",
-								"description": "package name"
-							},
-							"qualifier": {
-								"type": "string",
-								"description": "imported package qualifier"
-							},
-							"dependencies": {
-								"type": "array",
-								"description": "dependencies",
-								"items": {
-									"type": "object",
-									"description": "dependency data",
-									"properties": {
-										"name": {
-											"type": "string",
-											"description": "dependency"
-										},
-										"location": {
-											"type": "array",
-											"description": "list of files importing dependency",
-											"items": {
+					"packages": {
+						"description": "List of defined packages with exported symbols",
+						"type": "array",
+						"items": {
+							"type": "string",
+							"description": "Package"
+						},
+						"uniqueItems": true
+					},
+					"dependencies": {
+						"description": "List of dependencies for each defined package",
+						"type": "array",
+						"items": {
+							"type": "object",
+							"description": "list of dependencies",
+							"properties": {
+								"package": {
+									"type": "string",
+									"description": "package name"
+								},
+								"qualifier": {
+									"type": "string",
+									"description": "imported package qualifier"
+								},
+								"dependencies": {
+									"type": "array",
+									"description": "dependencies",
+									"items": {
+										"type": "object",
+										"description": "dependency data",
+										"properties": {
+											"name": {
 												"type": "string",
-												"description": "file",
-												"minLength": 1
+												"description": "dependency"
 											},
-											"uniqueItems": true
-										}
+											"location": {
+												"type": "array",
+												"description": "list of files importing dependency",
+												"items": {
+													"type": "string",
+													"description": "file",
+													"minLength": 1
+												},
+												"uniqueItems": true
+											}
+										},
+										"required": ["name"]
 									},
-									"required": ["name"]
+									"uniqueItems": true
+								}
+							},
+							"required": ["package", "qualifier", "dependencies"]
+						},
+						"uniqueItems": true
+					},
+					"tests": {
+						"description": "List of tests",
+						"type": "array",
+						"items": {
+							"type": "object",
+							"description": "test",
+							"properties": {
+								"test": {
+									"type": "string",
+									"description": "test name",
+									"minLength": 1
 								},
-								"uniqueItems": true
+								"dependencies": {
+									"type": "array",
+									"description": "dependencies",
+									"items": {
+										"type": "string",
+										"description": "dependency"
+									},
+									"uniqueItems": true
+								}
 							}
 						},
-						"required": ["package", "qualifier", "dependencies"]
+						"uniqueItems": true
 					},
-					"uniqueItems": true
-				},
-				"tests": {
-					"description": "List of tests",
-					"type": "array",
-					"items": {
-						"type": "object",
-						"description": "test",
-						"properties": {
-							"test": {
-								"type": "string",
-								"description": "test name",
-								"minLength": 1
-							},
-							"dependencies": {
-								"type": "array",
-								"description": "dependencies",
-								"items": {
+					"main": {
+						"description": "List of files with 'package main' clause",
+						"type": "array",
+						"items": {
+							"type": "object",
+							"description": "Buildable main go file",
+							"object": {
+								"filename": {
 									"type": "string",
-									"description": "dependency"
+									"description": "main filename",
+									"minLength": 1
 								},
-								"uniqueItems": true
-							}
-						}
-					},
-					"uniqueItems": true
-				},
-				"main": {
-					"description": "List of files with 'package main' clause",
-					"type": "array",
-					"items": {
-						"type": "object",
-						"description": "Buildable main go file",
-						"object": {
-							"filename": {
-								"type": "string",
-								"description": "main filename",
-								"minLength": 1
+								"dependencies": {
+									"type": "array",
+									"description": "dependencies",
+									"items": {
+										"type": "string",
+										"description": "dependency"
+									},
+									"uniqueItems": true
+								}
 							},
-							"dependencies": {
-								"type": "array",
-								"description": "dependencies",
-								"items": {
-									"type": "string",
-									"description": "dependency"
-								},
-								"uniqueItems": true
-							}
+							"required": ["filename"]
 						},
-						"required": ["filename"]
-					},
-					"uniqueItems": true
-				}
-			},
-			"required": ["packages", "dependencies"]
+						"uniqueItems": true
+					}
+				},
+				"required": ["ipprefix"]
+			}
 		}
 	},
-	"required": ["artefact", "project", "commit", "ipprefix", "data", "product", "distribution", "build", "rpm"]
+	"required": ["artefact", "project", "commit", "data", "product", "distribution", "build", "rpm"]
 }
