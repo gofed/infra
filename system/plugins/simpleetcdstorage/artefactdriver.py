@@ -52,6 +52,8 @@ class ArtefactDriver(MetaArtefactDriver):
 			logging.error("Unable to retrieve %s artefact with '%s' key" % (self.artefact, key))
 			return False, {}
 
+		logging.info("Data retrieved for '%s' key" % key)
+
 		return True, json.loads(value)
 
 	def storeList(self, dataList):
