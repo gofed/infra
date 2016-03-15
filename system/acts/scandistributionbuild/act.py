@@ -119,7 +119,7 @@ class ScanDistributionBuildAct(MetaAct):
 			)
 			data = {
 				"product": self.product,
-				"directories_to_skip": rpm["skipped_directories"],
+				"directories_to_skip": rpm["skipped_directories"] if "skipped_directories" in rpm else [],
 				"distribution": self.distribution,
 				"build": self.build,
 				"rpm": rpm["name"],
