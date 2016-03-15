@@ -4,6 +4,9 @@ import json
 
 from system.acts.scandistributionbuild.act import ScanDistributionBuildAct
 
+import logging
+logging.basicConfig(level=logging.INFO)
+
 if __name__ == "__main__":
 	server = "http://koji.fedoraproject.org/kojihub/"
 	session = koji.ClientSession(server)
@@ -15,7 +18,11 @@ if __name__ == "__main__":
 
 	# fetch names of the latest builds for rawhide (ping DH if I can use some of it)
 	for pkg in packages:
-		data = session.getLatestRPMS("rawhide", package="golang-gopkg-check")
+		data = session.getLatestRPMS("rawhide", package=pkg)
+		if len(data[1]) == 0:
+			print "'%s' package not found" % pkg
+			continue
+
 		build = "%s-%s-%s" % (data[1][0]["package_name"], data[1][0]["version"], data[1][0]["release"])
 		rpms = []
 		for rpm in data[0]:
@@ -26,16 +33,7 @@ if __name__ == "__main__":
 				continue
 
 			rpm_obj = {
-				"name": "%s-%s-%s.%s.rpm" % (rpm["name"], rpm["version"], rpm["release"], rpm["arch"]),
-				# TODO(jchaloup): autodetect directories with deps
-				# what is a standard way for:
-				# - Godeps (Godeps.json, _workspace/src), src can contain: github.com/google.golang.org
-				# - vendor (src), src can contain: github.com|golang.org|gopkg.in|google.golang.org
-				# - experimental
-				# - other known dirs?
-				# - vendor/experimental
-				# - at the end, test each directory for presence of known providers
-				"skipped_directories": ["Godeps"]
+				"name": "%s-%s-%s.%s.rpm" % (rpm["name"], rpm["version"], rpm["release"], rpm["arch"])
 			}
 
 			rpms.append(rpm_obj)
@@ -49,18 +47,20 @@ if __name__ == "__main__":
 			}
 		}
 
-		print data
+		print data["build"]
 
-		print "Setting:"
-		print act.setData(data)
+		#print "Setting:"
+		if not act.setData(data):
+			print "setData Error" % pkg
 	
-		print "Executing:"
-		print act.execute()
+		#print "Executing:"
+		if not act.execute():
+			print "execute Error: %s" % pkg
 	
-		print "Getting:"
+		#print "Getting:"
 		#act.getData()
-		print json.dumps(act.getData())
-		break
+		#print json.dumps(act.getData())
+		#break
 # for each build get a list of devel subpackages (make asumption: pkg-devel.noarch.rpm)
 #rpms = session.getLatestRPMS("rawhide", package="etcd")
 
