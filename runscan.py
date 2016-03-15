@@ -29,10 +29,12 @@ if __name__ == "__main__":
 				"name": "%s-%s-%s.%s.rpm" % (rpm["name"], rpm["version"], rpm["release"], rpm["arch"]),
 				# TODO(jchaloup): autodetect directories with deps
 				# what is a standard way for:
-				# - Godeps
-				# - vendor
+				# - Godeps (Godeps.json, _workspace/src), src can contain: github.com/google.golang.org
+				# - vendor (src), src can contain: github.com|golang.org|gopkg.in|google.golang.org
 				# - experimental
 				# - other known dirs?
+				# - vendor/experimental
+				# - at the end, test each directory for presence of known providers
 				"skipped_directories": ["Godeps"]
 			}
 
