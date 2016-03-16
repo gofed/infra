@@ -8,7 +8,8 @@ from system.artefacts import artefacts
 STRATEGY_DISTRIBUTION_PREFIX = 1
 
 DISTRO_PREFIX = "usr/share/gocode/src/"
-DISTRO_PREFIX_LEN = 21
+DISTRO_PREFIX_LEN = len(DISTRO_PREFIX)
+DISTRO_DOC_PREFIX = "usr/share/doc/"
 
 class ArtefactDecomposer:
 	"""
@@ -24,6 +25,12 @@ class ArtefactDecomposer:
 		for package in artefact["packages"]:
 			# the only supported prefix atm is /usr/share/gocode/src
 			pkg = package["package"]
+
+			# if the package is prefixed with /usr/share/doc/, filter it out
+			# TODO(jchaloup): for doc create a new property in the artefact
+			if pkg.startswith(DISTRO_DOC_PREFIX):
+				continue
+
 			if not pkg.startswith(DISTRO_PREFIX):
 				raise ValueError("Package %s does not start with %s" % (pkg, DISTRO_PREFIX))
 
@@ -63,6 +70,11 @@ class ArtefactDecomposer:
 		# decompose list of packages
 		pkg_classes = {}
 		for package in artefact["data"]["packages"]:
+			# if the package is prefixed with /usr/share/doc/, filter it out
+			# TODO(jchaloup): for doc create a new property in the artefact
+			if package.startswith(DISTRO_DOC_PREFIX):
+				continue
+
 			# the only supported prefix atm is /usr/share/gocode/src
 			if not package.startswith(DISTRO_PREFIX):
 				raise ValueError("Package %s does not start with %s" % (package, DISTRO_PREFIX))
@@ -79,6 +91,12 @@ class ArtefactDecomposer:
 		dep_classes = {}
 		for dep in artefact["data"]["dependencies"]:
 			package = dep["package"]
+
+			# if the package is prefixed with /usr/share/doc/, filter it out
+			# TODO(jchaloup): for doc create a new property in the artefact
+			if package.startswith(DISTRO_DOC_PREFIX):
+				continue
+
 			if not package.startswith(DISTRO_PREFIX):
 				raise ValueError("Package %s does not start with %s" % (package, DISTRO_PREFIX))
 
@@ -95,6 +113,12 @@ class ArtefactDecomposer:
 		main_classes = {}
 		for main in artefact["data"]["main"]:
 			filename = main["filename"]
+
+			# if the package is prefixed with /usr/share/doc/, filter it out
+			# TODO(jchaloup): for doc create a new property in the artefact
+			if filename.startswith(DISTRO_DOC_PREFIX):
+				continue
+
 			if not filename.startswith(DISTRO_PREFIX):
 				raise ValueError("Main %s does not start with %s" % (filename, DISTRO_PREFIX))
 
@@ -111,6 +135,12 @@ class ArtefactDecomposer:
 		test_classes = {}
 		for test in artefact["data"]["tests"]:
 			package = test["test"]
+
+			# if the package is prefixed with /usr/share/doc/, filter it out
+			# TODO(jchaloup): for doc create a new property in the artefact
+			if package.startswith(DISTRO_DOC_PREFIX):
+				continue
+
 			if not package.startswith(DISTRO_PREFIX):
 				raise ValueError("Package %s does not start with %s" % (package, DISTRO_PREFIX))
 

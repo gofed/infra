@@ -43,7 +43,7 @@ class GoSymbolsExtractor(MetaProcessor):
 
 		"""Setting implicit flags"""
 		self.verbose = False
-		self.skip_errors = False
+		self.skip_errors = True
 
 		"""set implicit output"""
 		# project
