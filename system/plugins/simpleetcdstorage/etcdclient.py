@@ -19,7 +19,7 @@ class EtcdClient:
 
 		# if the value is too long, save it into a file
 		if len(escaped_value) > MAXIMUM_VALUE_LEN:
-			f = tempfile.NamedTemporaryFile(delete=False)
+			f = tempfile.NamedTemporaryFile(delete=True)
 			with open(f.name, 'w') as s:
 				s.write(value)
 			cmd = "etcdctl set \"%s\" < %s" % (escaped_key, f.name)
