@@ -1,4 +1,5 @@
-from .types import Graph
+from gofed_lib.graphutils import Graph
+from gofed_lib.graphutils import GraphUtils
 
 # nodes = rpms
 LEVEL_RPM = 1
@@ -28,6 +29,9 @@ class DatasetDependencyGraphBuilder(object):
 
 		self._missing_packages = list(set(missing))
 
+		# convert edges to adjacent list
+		edges = GraphUtils.edges2adjacentList(edges)
+
 		return Graph(nodes, edges)
 
 	def _buildGolangPackageLevelGraph(self, dataset):
@@ -51,6 +55,9 @@ class DatasetDependencyGraphBuilder(object):
 
 		# mixing all categories we can get repeating edges
 		edges = list(set(edges))
+
+		# convert edges to adjacent list
+		edges = GraphUtils.edges2adjacentList(edges)
 
 		# TODO(jchaloup): integrate parent mapping as well so one can join packages from the same rpm
 		return Graph(nodes, edges)

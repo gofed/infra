@@ -95,6 +95,7 @@ class DistributionLatestBuildGraphDataset:
 		return (vertices, edges)
 
 	def _buildGraph(self, requirements):
+		# TODO(jchaloup): extend nodes on a level of files?
 		vertices = []	# [rpm]
 		edges = []	# [(rpm,rpm)]
 		alphabet = []	# [package]
@@ -205,8 +206,8 @@ class DistributionLatestBuildGraphDataset:
 
 			requirements.append(self._extractRequirements(artefacts["packages"]))
 			
-			if counter == 40:
-				break
+			#if counter == 60:
+			#	break
 
 			counter = counter + 1
 
