@@ -1,15 +1,18 @@
 from gofed_lib.packagemanager import PackageManager
-import koji
 import json
+import traceback
+import sys
 
 from system.acts.scandistributionbuild.act import ScanDistributionBuildAct
+from gofed_lib.kojiclient import FakeKojiClient, KojiClient
+from gofed_lib.helpers import Rpm
 
 import logging
 logging.basicConfig(level=logging.INFO)
 
 if __name__ == "__main__":
-	server = "http://koji.fedoraproject.org/kojihub/"
-	session = koji.ClientSession(server)
+
+	client = FakeKojiClient()
 
 	act = ScanDistributionBuildAct()
 
@@ -18,49 +21,62 @@ if __name__ == "__main__":
 
 	# fetch names of the latest builds for rawhide (ping DH if I can use some of it)
 	for pkg in packages:
-		data = session.getLatestRPMS("rawhide", package=pkg)
-		if len(data[1]) == 0:
-			print "'%s' package not found" % pkg
+		try:
+			data = client.getLatestRPMS("rawhide", "etcd")
+		except ValueError as e:
+			logging.error(e)
 			continue
 
-		build = "%s-%s-%s" % (data[1][0]["package_name"], data[1][0]["version"], data[1][0]["release"])
 		rpms = []
-		for rpm in data[0]:
-			if rpm["arch"] != "noarch":
+		for rpm in data["rpms"]:
+			rpm_name = Rpm(data["name"], rpm["name"]).name()
+			if not rpm_name.endswith("devel"): # and not rpm["name"].endswith("unit-test"):
 				continue
 
-			if not rpm["name"].endswith("devel"): # and not rpm["name"].endswith("unit-test"):
-				continue
+			# Some devel subpackage may still be arch specific
+			#if rpm["arch"] != "noarch":
+			#	continue
 
 			rpm_obj = {
-				"name": "%s-%s-%s.%s.rpm" % (rpm["name"], rpm["version"], rpm["release"], rpm["arch"])
+				"name": rpm["name"]
 			}
 
 			rpms.append(rpm_obj)
+
+		if rpms == []:
+			print "List of rpms empty\n"
+			continue
 
 		data = {
 			"product": "Fedora",
 			"distribution": "rawhide",
 			"build": {
-				"name": build,
+				"name": data["name"],
 				"rpms": rpms
 			}
 		}
 
 		print data["build"]
 
-		#print "Setting:"
-		if not act.setData(data):
-			print "setData Error" % pkg
+		try:
+			#print "Setting:"
+			if not act.setData(data):
+				print "setData Error: %s\n" % pkg
 	
-		#print "Executing:"
-		if not act.execute():
-			print "execute Error: %s" % pkg
+			#print "Executing:"
+			if not act.execute():
+				print "execute Error: %s\n" % pkg
+		except:
+			exc_info = sys.exc_info()
+			traceback.print_exception(*exc_info)
+			del exc_info
+
+		print ""
 	
 		#print "Getting:"
 		#act.getData()
 		#print json.dumps(act.getData())
-		#break
+		break
 # for each build get a list of devel subpackages (make asumption: pkg-devel.noarch.rpm)
 #rpms = session.getLatestRPMS("rawhide", package="etcd")
 
