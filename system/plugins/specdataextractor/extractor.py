@@ -117,7 +117,10 @@ class SpecDataExtractor(MetaProcessor):
 		# RFE(jchaloup): if %commit is not found => log this to special channel
 		self.commit = sp.getMacro("commit")
 		if self.commit == "":
-			logging.error("commit not found")
+			self.commit = sp.getMacro("rev")
+
+		if self.commit == "":
+			logging.error("commit/rev not found")
 			return False
 
 		# RFE(jchaloup): if %import_path is not found => log this to special channel
