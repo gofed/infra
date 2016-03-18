@@ -25,14 +25,14 @@ class EtcdClient:
 			cmd = "etcdctl set \"%s\" < %s" % (escaped_key, f.name)
 			so, se, rc = runCommand(cmd)
 			if rc != 0:
-				logging.info(se)
+				logging.error("%s, len: %s" % (se, len(escaped_value)))
 				return False
 			f.close()
 		else:
 			cmd = "etcdctl set \"%s\" \"%s\"" % (escaped_key, escaped_value)
 			so, se, rc = runCommand(cmd)
 			if rc != 0:
-				logging.info(se)
+				logging.error(se)
 				return False
 		return True
 
