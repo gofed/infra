@@ -26,6 +26,7 @@ import json
 import logging
 
 from infra.system.core.functions.types import FunctionFailedError
+from .graphdataset import GraphDataset
 
 class DistributionLatestBuildGraphDataset:
 
@@ -156,9 +157,12 @@ class DistributionLatestBuildGraphDataset:
 		# make alphabet unique
 		alphabet = list(set(alphabet))
 
-		return(vertices, edges, parents, alphabet, labels)
+		return GraphDataset(vertices, edges, alphabet, parents, labels)
 
 	def build(self):
+		"""Build dataset for a given list of buildes
+		"""
+		# TODO(jchaloup): specify json schema for a dataset
 		# get a list of latest rpms for selected packages
 		counter = 0
 		requirements = []
@@ -206,5 +210,5 @@ class DistributionLatestBuildGraphDataset:
 
 			counter = counter + 1
 
-		self._buildGraph(requirements)
+		return self._buildGraph(requirements)
 
