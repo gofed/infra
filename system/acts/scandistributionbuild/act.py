@@ -48,6 +48,9 @@ class ScanDistributionBuildAct(MetaAct):
 		# to get artefact from a storage. Without the project I can not
 		# get artefact from a storage.
 
+		self.exported_api = {}
+		self.packages = {}
+
 		missing_rpms = []
 		for rpm in self.rpms:
 			rpm_name = rpm["name"]
