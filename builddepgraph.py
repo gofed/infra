@@ -33,7 +33,9 @@
 
 from gofed_lib.packagemanager import PackageManager
 from system.models.graphs.datasets.distributionlatestbuilds import DistributionLatestBuildGraphDataset
+from system.models.graphs.datasetdependencygraphbuilder import DatasetDependencyGraphBuilder
 
+import json
 import logging
 #logging.basicConfig(level=logging.INFO)
 
@@ -41,10 +43,15 @@ if __name__ == "__main__":
 	# get a list of all packages
 	packages = PackageManager().getPackages()
 
-	dataset = DistributionLatestBuildGraphDataset("rawhide", packages)
-	dataset.build()
+	dataset = DistributionLatestBuildGraphDataset("rawhide", packages).build()
 
+	graph = DatasetDependencyGraphBuilder().build(dataset, 2)
+	print str(graph)
 
+	#DatasetBuilder("DistributionLatestBuild").\
+	#	build("rawhide", packages).\
+	#	graph(level)
+	#DistributionLatestBuildGraphDataset("rawhide", packages).build().graph(level).build()
 
 
 
