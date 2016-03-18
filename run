@@ -1,0 +1,1 @@
+time PYTHONPATH=$(pwd)/third_party:$(pwd)/../ python builddepgraph.py
