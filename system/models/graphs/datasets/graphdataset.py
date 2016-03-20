@@ -1,7 +1,7 @@
 class GraphDataset(object):
 	"""Encapsulation of graph dataset
 	"""
-	def __init__(self, nodes, edges, alphabet, parents, labels):
+	def __init__(self, nodes = [], edges = {}, alphabet = [], parents = {}, labels = {}):
 		self._nodes = nodes
 		self._edges = edges
 		self._alphabet = alphabet
