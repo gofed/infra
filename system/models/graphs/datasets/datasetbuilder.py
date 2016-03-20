@@ -3,9 +3,12 @@ import os
 
 class DatasetBuilder(object):
 
-	def __init__(self):
+	def __init__(self, with_main = False, with_tests = False):
 		self._requirements = []
 		self._dataset = GraphDataset()
+
+		self.with_main = with_main
+		self.with_tests = with_tests
 
 	def dataset(self):
 		return self._dataset
@@ -138,19 +141,26 @@ class DatasetBuilder(object):
 		#
 		# TODO:
 		# - how to detect missing packages on rpm-level?
+		categories = ["devel"]
+		if self.with_main:
+			categories.append("main")
+		if self.with_tests:
+			categories.append("tests")
 
 		for v, _ in self._requirements:
 			for rpm in v:
 				vertices.append(rpm)
 				# symbols
-				alphabet = alphabet + v[rpm]["devel"] + v[rpm]["main"] + v[rpm]["tests"]
-				# parents
-				for l in v[rpm]["main"] + v[rpm]["tests"] + v[rpm]["devel"]:
-					parents[l] = rpm
+				for category in categories:
+					alphabet = alphabet + v[rpm][category]
+
+					# parents
+					for l in v[rpm][category]:
+						parents[l] = rpm
 
 		for _, e in self._requirements:
 			for rpm in e:
-				for category in ["devel", "main", "tests"]:
+				for category in categories:
 					for (a, b) in e[rpm][category]:
 						# edges
 						try:
