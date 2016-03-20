@@ -3,7 +3,7 @@
 # - distribution prefix strategy: decompose artefacts based on /usr/share/gocode/src/ipprefix prefix
 #
 
-from system.artefacts import artefacts
+from infra.system.artefacts import artefacts
 
 STRATEGY_DISTRIBUTION_PREFIX = 1
 
