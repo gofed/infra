@@ -56,11 +56,15 @@ class GoCodeInspectionAct(MetaAct):
 				"commit": self.data["commit"]
 			})
 			if not ok:
+				artefacts = self.ff.bake("gosymbolsextractor").call(self.data)
 				self.golang_project_packages = self._getArtefactFromData(
 					ARTEFACT_GOLANG_PROJECT_PACKAGES,
-					self.ff.bake("gosymbolsextractor").call(self.data)
+					artefacts
 				)
 
+				# TODO(jchaloup): just for testing purposes
+				for artefact in artefacts:
+					data = self.ff.bake("etcdstoragewriter").call(artefact)
 		else:
 			self.golang_project_packages = self._getArtefactFromData(
 				ARTEFACT_GOLANG_PROJECT_PACKAGES,
