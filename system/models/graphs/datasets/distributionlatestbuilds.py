@@ -20,7 +20,7 @@
 
 from gofed_lib.kojiclient import FakeKojiClient, KojiClient
 from gofed_lib.helpers import Rpm
-from system.core.factory.actfactory import ActFactory
+from infra.system.core.factory.actfactory import ActFactory
 import json
 import logging
 
@@ -96,12 +96,13 @@ class DistributionLatestBuildGraphDataset:
 				logging.error(e)
 				continue
 
-			builder.addArtefact(artefacts["packages"])
+			for rpm in artefacts["packages"]:
+				builder.addArtefact(artefacts["packages"][rpm], rpm)
 			
-			#if counter == 60:
+			#if counter == 40:
 			#	break
 
-			counter = counter + 1
+			#counter = counter + 1
 
 		return builder.build().dataset()
 

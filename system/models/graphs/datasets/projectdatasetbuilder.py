@@ -1,5 +1,5 @@
 from .datasetbuilder import DatasetBuilder
-from system.core.factory.actfactory import ActFactory
+from infra.system.core.factory.actfactory import ActFactory
 from .types import DatasetError
 from infra.system.core.functions.types import FunctionFailedError
 

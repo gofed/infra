@@ -10,9 +10,9 @@ class DatasetBuilder(object):
 	def dataset(self):
 		return self._dataset
 
-	def addArtefact(self, artefact):
+	def addArtefact(self, artefact, node_name = "-"):
 		self._requirements.append(
-			self._extractRequirements(artefact)
+			self._extractRequirements(artefact, node_name)
 		)
 
 		return self
@@ -22,15 +22,15 @@ class DatasetBuilder(object):
 
 		return self
 
-	def _extractRequirements(self, artefact):
+	def _extractRequirements(self, artefact, node_name):
 		if artefact["artefact"] == "golang-project-distribution-packages":
-			return self._extractProjectDistributionRequirements(artefact)
+			return self._extractProjectDistributionPackagesRequirements(artefact, node_name)
 		if artefact["artefact"] == "golang-project-packages":
-			return self._extractProjectPackagesRequirements(artefact)
+			return self._extractProjectPackagesRequirements(artefact, node_name)
 
 		raise ValueError("Artefact '%s' not supported" % artefact["artefact"])
 
-	def _extractProjectPackagesRequirements(self, artefact):
+	def _extractProjectPackagesRequirements(self, artefact, node_name):
 		"""
 		:param artefact: golang-project-*-packages artefact
 		:type  artefact: json
@@ -39,41 +39,40 @@ class DatasetBuilder(object):
 		vertices = {}
 		edges = {}
 
-		prefix_unit = "-"
-		vertices[prefix_unit] = {}
-		edges[prefix_unit] = {}
+		vertices[node_name] = {}
+		edges[node_name] = {}
 
 		# vertices
-		vertices[prefix_unit]["devel"] = []
+		vertices[node_name]["devel"] = []
 		for package in artefact["data"]["packages"]:
-			vertices[prefix_unit]["devel"].append("%s/%s" % (artefact["ipprefix"], package))
+			vertices[node_name]["devel"].append("%s/%s" % (artefact["ipprefix"], package))
 
 		# edges
-		edges[prefix_unit]["devel"] = []
+		edges[node_name]["devel"] = []
 		for dependencies in artefact["data"]["dependencies"]:
-			edges[prefix_unit]["devel"] = edges[prefix_unit]["devel"] + map(lambda l: ("%s/%s" % (artefact["ipprefix"], dependencies["package"]), l["name"]), dependencies["dependencies"])
+			edges[node_name]["devel"] = edges[node_name]["devel"] + map(lambda l: ("%s/%s" % (artefact["ipprefix"], dependencies["package"]), l["name"]), dependencies["dependencies"])
 
 		# main packages
-		vertices[prefix_unit]["main"] = []
-		edges[prefix_unit]["main"] = []
+		vertices[node_name]["main"] = []
+		edges[node_name]["main"] = []
 		for main in artefact["data"]["main"]:
 			# dirname from filename says in which package the dependencies are required/imported
 			pkg = os.path.dirname(main["filename"])
-			vertices[prefix_unit]["main"].append("%s/%s" % (artefact["ipprefix"], pkg))
-			edges[prefix_unit]["main"] = edges[prefix_unit]["main"] + map(lambda l: ("%s/%s" % (artefact["ipprefix"], pkg), l),  main["dependencies"])
+			vertices[node_name]["main"].append("%s/%s" % (artefact["ipprefix"], pkg))
+			edges[node_name]["main"] = edges[node_name]["main"] + map(lambda l: ("%s/%s" % (artefact["ipprefix"], pkg), l),  main["dependencies"])
 		# one directory can have multiple filename import the same package
-		edges[prefix_unit]["main"] = list(set(edges[prefix_unit]["main"]))
+		edges[node_name]["main"] = list(set(edges[node_name]["main"]))
 
 		# unit-tests
-		vertices[prefix_unit]["tests"] = []
-		edges[prefix_unit]["tests"] = []
+		vertices[node_name]["tests"] = []
+		edges[node_name]["tests"] = []
 		for test in artefact["data"]["tests"]:
-			vertices[prefix_unit]["tests"].append("%s/%s" % (artefact["ipprefix"], test["test"]))
-			edges[prefix_unit]["tests"] = edges[prefix_unit]["tests"] + map(lambda l: ("%s/%s" % (artefact["ipprefix"], test["test"]), l),  test["dependencies"])
+			vertices[node_name]["tests"].append("%s/%s" % (artefact["ipprefix"], test["test"]))
+			edges[node_name]["tests"] = edges[node_name]["tests"] + map(lambda l: ("%s/%s" % (artefact["ipprefix"], test["test"]), l),  test["dependencies"])
 
 		return (vertices, edges)
 
-	def _extractProjectDistributionPackagesRequirements(self, artefact):
+	def _extractProjectDistributionPackagesRequirements(self, artefact, node_name):
 		"""
 		:param artefact: golang-project-*-packages artefact
 		:type  artefact: json
@@ -81,37 +80,37 @@ class DatasetBuilder(object):
 		# collect vertices and edges
 		vertices = {}
 		edges = {}
-		for rpm in artefact:
-			vertices[rpm] = {}
-			edges[rpm] = {}
-			for prefix_unit in artefact[rpm]["data"]:
-				# vertices
-				vertices[rpm]["devel"] = []
-				for package in prefix_unit["packages"]:
-					vertices[rpm]["devel"].append(package)
+		vertices[node_name] = {}
+		edges[node_name] = {}
 
-				# edges
-				edges[rpm]["devel"] = []
-				for dependencies in prefix_unit["dependencies"]:
-					edges[rpm]["devel"] = edges[rpm]["devel"] + map(lambda l: (dependencies["package"], l["name"]), dependencies["dependencies"])
+		for prefix_unit in artefact["data"]:
+			# vertices
+			vertices[node_name]["devel"] = []
+			for package in prefix_unit["packages"]:
+				vertices[node_name]["devel"].append(package)
 
-				# main packages
-				vertices[rpm]["main"] = []
-				edges[rpm]["main"] = []
-				for main in prefix_unit["main"]:
-					# dirname from filename says in which package the dependencies are required/imported
-					pkg = os.path.dirname(main["filename"])
-					vertices[rpm]["main"].append(pkg)
-					edges[rpm]["main"] = edges[rpm]["main"] + map(lambda l: (pkg, l),  main["dependencies"])
-				# one directory can have multiple filename import the same package
-				edges[rpm]["main"] = list(set(edges[rpm]["main"]))
+			# edges
+			edges[node_name]["devel"] = []
+			for dependencies in prefix_unit["dependencies"]:
+				edges[node_name]["devel"] = edges[node_name]["devel"] + map(lambda l: (dependencies["package"], l["name"]), dependencies["dependencies"])
 
-				# unit-tests
-				vertices[rpm]["tests"] = []
-				edges[rpm]["tests"] = []
-				for test in prefix_unit["tests"]:
-					vertices[rpm]["tests"].append(test["test"])
-					edges[rpm]["tests"] = edges[rpm]["tests"] + map(lambda l: (test["test"], l),  test["dependencies"])
+			# main packages
+			vertices[node_name]["main"] = []
+			edges[node_name]["main"] = []
+			for main in prefix_unit["main"]:
+				# dirname from filename says in which package the dependencies are required/imported
+				pkg = os.path.dirname(main["filename"])
+				vertices[node_name]["main"].append(pkg)
+				edges[node_name]["main"] = edges[node_name]["main"] + map(lambda l: (pkg, l),  main["dependencies"])
+			# one directory can have multiple filename import the same package
+			edges[node_name]["main"] = list(set(edges[node_name]["main"]))
+
+			# unit-tests
+			vertices[node_name]["tests"] = []
+			edges[node_name]["tests"] = []
+			for test in prefix_unit["tests"]:
+				vertices[node_name]["tests"].append(test["test"])
+				edges[node_name]["tests"] = edges[node_name]["tests"] + map(lambda l: (test["test"], l),  test["dependencies"])
 
 		return (vertices, edges)
 
