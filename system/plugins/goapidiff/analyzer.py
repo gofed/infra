@@ -68,5 +68,11 @@ class GoApiDiff(MetaProcessor):
 
 	def execute(self):
 		"""Impementation of concrete data processor"""
-		return self.apidiff.runDiff()
+		try:
+			self.apidiff.runDiff()
+		except ValueError as e:
+			logging.error("GoApiDiff: %s" % e)
+			return False
+
+		return True
 

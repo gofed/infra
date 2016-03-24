@@ -4,6 +4,7 @@ import logging
 from infra.system.helpers.artefact_schema_validator import ArtefactSchemaValidator
 from infra.system.helpers.utils import getScriptDir
 from gofed_lib import gosymbolsextractor
+from gofed_lib.types import ExtractionError
 
 CONFIG_SOURCE_CODE_DIRECTORY = "resource"
 CONFIG_SKIPPED_DIRECTORIES = "directories_to_skip"
@@ -149,5 +150,10 @@ class GoSymbolsExtractor(MetaProcessor):
 		return data
 
 	def execute(self):
-		return self.gosymbolsextractor.extract()
+		try:
+			self.gosymbolsextractor.extract()
+		except ExtractionError as e:
+			logging.error("GoSymbolExtractor: %s" % e)
+			return False
+		return True
 
