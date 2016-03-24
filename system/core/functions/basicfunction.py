@@ -29,8 +29,10 @@ class BasicFunction:
 		if RESOURCE_FIELD in data:
 			# TODO(jchaloup): get client from client builder
 			client = ResourceClient(ProviderBuilder(), "/var/lib/gofed/resource_client")
-			if not client.retrieve(data[RESOURCE_FIELD]):
-				raise ResourceNotFoundError("Unable to retrieve resource: %s" % data[RESOURCE_FIELD])
+			try:
+				client.retrieve(data[RESOURCE_FIELD]):
+			except ValueError as e:
+				raise ResourceNotFoundError("Unable to retrieve resource '%s': %s" % (data[RESOURCE_FIELD], e))
 
 			m_data[RESOURCE_FIELD] = client.getSubresource()
 

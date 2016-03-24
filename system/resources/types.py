@@ -1,6 +1,7 @@
 RESOURCE_RPM = "rpm"
 RESOURCE_USER_DIRECTORY = "user-directory"
 RESOURCE_UPSTREAM_SOURCE_CODES = "upstream-source-code"
+RESOURCE_REPOSITORY = "repository"
 
 RESOURCE_TYPE_DIRECTORY = "directory"
 RESOURCE_TYPE_RPM = "rpm"

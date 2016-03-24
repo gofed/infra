@@ -93,6 +93,36 @@ class ResourceClient:
 
 			raise ValueError("Invalid resource specification")
 
+	def _handleRepository(self, provider, username, project):
+		if provider == "github":
+			provider = self.provider.buildGithubRepositoryProvider()
+		else:
+			raise ValueError("Unsupported provider: %s" % provider)
+
+		# TODO(jchaloup): catch exceptions from provide(...)
+		# product, distribution, build, rpm
+		resource_location =  provider.provide(username, project)
+
+		# TODO(jchaloup): catch exceptions for tarfile
+		tar = tarfile.open(resource_location)
+		dirpath = tempfile.mkdtemp()
+		tar.extractall(dirpath)
+		rootdir = ""
+		for member in tar.getmembers():
+			rootdir = member.name.split("/")[0]
+			break
+		tar.close()
+
+		# move the temp directory under working directory
+		resource_dest = "%s/%s_%s%s" % (
+			self.working_directory,
+			self.__class__.__name__.lower(),
+			uuid.uuid4().hex,
+			uuid.uuid4().hex
+		)
+		# TODO(jchaloup): catch exception and raise better one with more info
+		move(dirpath, resource_dest)
+		return "%s/%s" % (resource_dest, rootdir)
 
 	def retrieve(self, descriptor):
 		"""Retrieve subresource specified in descriptor
@@ -106,12 +136,12 @@ class ResourceClient:
 				if descriptor["resource-type"] == RESOURCE_TYPE_DIRECTORY:
 					# TODO(jchaloup): check if the directory exists
 					self.subresource = descriptor["location"][7:]
-					return True
+					return
 				# Extract the directory
 				#elif self.descriptor["resource-type"] == RESOURCE_TYPE_TARBALL:
 		elif resource_type == RESOURCE_UPSTREAM_SOURCE_CODES:
 			self.subresource = self._handleUpstreamSourceCode(descriptor["project"], descriptor["commit"])
-			return True
+			return
 
 		elif resource_type == RESOURCE_RPM:
 			self.subresource = self._handleRpm(
@@ -121,11 +151,17 @@ class ResourceClient:
 				descriptor["rpm"],
 				descriptor["subresource"]
 			)
-			return True
+			return
 
-		raise NotImplementedError()
+		elif resource_type == RESOURCE_REPOSITORY:
+			self.subresource = self._handleRepository(
+				descriptor["provider"],
+				descriptor["username"],
+				descriptor["project"]
+			)
+			return
 
-		return False
+		raise ValueError("ResourceClient: resource type '%s' not implemented" % resource_type)
 
 	def getSubresource(self):
 		"""Return location of subresource
