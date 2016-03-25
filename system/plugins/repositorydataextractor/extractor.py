@@ -10,7 +10,7 @@ from infra.system.artefacts.artefacts import ARTEFACT_GOLANG_PROJECT_REPOSITORY_
 from gofed_lib.github.client import GithubLocalClient
 from gofed_lib.utils import dateToTimestamp
 
-class GitCommitExtractor(MetaProcessor):
+class RepositoryDataExtractor(MetaProcessor):
 
 	def __init__(self):
 		self.input_validated = False

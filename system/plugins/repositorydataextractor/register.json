@@ -1,0 +1,6 @@
+{
+  "id": "repositorydataextractor",
+  "class": "RepositoryDataExtractor",
+  "file": "extractor.py",
+  "version": "1.0-alpha1"
+}
