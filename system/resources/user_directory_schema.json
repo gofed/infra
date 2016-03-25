@@ -13,7 +13,7 @@
 			"type": "string",
 			"description": "Resource type, e.g. tarball, directory",
 			"oneOf": [
-				{"enum": ["tarball, directory"]}
+				{"enum": ["tarball", "directory"]}
 			]
 		},
 		"resource": {
