@@ -1,46 +1,97 @@
-
 {
-  "$schema": "http://json-schema.org/draft-04/schema#",
-  "title" : "Golang project repository commit",
-  "description": "Commit information",
-  "type": "object",
-  "properties": {
-    "artefact": {
-      "description": "Artefact name",
-      "type": "string"
-    },
-    "repository": {
-      "description": "Repository name",
-      "type": "string"
-    },
-    "commit": {
-      "description": "ID of the commit",
-      "type": "string"
-    },
-    "adate": {
-      "description": "Author date",
-      "type": "string"
-    },
-    "cdate": {
-      "description": "Commit date",
-      "type": "string"
-    },
-    "author": {
-      "description": "Author of commit",
-      "type": "string"
-    },
-    "message": {
-      "description": "Commit message",
-      "type": "string"
-    }
-  },
-  "required": [
-    "artefact",
-    "repository",
-    "commit",
-    "adate",
-    "cdate",
-    "author",
-    "message"
-  ]
+	"$schema": "http://json-schema.org/draft-04/schema#",
+	"title" : "Golang project repository commit",
+	"description": "Commit information",
+	"type": "object",
+	"properties": {
+		"artefact": {
+			"description": "Artefact name",
+			"type": "string"
+		},
+		"repository": {
+			"anyOf": [
+				{ "$ref": "#/definitions/github" },
+				{ "$ref": "#/definitions/bitbucket" }
+			]
+		},
+		"commit": {
+			"description": "ID of the commit",
+			"type": "string"
+		},
+		"adate": {
+			"description": "Author date",
+			"type": "string"
+		},
+		"cdate": {
+			"description": "Commit date",
+			"type": "string"
+		},
+		"author": {
+			"description": "Author of commit",
+			"type": "string"
+		},
+		"message": {
+			"description": "Commit message",
+			"type": "string"
+		}
+	},
+	"required": [
+		"artefact",
+		"repository",
+		"commit",
+		"adate",
+		"cdate",
+		"author",
+		"message"
+	],
+	"definitions": {
+		"github": {
+			"description": "Github repository",
+			"type": "object",
+			"properties": {
+				"provider": {
+					"description": "Provider",
+					"type": "string",
+					"oneOf": [
+						{"enum": ["github"]}
+					]
+				},
+				"username": {
+					"description": "Github username",
+					"type": "string",
+					"minLength": 1
+				},
+				"project": {
+					"description": "Github project",
+					"type": "string",
+					"minLength": 1
+				}
+			},
+			"required": ["provider", "username", "project"]
+		},
+		"bitbucket": {
+			"description": "Bitbucket repository",
+			"type": "object",
+			"properties": {
+				"provider": {
+					"description": "Provider",
+					"type": "string",
+					"oneOf": [
+						{"enum": ["bitbucket"]}
+					]
+				},
+				"username": {
+					"description": "Bitbucket username",
+					"type": "string",
+					"minLength": 1
+				},
+				"project": {
+					"description": "Bitbucket project",
+					"type": "string",
+					"minLength": 1
+				}
+			},
+			"required": ["provider", "username", "project"]
+		}
+	}
 }
