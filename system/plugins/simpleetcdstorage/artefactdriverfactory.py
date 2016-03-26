@@ -12,6 +12,7 @@ from .golangprojectrepositoryinfo import GolangProjectRepositoryInfoDriver
 from .golangprojectrepositorycommit import GolangProjectRepositoryCommitDriver
 from .golangprojectdistributioninfo import GolangProjectDistributionInfoDriver
 from .golangprojectdistributionbuild import GolangProjectDistributionBuildDriver
+from .cachegolangprojectrepositorycommits import CacheGolangProjectRepositoryCommitsDriver
 
 class ArtefactDriverFactory:
 
@@ -55,5 +56,8 @@ class ArtefactDriverFactory:
 
 		if artefact == artefacts.ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_BUILD:
 			return GolangProjectDistributionBuildDriver()
+
+		if artefact == artefacts.ARTEFACT_CACHE_GOLANG_PROJECT_REPOSITORY_COMMITS:
+			return CacheGolangProjectRepositoryCommitsDriver()
 
 		raise ValueError("Invalid artefact: %s" % artefact)

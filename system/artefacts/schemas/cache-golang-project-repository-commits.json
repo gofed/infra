@@ -1,26 +1,21 @@
 {
 	"$schema": "http://json-schema.org/draft-04/schema#",
-	"title": "Golang project repository info",
-	"description": "Repository basic information and list of commits",
+	"title": "Golang project repository commits cache",
+	"description": "Repository list of commits with theirs commit date",
 	"type": "object",
 	"properties": {
 		"artefact": {
 			"description": "Artefact name",
 			"type": "string"
+			"oneOf": [
+				{"enum": ["cache-golang-project-repository-commits"]}
+			]
 		},
 		"repository": {
 			"anyOf": [
 				{ "$ref": "#/definitions/github" },
 				{ "$ref": "#/definitions/bitbucket" }
 			]
-		},
-		"branches": {
-			"description": "List of branches",
-			"type": "array",
-			"items": {
-				"description": "Branch name",
-				"type": "string"
-			}
 		},
 		"coverage": {
 			"description": "List of covered date intervals",
@@ -45,15 +40,29 @@
 			"description": "List of commits",
 			"type": "array",
 			"items": {
-				"description": "Commit hexsha",
-				"type": "string"
-			}
+				"description": "Commit with commit date timestamps",
+				"type": "object",
+				"properties": {
+					"c": {
+						"description": "commit",
+						"type": "string",
+						"minLength": 1
+					},
+					"d": {
+						"description": "commit data timestamp",
+						"type": "string",
+						"minLength": 1
+					}
+				},
+				"required": ["c", "d"]
+			},
+			"uniqueItems": true
 		}
 	},
 	"required": [
 		"artefact",
 		"repository",
-		"branches",
+		"coverage",
 		"commits"
 	],
 	"definitions": {

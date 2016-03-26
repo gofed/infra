@@ -46,12 +46,20 @@
 {
 	"id": "golang-project-repository-info",
 	"artefact": "ARTEFACT_GOLANG_PROJECT_REPOSITORY_INFO",
-	"keys": ["artefact","project"]
+	"keys": ["artefact", "repository"],
+	"key_order": {
+		"repository": ["provider", "username", "project"]
+	}
+
 },
 {
 	"id": "golang-project-repository-commit",
 	"artefact": "ARTEFACT_GOLANG_PROJECT_REPOSITORY_COMMIT",
-	"keys": ["artefact", "repository", "commit"]
+	"keys": ["artefact", "repository", "commit"],
+	"key_order": {
+		"repository": ["provider", "username", "project"]
+	}
+
 },
 	{
 	"id": "golang-project-distribution-info",
@@ -62,5 +70,13 @@
 	"id": "golang-project-distribution-build",
 	"artefact": "ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_BUILD",
 	"keys": ["artefact", "product", "distribution", "build"]
+},
+{
+	"id": "cache-golang-project-repository-commits",
+	"artefact": "ARTEFACT_CACHE_GOLANG_PROJECT_REPOSITORY_COMMITS",
+	"keys": ["artefact", "repository"],
+	"key_order": {
+		"repository": ["provider", "username", "project"]
+	}
 }
 ]
