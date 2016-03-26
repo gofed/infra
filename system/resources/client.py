@@ -122,6 +122,9 @@ class ResourceClient:
 		)
 		# TODO(jchaloup): catch exception and raise better one with more info
 		move(dirpath, resource_dest)
+
+		# TODO(jchaloup): call git pull/ hg pull on the repository
+
 		return "%s/%s" % (resource_dest, rootdir)
 
 	def retrieve(self, descriptor):

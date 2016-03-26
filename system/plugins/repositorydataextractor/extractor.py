@@ -40,7 +40,7 @@ class RepositoryDataExtractor(MetaProcessor):
 		if 'end_date' in data:
 			self.end_date = dateToTimestamp(data["end_date"])
 		else:
-			self.end_date = time.mktime((datetime.date.today() + datetime.timedelta(hours=24)).timetuple())
+			self.end_date = int(time.mktime((datetime.date.today() + datetime.timedelta(hours=24)).timetuple()))
 
 		return True
 
@@ -51,8 +51,17 @@ class RepositoryDataExtractor(MetaProcessor):
 		data['branches'] = self.branches
 
 		commits = set([])
+		start_date = self.end_date
+		end_date = self.start_date
 		for branch in self.commits:
+			for commit in self.commits[branch]:
+				start_date = min(start_date, self.commits[branch][commit]["cdate"])
+				end_date = max(end_date, self.commits[branch][commit]["cdate"])
+
 			commits = commits | set(self.commits[branch].keys())
+
+		data['start_timestamp'] = start_date
+		data['end_timestamp'] = end_date
 
 		data['commits'] = list(commits)
 
@@ -64,8 +73,10 @@ class RepositoryDataExtractor(MetaProcessor):
 		data['artefact'] = ARTEFACT_GOLANG_PROJECT_REPOSITORY_COMMIT
 		data['repository'] = self.repository
 		data['commit'] = commit["hexsha"]
-		data['adate'] = time.strftime('%Y-%m-%d', time.gmtime(commit["adate"]))
-		data['cdate'] = time.strftime('%Y-%m-%d', time.gmtime(commit["cdate"]))
+
+		# keep timestamps
+		data['adate'] = commit["adate"]
+		data['cdate'] = commit["cdate"]
 		data['author'] = commit["author"]
 		data['message'] = commit["message"]
 
@@ -98,6 +109,9 @@ class RepositoryDataExtractor(MetaProcessor):
 		#	if not validator.validate(commits_data[commit]):
 		#		logging.error('%s is not valid' % ARTEFACT_GOLANG_PROJECT_REPOSITORY_COMMIT)
 		#		return {}
+
+		for commit in commits_data:
+			data.append(commits_data[commit])
 
 		return data
 

@@ -1,0 +1,73 @@
+{
+	"$schema": "http://json-schema.org/draft-04/schema#",
+	"title": "Spec model data provider act",
+	"description": "Definition of act providing data for spec model.",
+	"type": "object",
+	"properties": {
+		"repository": {
+			"anyOf": [
+				{ "$ref": "#/definitions/github" },
+				{ "$ref": "#/definitions/bitbucket" }
+			]
+		},
+		"start_date": {
+		  "description": "Commits since date",
+		  "type": "string"
+		},
+		"end_date": {
+		  "description": "Commits to date",
+		  "type": "string"
+		}
+	},
+	"required": ["repository"],
+	"definitions": {
+		"github": {
+			"description": "Github repository",
+			"type": "object",
+			"properties": {
+				"provider": {
+					"description": "Provider",
+					"type": "string",
+					"oneOf": [
+						{"enum": ["github"]}
+					]
+				},
+				"username": {
+					"description": "Github username",
+					"type": "string",
+					"minLength": 1
+				},
+				"project": {
+					"description": "Github project",
+					"type": "string",
+					"minLength": 1
+				}
+			},
+			"required": ["provider", "username", "project"]
+		},
+		"bitbucket": {
+			"description": "Bitbucket repository",
+			"type": "object",
+			"properties": {
+				"provider": {
+					"description": "Provider",
+					"type": "string",
+					"oneOf": [
+						{"enum": ["bitbucket"]}
+					]
+				},
+				"username": {
+					"description": "Bitbucket username",
+					"type": "string",
+					"minLength": 1
+				},
+				"project": {
+					"description": "Bitbucket project",
+					"type": "string",
+					"minLength": 1
+				}
+			},
+			"required": ["provider", "username", "project"]
+		}
+	}
+}
