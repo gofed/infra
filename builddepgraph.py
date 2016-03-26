@@ -35,6 +35,9 @@ from gofed_lib.packagemanager import PackageManager
 from system.models.graphs.datasets.distributionlatestbuilds import DistributionLatestBuildGraphDataset
 from system.models.graphs.datasetdependencygraphbuilder import DatasetDependencyGraphBuilder
 from system.models.graphs.basicdependencyanalysis import BasicDependencyAnalysis
+from gofed_lib.graphutils import GraphUtils
+from system.models.graphs.datasets.projectdatasetbuilder import ProjectDatasetBuilder
+from system.models.graphs.datasets.localprojectdatasetbuilder import LocalProjectDatasetBuilder
 
 import json
 import logging
@@ -44,10 +47,15 @@ if __name__ == "__main__":
 	# get a list of all packages
 	packages = PackageManager().getPackages()
 
-	dataset = DistributionLatestBuildGraphDataset("rawhide", packages).build()
+	#dataset = DistributionLatestBuildGraphDataset("rawhide", packages).build()
+	#dataset = ProjectDatasetBuilder("github.com/coreos/etcd", "5e6eb7e19d6385adfabb1f1caea03e732f9348ad").build()
+	dataset = LocalProjectDatasetBuilder("/home/jchaloup/Packages/etcd/fedora/etcd/etcd-5e6eb7e19d6385adfabb1f1caea03e732f9348ad", "github.com/coreos/etcd").build()
 
 	graph = DatasetDependencyGraphBuilder().build(dataset, 2)
 	#print str(graph)
+
+	# get a subgraph
+	#print str(GraphUtils.truncateGraph(graph, ["kubernetes-devel-1.2.0-0.15.alpha6.gitf0cd09a.fc25.noarch.rpm"]))
 
 	print json.dumps(BasicDependencyAnalysis(graph).analyse().getResults())
 

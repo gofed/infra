@@ -40,7 +40,8 @@ def getAPI1():
 def getAPI2():
 
 	data = {
-		"resource": "/home/jchaloup/Packages/etcd/fedora/etcd/etcd-2.2.4",
+		"resource": "/home/jchaloup/Packages/etcd/fedora/etcd/etcd-2.2.5",
+		#"resource": "/home/jchaloup/Packages/kubernetes/fedora/kubernetes/origin-cffae0523cfa80ddf917aba69f08508b91f603d5",
 		"directories_to_skip": ["Godeps","hack"],
 		"project": "github.com/coreos/etcd",
 		"commit": "bdee27b19e8601ffd7bd4f0481abe9bbae04bd09",
@@ -83,6 +84,9 @@ def retrieveExportedAPI():
 	_, exported_api2 = ff.bake("etcdstoragereader").call(data)
 
 	return (exported_api1, exported_api2)
+
+getAPI2()
+exit(1)
 
 #data = getAPI()
 #driver = GolangProjectExportedAPIDriver()
