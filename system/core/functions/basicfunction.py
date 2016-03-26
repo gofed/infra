@@ -30,7 +30,7 @@ class BasicFunction:
 			# TODO(jchaloup): get client from client builder
 			client = ResourceClient(ProviderBuilder(), "/var/lib/gofed/resource_client")
 			try:
-				client.retrieve(data[RESOURCE_FIELD]):
+				client.retrieve(data[RESOURCE_FIELD])
 			except ValueError as e:
 				raise ResourceNotFoundError("Unable to retrieve resource '%s': %s" % (data[RESOURCE_FIELD], e))
 

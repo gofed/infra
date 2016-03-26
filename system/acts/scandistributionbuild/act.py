@@ -138,6 +138,6 @@ class ScanDistributionBuildAct(MetaAct):
 
 			# TODO(jchaloup): only for testing purposes atm, make an option for storing
 			for artefact in data:
-				data = self.ff.bake("etcdstoragewriter").call(artefact)
+				rdata = self.ff.bake("etcdstoragewriter").call(artefact)
 
 		return True
