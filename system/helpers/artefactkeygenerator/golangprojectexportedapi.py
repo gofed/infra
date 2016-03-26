@@ -8,8 +8,7 @@ class GolangProjectExportedApiKeyGenerator(MetaArtefactKeyGenerator):
 		keys = []
 		for key in ["artefact", "project", "commit"]:
 			if key not in data:
-				logging.error("golang-project-exported-api: %s key missing" % key)
-				return ""
+				raise ValueError("golang-project-exported-api: %s key missing" % key)
 
 			keys.append(data[key])
 

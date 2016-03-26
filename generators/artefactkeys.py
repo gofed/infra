@@ -11,9 +11,16 @@ class %sKeyGenerator(MetaArtefactKeyGenerator):
 		keys = []
 		for key in %s:
 			if key not in data:
-				logging.error("%s: %%s key missing" %% key)
-				return ""
+				raise ValueError("%s: %%s key missing" %% key)
+"""
 
+class_template_extended = """
+			keys.append(self.value2key(data[key], delimiter, key, %s))
+
+		return delimiter.join(keys)
+"""
+
+class_template_end = """
 			keys.append(data[key])
 
 		return delimiter.join(keys)
@@ -27,7 +34,13 @@ def generateKeyClass(key_spec):
 	else:
 		delimiter = key_spec["delimiter"]
 
-	return class_template % (obj.class_name(), delimiter, obj.class_keys(), key_spec["id"])
+	template = class_template % (obj.class_name(), delimiter, obj.class_keys(), key_spec["id"])
+	if "key_order" in key_spec:
+		template += class_template_extended % json.dumps(key_spec["key_order"])
+	else:
+		template += class_template_end
+
+	return template
 
 def generateKeyFF(key_spec):
 	lines = []

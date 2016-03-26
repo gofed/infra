@@ -8,8 +8,7 @@ class GolangIpprefixToPackageNameKeyGenerator(MetaArtefactKeyGenerator):
 		keys = []
 		for key in ["artefact", "product", "distribution", "ipprefix"]:
 			if key not in data:
-				logging.error("golang-ipprefix-to-package-name: %s key missing" % key)
-				return ""
+				raise ValueError("golang-ipprefix-to-package-name: %s key missing" % key)
 
 			keys.append(data[key])
 

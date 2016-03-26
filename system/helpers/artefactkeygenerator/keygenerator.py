@@ -12,6 +12,7 @@ from .golangprojectrepositoryinfo import GolangProjectRepositoryInfoKeyGenerator
 from .golangprojectrepositorycommit import GolangProjectRepositoryCommitKeyGenerator
 from .golangprojectdistributioninfo import GolangProjectDistributionInfoKeyGenerator
 from .golangprojectdistributionbuild import GolangProjectDistributionBuildKeyGenerator
+from .cachegolangprojectrepositorycommits import CacheGolangProjectRepositoryCommitsKeyGenerator
 
 class KeyGeneratorFactory:
 
@@ -55,5 +56,8 @@ class KeyGeneratorFactory:
 
 		if artefact == artefacts.ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_BUILD:
 			return GolangProjectDistributionBuildKeyGenerator()
+
+		if artefact == artefacts.ARTEFACT_CACHE_GOLANG_PROJECT_REPOSITORY_COMMITS:
+			return CacheGolangProjectRepositoryCommitsKeyGenerator()
 
 		raise ValueError("Invalid artefact: %s" % artefact)

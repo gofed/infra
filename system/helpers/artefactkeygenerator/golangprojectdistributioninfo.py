@@ -8,8 +8,7 @@ class GolangProjectDistributionInfoKeyGenerator(MetaArtefactKeyGenerator):
 		keys = []
 		for key in ["artefact", "product", "distribution", "project"]:
 			if key not in data:
-				logging.error("golang-project-distribution-info: %s key missing" % key)
-				return ""
+				raise ValueError("golang-project-distribution-info: %s key missing" % key)
 
 			keys.append(data[key])
 

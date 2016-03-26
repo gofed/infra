@@ -8,9 +8,8 @@ class GolangProjectRepositoryCommitKeyGenerator(MetaArtefactKeyGenerator):
 		keys = []
 		for key in ["artefact", "repository", "commit"]:
 			if key not in data:
-				logging.error("golang-project-repository-commit: %s key missing" % key)
-				return ""
+				raise ValueError("golang-project-repository-commit: %s key missing" % key)
 
-			keys.append(data[key])
+			keys.append(self.value2key(data[key], delimiter, key, {"repository": ["provider", "username", "project"]}))
 
 		return delimiter.join(keys)

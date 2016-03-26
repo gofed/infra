@@ -8,8 +8,7 @@ class GolangProjectApiDiffKeyGenerator(MetaArtefactKeyGenerator):
 		keys = []
 		for key in ["artefact", "project", "commit1", "commit2"]:
 			if key not in data:
-				logging.error("golang-project-api-diff: %s key missing" % key)
-				return ""
+				raise ValueError("golang-project-api-diff: %s key missing" % key)
 
 			keys.append(data[key])
 

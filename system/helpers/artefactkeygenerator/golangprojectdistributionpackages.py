@@ -8,8 +8,7 @@ class GolangProjectDistributionPackagesKeyGenerator(MetaArtefactKeyGenerator):
 		keys = []
 		for key in ["artefact", "product", "distribution", "build", "rpm"]:
 			if key not in data:
-				logging.error("golang-project-distribution-packages: %s key missing" % key)
-				return ""
+				raise ValueError("golang-project-distribution-packages: %s key missing" % key)
 
 			keys.append(data[key])
 

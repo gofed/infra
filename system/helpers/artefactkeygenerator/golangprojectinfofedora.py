@@ -8,8 +8,7 @@ class GolangProjectInfoFedoraKeyGenerator(MetaArtefactKeyGenerator):
 		keys = []
 		for key in ["artefact", "project", "distribution"]:
 			if key not in data:
-				logging.error("golang-project-info-fedora: %s key missing" % key)
-				return ""
+				raise ValueError("golang-project-info-fedora: %s key missing" % key)
 
 			keys.append(data[key])
 

@@ -8,8 +8,7 @@ class GolangProjectContentMetadataKeyGenerator(MetaArtefactKeyGenerator):
 		keys = []
 		for key in ["artefact", "project", "commit"]:
 			if key not in data:
-				logging.error("golang-project-content-metadata: %s key missing" % key)
-				return ""
+				raise ValueError("golang-project-content-metadata: %s key missing" % key)
 
 			keys.append(data[key])
 
