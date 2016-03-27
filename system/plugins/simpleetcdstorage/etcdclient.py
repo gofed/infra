@@ -1,7 +1,6 @@
 from infra.system.helpers.utils import runCommand
 import logging
 import tempfile
-import re
 
 MAXIMUM_VALUE_LEN = 1000
 
@@ -14,23 +13,21 @@ class EtcdClient:
 	"""
 
 	def set(self, key, value):
-		# key and values are string => escape quotes
-		escaped_key = re.escape(key)
-		escaped_value = re.escape(value)
-
+		# values are string => escape quotes
+		escaped_value = value.replace('"', '\\"').replace('\\\\"', '\\\\\\"')
 		# if the value is too long, save it into a file
 		if len(escaped_value) > MAXIMUM_VALUE_LEN:
 			f = tempfile.NamedTemporaryFile(delete=True)
 			with open(f.name, 'w') as s:
 				s.write(value)
-			cmd = "etcdctl set \"%s\" < %s" % (escaped_key, f.name)
+			cmd = "etcdctl set \"%s\" < %s" % (key, f.name)
 			so, se, rc = runCommand(cmd)
 			if rc != 0:
 				logging.error("%s, len: %s" % (se, len(escaped_value)))
 				return False
 			f.close()
 		else:
-			cmd = "etcdctl set \"%s\" \"%s\"" % (escaped_key, escaped_value)
+			cmd = "etcdctl set \"%s\" \"%s\"" % (key, escaped_value)
 			so, se, rc = runCommand(cmd)
 			if rc != 0:
 				logging.error(se)
@@ -38,14 +35,13 @@ class EtcdClient:
 		return True
 
 	def get(self, key):
-		# key and values are string => escape quotes
-		escaped_key = key.replace('"', '\\"')
 
-		cmd = "etcdctl get \"%s\"" % escaped_key
+		cmd = "etcdctl get \"%s\"" % key
 		logging.info(cmd)
 		so, se, rc = runCommand(cmd)
 		if rc != 0:
 			logging.info(se)
 			return False, ""
 
-		return True, so.split("\n")[0]
+		value = so.split("\n")[0]
+		return True, value
