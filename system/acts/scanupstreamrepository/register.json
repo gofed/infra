@@ -1,0 +1,6 @@
+{
+"id": "scan-upstream-repository",
+"class": "ScanUpstreamRepositoryAct",
+"file": "act.py",
+"version": "1.0-alpha1"
+}

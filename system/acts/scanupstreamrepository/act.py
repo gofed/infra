@@ -253,6 +253,24 @@ class ScanUpstreamRepositoryAct(MetaAct):
 			"commits": cache_commits
 		}
 
+	def retrieveCommitsFromCache(self, cache, start_timestamp, end_timestamp):
+		# sort commits
+		commit_artefacts = {}
+		for commit in filter(lambda l: l["d"] >= start_timestamp and l["d"] <= end_timestamp, cache["commits"]):
+			# construct a storage request for each commit
+			data = {
+				"artefact": ARTEFACT_GOLANG_PROJECT_REPOSITORY_COMMIT,
+				"repository": cache["repository"],
+				"commit": commit["c"]
+			}
+
+			# retrieve commit date for each commit
+			commit_found, commit_data = self.ff.bake("etcdstoragereader").call(data)
+			if commit_found:
+				commit_artefacts[commit["c"]] = commit_data
+
+		return commit_artefacts
+
 	def execute(self):
 		"""Impementation of concrete data processor"""
 
@@ -283,24 +301,38 @@ class ScanUpstreamRepositoryAct(MetaAct):
 			# both ends of date interval are specified
 			start_timestamp = dateToTimestamp(self.start_date)
 			end_timestamp = dateToTimestamp(self.end_date)
+			req_interval = (start_timestamp, end_timestamp)
 
 			covered = False
 			for coverage in cache["coverage"]:
-				print (start_timestamp, end_timestamp)
-				print (coverage["start_timestamp"], coverage["end_timestamp"])
+				coverage_interval = (coverage["start_timestamp"], coverage["end_timestamp"])
 				# if date interval not covered => extract
-				if intervalCovered(
-					(start_timestamp, end_timestamp),
-					(coverage["start_timestamp"], coverage["end_timestamp"])
-				):
+				if intervalCovered(req_interval, coverage_interval):
 					covered = True
 					break
 
 			# data interval is covered, retrieve a list of all relevant commits
-			#if covered:
-			exit(1)
+			if covered:
+				# retrieve repository info artefact
+				data = {
+					"artefact": ARTEFACT_GOLANG_PROJECT_REPOSITORY_INFO,
+					"repository": self.repository
+				}
 
+				info_found, info_artefact = self.ff.bake("etcdstoragereader").call(data)
+				if not info_found:
+					raise ActDataError("Unable to retrieve repository-info")
+
+				self.repository_info = info_artefact
+
+				# retrieve commits
+				self.repository_commits = self.retrieveCommitsFromCache(cache, start_timestamp, end_timestamp)
+
+				return True
+
+		# ============================================
 		# cache not found or data interval not covered
+		# ============================================
 
 		# extract artefacts
 		data = self._extractRepositoryData()
@@ -345,7 +377,6 @@ class ScanUpstreamRepositoryAct(MetaAct):
 		}
 
 		info_found, info_artefact = self.ff.bake("etcdstoragereader").call(data)
-
 		# info not found
 		if not info_found:
 			updated_repository_info = extracted_info_artefact
