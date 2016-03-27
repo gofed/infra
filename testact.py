@@ -1,7 +1,4 @@
-from system.acts.specmodeldataprovider.act import SpecModelDataProviderAct
-from system.acts.scandistributionbuild.act import ScanDistributionBuildAct
-from system.acts.gocodeinspection.act import GoCodeInspectionAct
-from system.acts.scanupstreamrepository.act import ScanUpstreamRepositoryAct
+from system.core.factory.actfactory import ActFactory
 import json
 
 def prepareSpecModelDataProviderActWithUpstream():
@@ -13,7 +10,7 @@ def prepareSpecModelDataProviderActWithUpstream():
 		"ipprefix": "github.com/bradfitz/http2"
 	}
 
-	act = SpecModelDataProviderAct()
+	act = ActFactory().bake("spec-model-data-provider")
 
 	return (data, act)
 
@@ -27,7 +24,7 @@ def prepareSpecModelDataProviderActWithUserDirectory():
 		"ipprefix": "github.com/bradfitz/http2"
 	}
 
-	act = SpecModelDataProviderAct()
+	act = ActFactory().bake("spec-model-data-provider")
 
 	return (data, act)
 
@@ -47,7 +44,7 @@ def prepareScanDistributionBuildAct():
 		}
 	}
 
-	act = ScanDistributionBuildAct()
+	act = ActFactory().bake("scan-distribution-build")
 
 	return (data, act)
 
@@ -60,7 +57,7 @@ def prepareGoCodeInspectionActWithUpstream():
 		"ipprefix": "github.com/bradfitz/http1"
 	}
 
-	act = GoCodeInspectionAct()
+	act = ActFactory().bake("go-code-inspection")
 
 	return (data, act)
 
@@ -71,11 +68,16 @@ def prepareScanUpstreamRepositoryAct():
 			"username": "coreos",
 			"project": "etcd"
 		},
-		"start_date": "2016-03-22",
-		"end_date": "2016-03-25"
+		#"start_date": "2016-03-23",
+		#"end_date": "2016-03-25"
+		#"start_date": "2016-03-10",
+		#"end_date": "2016-03-22"
+		"start_date": "2016-03-15",
+		"end_date": "2016-03-17"
+
 	}
 
-	act = ScanUpstreamRepositoryAct()
+	act = ActFactory().bake("scan-upstream-repository")
 
 	return (data, act)
 
@@ -87,10 +89,5 @@ if __name__ == "__main__":
 	#data, act = prepareGoCodeInspectionActWithUpstream()
 	data, act = prepareScanUpstreamRepositoryAct()
 
-	print act.setData(data)
+	print json.dumps(act.call(data))
 
-	print "Executing:"
-	print act.execute()
-
-	print "Getting:"
-	print json.dumps(act.getData())
