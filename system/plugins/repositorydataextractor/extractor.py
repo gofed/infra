@@ -63,6 +63,8 @@ class RepositoryDataExtractor(MetaProcessor):
 		data['start_timestamp'] = start_date
 		data['end_timestamp'] = end_date
 
+		data['coverage'] = [{'start_timestamp': start_date, 'end_timestamp': end_date}]
+
 		data['commits'] = list(commits)
 
 		return data
