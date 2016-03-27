@@ -1,6 +1,7 @@
 from infra.system.helpers.utils import runCommand
 import logging
 import tempfile
+import re
 
 MAXIMUM_VALUE_LEN = 1000
 
@@ -14,8 +15,8 @@ class EtcdClient:
 
 	def set(self, key, value):
 		# key and values are string => escape quotes
-		escaped_key = key.replace('"', '\\"')
-		escaped_value = value.replace('"', '\\"')
+		escaped_key = re.escape(key)
+		escaped_value = re.escape(value)
 
 		# if the value is too long, save it into a file
 		if len(escaped_value) > MAXIMUM_VALUE_LEN:
