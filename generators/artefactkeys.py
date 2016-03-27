@@ -21,7 +21,7 @@ class_template_extended = """
 """
 
 class_template_end = """
-			keys.append(data[key])
+			keys.append(self.truncateKey(data[key]))
 
 		return delimiter.join(keys)
 """

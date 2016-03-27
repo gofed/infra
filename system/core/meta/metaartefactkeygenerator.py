@@ -1,3 +1,5 @@
+import re
+
 class MetaArtefactKeyGenerator:
 	"""
 	Each artefact can have different fields that uniquely determine
@@ -12,9 +14,12 @@ class MetaArtefactKeyGenerator:
 		"""extract fields from an artefact uniquely determining its storage location"""
 		raise NotImplementedError
 
+	def truncateKey(self, key):
+		return re.sub('[^a-zA-Z0-9:-]', '-', key)
+
 	def value2key(self, value, delimiter, key, key_order):
 		if type(value) in [type(""), type(u"")]:
-			return value
+			return self.truncateKey(value)
 
 		if type(value) != type({}):
 			raise ValueError("Second level key is not dictionary")
@@ -27,7 +32,7 @@ class MetaArtefactKeyGenerator:
 			if type(value[vkey]) != type("") and type(value[vkey]) != type(u""):
 				raise ValueError("Second level value is not string")
 
-			keys.append(value[vkey])
+			keys.append(self.truncateKey(value[vkey]))
 
 		return delimiter.join(keys)
 

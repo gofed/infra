@@ -10,6 +10,6 @@ class GolangProjectDistributionPackagesKeyGenerator(MetaArtefactKeyGenerator):
 			if key not in data:
 				raise ValueError("golang-project-distribution-packages: %s key missing" % key)
 
-			keys.append(data[key])
+			keys.append(self.truncateKey(data[key]))
 
 		return delimiter.join(keys)
