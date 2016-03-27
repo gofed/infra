@@ -1,5 +1,44 @@
 from gofed_lib.utils import intervalsOverlap
 
+class CacheIntervalBreaker(object):
+
+	def __init__(self):
+		pass
+
+	def decompose(self, stored_commits, not_stored_commits):
+		commits = stored_commits + not_stored_commits
+		commits = sorted(commits, key = lambda commit: commit["d"])
+		commits = map(lambda l: {"c": "", "d": l["d"]} if l in not_stored_commits else l, commits)
+
+		# decompose
+		commits_len = len(commits)
+		index = 0
+		coverage = []
+
+		while index < commits_len:
+			# find start of a segment
+			while index < commits_len and commits[index]["c"] == "":
+				index = index + 1
+
+			# end of the list?
+			if index >= commits_len:
+				break
+
+			start_date = commits[index]["d"]
+			# find end of the segment
+			end_date = commits[index]["d"]
+			while index < commits_len and commits[index]["c"] != "":
+				end_date = commits[index]["d"]
+				index = index + 1
+
+			# end of segment or entire list found
+			coverage.append({
+				"start_timestamp": start_date,
+				"end_timestamp": end_date
+			})
+
+		return coverage
+
 class CacheIntervalMerger(object):
 
 	def __init__(self):
@@ -31,30 +70,12 @@ class CacheIntervalMerger(object):
 	def merge(self, intervals1, intervals2):
 		"""Merge two caches
 
-		:param cache: the current cache
-		:type  cache: dict
-		:param newcache: cache to be merged with the current cash
-		:type  newcache: dict
+		:param intervals1: list of date intervals
+		:type  intervals1: [{}]
+		:param intervals2: list of date intervals
+		:type  intervals2: [{}]
 		"""
-
-		# merge coverages.
-		# Asumption: none of the intervals overlap
-		#
-		# Each interval in newcache can overlap with one or more intervals
-		# in cache. If so, take all such intervals and merge them with the
-		# newcache's intervals.
-		#
-		# Algorithm:
-		# 1. for each interval in newcache:
-		# 	o_intervals = findOverlappingIntervalsInCache(cache, interval)
-		#	n_interval = merge(o_intervals + interval)
-		# 2. merge all overlapping n_intervals
-		n_intervals = []
-		# TODO(jchaloup): this can be done in linear time!!!
-		for interval1 in intervals1:
-			for interval2 in intervals2:
-				if self._overlap(interval1, interval2):
-					n_intervals.append(self._mergeIntervals(interval1, interval2))
+		n_intervals = sorted(intervals1 + intervals2, key = lambda interval: interval["start_timestamp"])
 
 		# For testing purposes
 		#n_intervals = [
