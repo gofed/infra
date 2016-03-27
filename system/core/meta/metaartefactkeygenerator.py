@@ -13,7 +13,7 @@ class MetaArtefactKeyGenerator:
 		raise NotImplementedError
 
 	def value2key(self, value, delimiter, key, key_order):
-		if type(value) == type(""):
+		if type(value) in [type(""), type(u"")]:
 			return value
 
 		if type(value) != type({}):
