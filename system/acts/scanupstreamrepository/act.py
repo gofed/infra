@@ -84,6 +84,8 @@ from gofed_lib.utils import dateToTimestamp
 from infra.system.helpers.cacheintervalmerger import CacheIntervalMerger, CacheIntervalBreaker
 from gofed_lib.utils import intervalCovered
 from infra.system.core.acts.types import ActDataError
+import logging
+import json
 
 class ScanUpstreamRepositoryAct(MetaAct):
 
@@ -111,6 +113,14 @@ class ScanUpstreamRepositoryAct(MetaAct):
 		if 'end_date' in data:
 			self.end_date = data["end_date"]
 
+		self.start_timestamp = ""
+		if 'start_timestamp' in data:
+			self.start_timestamp = data["start_timestamp"]
+
+		self.end_timestamp = ""
+		if 'end_timestamp' in data:
+			self.end_timestamp = data["end_timestamp"]
+
 		self.commit = ""
 		if 'commit' in data:
 			self.commit = data["commit"]
@@ -137,10 +147,14 @@ class ScanUpstreamRepositoryAct(MetaAct):
 			"resource": resource
 		}
 
-		if self.start_date != "":
+		if self.start_timestamp != "":
+			data["start_timestamp"] = self.start_timestamp
+		elif self.start_date != "":
 			data["start_date"] = self.start_date
 
-		if self.end_date != "":
+		if self.end_timestamp != "":
+			data["end_timestamp"] = self.end_timestamp
+		elif self.end_date != "":
 			data["end_date"] = self.end_date
 
 		return self.ff.bake("repositorydataextractor").call(data)
@@ -334,10 +348,18 @@ class ScanUpstreamRepositoryAct(MetaAct):
 
 		cache_found, cache = self.ff.bake("etcdstoragereader").call(data)
 		# Is the date interval covered?
-		if cache_found and self.end_date != "" and self.start_date != "":
+		if cache_found and (self.end_date != "" or self.end_timestamp != "") and (self.start_date != "" or self.start_timestamp != ""):
 			# both ends of date interval are specified
-			start_timestamp = dateToTimestamp(self.start_date)
-			end_timestamp = dateToTimestamp(self.end_date)
+			if self.start_date != "":
+				start_timestamp = dateToTimestamp(self.start_date)
+			else:
+				start_timestamp = self.start_timestamp
+
+			if self.end_date != "":
+				end_timestamp = dateToTimestamp(self.end_date)
+			else:
+				end_timestamp = self.end_timestamp
+
 			req_interval = (start_timestamp, end_timestamp)
 
 			covered = False
