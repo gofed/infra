@@ -1,8 +1,7 @@
 from infra.system.helpers.utils import runCommand
 import logging
 import tempfile
-
-MAXIMUM_VALUE_LEN = 1000
+from subprocess import PIPE, Popen
 
 class EtcdClient:
 	"""
@@ -15,23 +14,15 @@ class EtcdClient:
 	def set(self, key, value):
 		# values are string => escape quotes
 		escaped_value = value.replace('"', '\\"').replace('\\\\"', '\\\\\\"')
-		# if the value is too long, save it into a file
-		if len(escaped_value) > MAXIMUM_VALUE_LEN:
-			f = tempfile.NamedTemporaryFile(delete=True)
-			with open(f.name, 'w') as s:
-				s.write(value)
-			cmd = "etcdctl set \"%s\" < %s" % (key, f.name)
-			so, se, rc = runCommand(cmd)
-			if rc != 0:
-				logging.error("%s, len: %s" % (se, len(escaped_value)))
-				return False
-			f.close()
-		else:
-			cmd = "etcdctl set \"%s\" \"%s\"" % (key, escaped_value)
-			so, se, rc = runCommand(cmd)
-			if rc != 0:
-				logging.error(se)
-				return False
+
+		p = Popen("etcdctl set \"%s\"", stderr=PIPE, stdout=PIPE, stdin=PIPE, shell=True)
+		p.stdin.write(escaped_value)
+		so, se = p.communicate()
+		p.stdin.close()
+		rc = p.returncode
+		if rc != 0:
+			logging.error(se)
+			return False
 		return True
 
 	def get(self, key):
