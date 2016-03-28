@@ -19,6 +19,7 @@ class RepositoryDataExtractor(MetaProcessor):
 		self.repository_directory = ''
 		self.start_date = ''
 		self.end_date = ''
+		self.commit = ''
 
 		self.branches = []
 		self.commits = {}
@@ -41,6 +42,17 @@ class RepositoryDataExtractor(MetaProcessor):
 			self.end_date = dateToTimestamp(data["end_date"])
 		else:
 			self.end_date = int(time.mktime((datetime.date.today() + datetime.timedelta(hours=24)).timetuple()))
+
+		if 'start_timestamp' in data:
+			self.start_date = data["start_timestamp"]
+
+		if 'end_timestamp' in data:
+			self.end_date = data["end_timestamp"]
+
+		# Check single commit only?
+		self.commit = ""
+		if 'commit' in data:
+			self.commit = data["commit"]
 
 		return True
 
@@ -90,6 +102,9 @@ class RepositoryDataExtractor(MetaProcessor):
 
 		data = []
 
+		if self.commit != "":
+			return self._generateGolangProjectRepositoryCommit(self.commits[""])
+
 		data.append(self._generateGolangProjectRepositoryInfo())
 		validator = ArtefactSchemaValidator(ARTEFACT_GOLANG_PROJECT_REPOSITORY_INFO)
 		if not validator.validate(data[0]):
@@ -125,6 +140,11 @@ class RepositoryDataExtractor(MetaProcessor):
 
 	def execute(self):
 		client = GithubLocalClient(self.repository_directory)
+
+		if self.commit != "":
+			self.commits[""] = client.commit(self.commit)
+			return True
+
 		self.branches = client.branches()
 
 		self.commits = {}

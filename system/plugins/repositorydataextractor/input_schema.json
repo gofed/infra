@@ -11,21 +11,34 @@
 			]
 		},
 		"resource": {
-		  "description": "Repository directory",
-		  "type": "string"
+			"description": "Repository directory",
+			"type": "string"
+		},
+		"commit": {
+			"description": "Repository commit",
+			"type": "string",
+			"minLength": 1
 		},
 		"start_date": {
-		  "description": "Commits since date",
-		  "type": "string"
+			"description": "Commits since date",
+			"type": "string"
 		},
 		"end_date": {
-		  "description": "Commits to date",
-		  "type": "string"
+			"description": "Commits to date",
+			"type": "string"
+		},
+		"start_timestamp": {
+			"description": "Commits since timestamp",
+			"type": "integer"
+		},
+		"end_timestamp": {
+			"description": "Commits to timestamp",
+			"type": "integer"
 		}
 	},
 	"required": [
-	  "repository",
-	  "resource"
+		"repository",
+		"resource"
 	],
 	"definitions": {
 		"github": {

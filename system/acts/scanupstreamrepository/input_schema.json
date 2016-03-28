@@ -10,6 +10,11 @@
 				{ "$ref": "#/definitions/bitbucket" }
 			]
 		},
+		"commit": {
+			"description": "Repository commit",
+			"type": "string",
+			"minLength": 1
+		},
 		"start_date": {
 		  "description": "Commits since date",
 		  "type": "string"

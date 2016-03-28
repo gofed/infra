@@ -111,6 +111,10 @@ class ScanUpstreamRepositoryAct(MetaAct):
 		if 'end_date' in data:
 			self.end_date = data["end_date"]
 
+		self.commit = ""
+		if 'commit' in data:
+			self.commit = data["commit"]
+
 		return True
 
 	def getData(self):
@@ -271,16 +275,49 @@ class ScanUpstreamRepositoryAct(MetaAct):
 
 		return commit_artefacts
 
+	def retrieveSingleCommit(self, repository, commit):
+		data = {
+			"artefact": ARTEFACT_GOLANG_PROJECT_REPOSITORY_COMMIT,
+			"repository": repository,
+			"commit": commit
+		}
+
+		# retrieve commit date for each commit
+		commit_found, commit_data = self.ff.bake("etcdstoragereader").call(data)
+		if commit_found:
+			return commit_data
+
+		# commit not found, extract it
+		resource = ResourceSpecifier().generateUpstreamRepository(
+			repository["provider"],
+			repository["username"],
+			repository["project"]
+		)
+
+		data = {
+			"repository": repository,
+			"commit": commit,
+			"resource": resource
+		}
+
+		return self.ff.bake("repositorydataextractor").call(data)
+
 	def execute(self):
 		"""Impementation of concrete data processor"""
+
+		self.repository_info = {}
+		self.repository_commits = {}
+
+		# if a self.commit != "" => request only for particular commit
+		if self.commit != "":
+			self.repository_commits[self.commit] = self.retrieveSingleCommit(self.repository, self.commit)
+			return True
 
 		# check storage
 		# I can not check for spec file specific macros as I need project
 		# to get artefact from a storage. Without the project I can not
 		# get artefact from a storage.
 
-		self.repository_info = {}
-		self.repository_commits = {}
 
 		# read the current list of commits stored in storage
 		# if the youngest commit is younger than end_date, no need to extract data
