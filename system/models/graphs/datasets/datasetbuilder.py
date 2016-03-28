@@ -33,6 +33,11 @@ class DatasetBuilder(object):
 
 		raise ValueError("Artefact '%s' not supported" % artefact["artefact"])
 
+	def _prefixPackage(self, prefix, package):
+		if package == ".":
+			return prefix
+		return "%s/%s" % (prefix, package)
+
 	def _extractProjectPackagesRequirements(self, artefact, node_name):
 		"""
 		:param artefact: golang-project-*-packages artefact
@@ -48,12 +53,12 @@ class DatasetBuilder(object):
 		# vertices
 		vertices[node_name]["devel"] = []
 		for package in artefact["data"]["packages"]:
-			vertices[node_name]["devel"].append("%s/%s" % (artefact["ipprefix"], package))
+			vertices[node_name]["devel"].append(self._prefixPackage(artefact["ipprefix"], package))
 
 		# edges
 		edges[node_name]["devel"] = []
 		for dependencies in artefact["data"]["dependencies"]:
-			edges[node_name]["devel"] = edges[node_name]["devel"] + map(lambda l: ("%s/%s" % (artefact["ipprefix"], dependencies["package"]), l["name"]), dependencies["dependencies"])
+			edges[node_name]["devel"] = edges[node_name]["devel"] + map(lambda l: (self._prefixPackage(artefact["ipprefix"], dependencies["package"]), l["name"]), dependencies["dependencies"])
 
 		# main packages
 		vertices[node_name]["main"] = []
@@ -62,7 +67,7 @@ class DatasetBuilder(object):
 			# dirname from filename says in which package the dependencies are required/imported
 			pkg = os.path.dirname(main["filename"])
 			vertices[node_name]["main"].append("%s/%s" % (artefact["ipprefix"], pkg))
-			edges[node_name]["main"] = edges[node_name]["main"] + map(lambda l: ("%s/%s" % (artefact["ipprefix"], pkg), l),  main["dependencies"])
+			edges[node_name]["main"] = edges[node_name]["main"] + map(lambda l: (self._prefixPackage(artefact["ipprefix"], pkg), l),  main["dependencies"])
 		# one directory can have multiple filename import the same package
 		edges[node_name]["main"] = list(set(edges[node_name]["main"]))
 
@@ -71,7 +76,7 @@ class DatasetBuilder(object):
 		edges[node_name]["tests"] = []
 		for test in artefact["data"]["tests"]:
 			vertices[node_name]["tests"].append("%s/%s" % (artefact["ipprefix"], test["test"]))
-			edges[node_name]["tests"] = edges[node_name]["tests"] + map(lambda l: ("%s/%s" % (artefact["ipprefix"], test["test"]), l),  test["dependencies"])
+			edges[node_name]["tests"] = edges[node_name]["tests"] + map(lambda l: (self._prefixPackage(artefact["ipprefix"], test["test"]), l),  test["dependencies"])
 
 		return (vertices, edges)
 
