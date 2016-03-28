@@ -5,3 +5,5 @@ jsonschema
 pycurl
 urllib2
 tarfile
+GitPython
+python-gitdb
