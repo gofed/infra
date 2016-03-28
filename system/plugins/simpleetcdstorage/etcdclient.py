@@ -12,11 +12,9 @@ class EtcdClient:
 	"""
 
 	def set(self, key, value):
-		# values are string => escape quotes
-		escaped_value = value.replace('"', '\\"').replace('\\\\"', '\\\\\\"')
-
-		p = Popen("etcdctl set \"%s\"", stderr=PIPE, stdout=PIPE, stdin=PIPE, shell=True)
-		p.stdin.write(escaped_value)
+		logging.info("etcdctl set \"%s\"" % key)
+		p = Popen("etcdctl set \"%s\"" % key, stderr=PIPE, stdout=PIPE, stdin=PIPE, shell=True)
+		p.stdin.write(value)
 		so, se = p.communicate()
 		p.stdin.close()
 		rc = p.returncode
