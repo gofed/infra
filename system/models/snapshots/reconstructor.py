@@ -3,9 +3,8 @@
 # 
 #
 # TODO(jchaloup):
-# - even if a project has been covered, new package of covered project may appear that was not
-#   check that a given package is covered too => extend the detected_projects to a list of packages already scanned
-#
+# - fill and return snapshot
+# - move snapshot data type into gofed/lib
 
 from infra.system.core.factory.actfactory import ActFactory
 from infra.system.artefacts.artefacts import ARTEFACT_GOLANG_PROJECT_PACKAGES
@@ -36,7 +35,7 @@ class SnapshotReconstructor(object):
 		self.snapshot = Snapshot()
 
 		# dependency space
-		self.detected_projects = []
+		self.detected_projects = {}
 		self.unscanned_projects = {}
 
 	def _getCommitTimestamp(self, repository, commit):
@@ -118,9 +117,21 @@ class SnapshotReconstructor(object):
 			# for each imported path get a list of commits in a given interval
 			try:
 				self.ipparser.parse(prefix)
+				# ipprefix already covered?
 				if self.ipparser.getImportPathPrefix() in self.detected_projects:
-					logging.warning("Prefix %s already covered" % prefix)
-					continue
+					# ip covered in the prefix class?
+					not_covered = []
+					for ip in prefix_classes[prefix]:
+						if ip not in self.detected_projects[prefix]:
+							not_covered.append(ip)
+
+					if not_covered == []:
+						logging.warning("Prefix %s already covered" % prefix)
+						continue
+
+						logging.warning("Some paths '%s' not yet covered in '%s' prefix" % (str(not_covered), prefix))
+					# scan only ips not yet covered
+					prefix_classes[prefix] = not_covered
 
 				provider = self.ipparser.getProviderSignature()
 				provider_prefix = self.ipparser.getProviderPrefix()
@@ -167,7 +178,8 @@ class SnapshotReconstructor(object):
 		next_projects = self.detectNextDependencies(direct_dependencies, ipprefix, commit_timestamp)
 
 		# update detected projects
-		self.detected_projects = list(set(self.detected_projects + next_projects.keys()))
+		for project in next_projects:
+			self.detected_projects[project] = next_projects[project]["paths"]
 
 		# update packages to scan
 		for prefix in next_projects:
@@ -190,8 +202,6 @@ class SnapshotReconstructor(object):
 			graph = DatasetDependencyGraphBuilder().build(dataset, LEVEL_GOLANG_PACKAGES)
 
 			# get the subgraph of evolved dependency's packages
-			#print graph
-			#print self.unscanned_projects[prefix]["paths"]
 			subgraph = GraphUtils.truncateGraph(graph, self.unscanned_projects[prefix]["paths"])
 
 			# get dependencies from the subgraph
@@ -201,8 +211,6 @@ class SnapshotReconstructor(object):
 				nodes = nodes + label_edges[node]
 
 		nodes = list(set(nodes))
-		# filter out all nodes already detected
-		nodes = filter(lambda l: l not in self.detected_projects, nodes)
 
 		next_projects = self.detectNextDependencies(nodes, ipprefix, commit_timestamp)
 		if next_projects == {}:
@@ -213,14 +221,16 @@ class SnapshotReconstructor(object):
 		self.unscanned_projects = {}
 
 		for prefix in next_projects:
+			# prefix already covered? Just extend the current coverage
 			if prefix in self.detected_projects:
+				for ip in next_projects[prefix]["paths"]:
+					if ip not in self.detected_projects[prefix]:
+						self.detected_projects[prefix].append(ip)
 				continue
 
 			one_at_least = True
 			self.unscanned_projects[prefix] = next_projects[prefix]
-
-		# update detected projects
-		self.detected_projects = list(set(self.detected_projects + next_projects.keys()))
+			self.detected_projects[prefix] = next_projects[prefix]["paths"]
 
 		return one_at_least
 
