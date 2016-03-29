@@ -2,8 +2,6 @@
 # As default, reconstructoror will construct the snapshot for a devel part of a project.
 # 
 #
-# TODO(jchaloup):
-# - the snapshot is constructed for devel part, extend it to main and unit-test package as well
 
 from infra.system.core.factory.actfactory import ActFactory
 from infra.system.artefacts.artefacts import ARTEFACT_GOLANG_PROJECT_PACKAGES
@@ -156,7 +154,7 @@ class SnapshotReconstructor(object):
 
 		return next_projects
 
-	def detectDirectDependencies(self, repository, commit, ipprefix, commit_timestamp):
+	def detectDirectDependencies(self, repository, commit, ipprefix, commit_timestamp, mains, tests):
 		data = {
 			"type": "upstream_source_code",
 			"project": "github.com/coreos/etcd",
@@ -171,6 +169,24 @@ class SnapshotReconstructor(object):
 		direct_dependencies = []
 		for package in packages_artefact["data"]["dependencies"]:
 			direct_dependencies = direct_dependencies + map(lambda l: l["name"], package["dependencies"])
+
+		if mains != []:
+			paths = {}
+			for path in packages_artefact["data"]["main"]:
+				paths[path["filename"]] = path["dependencies"]
+
+			for main in mains:
+				if main not in paths:
+					raise ReconstructionError("Main package file %s not found" % main)
+
+				direct_dependencies = direct_dependencies + paths[main]
+
+		if tests:
+			for dependencies in map(lambda l: l["dependencies"], packages_artefact["data"]["tests"]):
+				direct_dependencies = direct_dependencies + dependencies
+
+		# remove duplicates
+		direct_dependencies = list(set(direct_dependencies))
 
 		next_projects = self.detectNextDependencies(direct_dependencies, ipprefix, commit_timestamp)
 
@@ -234,12 +250,28 @@ class SnapshotReconstructor(object):
 
 		return one_at_least
 
-	def reconstruct(self, repository, commit, ipprefix):
+	def reconstruct(self, repository, commit, ipprefix, mains = [], tests = False):
+		"""Reconstruct snapshot
+		:param repository: project repository
+		:type  repository: dict
+		:param commit: repository commit
+		:type  commit: string
+		:param ipprefix: import path prefix
+		:type  ipprefix: string
+		:param mains: list of main packages with root path to go file to cover, implicitly no main package, just devel
+		:type  mains: [string]
+		:param tests: cover unit tests as well, default is False
+		:type  tests: boolean
+		"""
+
+		# clear snapshot
+		self._snapshot.clear()
+
 		# get commit date of project's commit
 		commit_timestamp = self._getCommitTimestamp(repository, commit)
 		# get direct dependencies
 		logging.info("=============DIRECT==============")
-		self.detectDirectDependencies(repository, commit, ipprefix, commit_timestamp)
+		self.detectDirectDependencies(repository, commit, ipprefix, commit_timestamp, mains, tests)
 
 		# scan detected dependencies
 		logging.info("=============UNDIRECT==============")
