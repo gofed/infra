@@ -3,14 +3,14 @@
 # 
 #
 # TODO(jchaloup):
-# - move snapshot data type into gofed/lib
+# - the snapshot is constructed for devel part, extend it to main and unit-test package as well
 
 from infra.system.core.factory.actfactory import ActFactory
 from infra.system.artefacts.artefacts import ARTEFACT_GOLANG_PROJECT_PACKAGES
 from gofed_lib.importpathsdecomposerbuilder import ImportPathsDecomposerBuilder
 from gofed_lib.importpathnormalizer import ImportPathNormalizer
 from gofed_lib.importpathparserbuilder import ImportPathParserBuilder
-from .snapshot import Snapshot
+from gofed_lib.snapshot import Snapshot
 import logging
 import copy
 
@@ -32,7 +32,7 @@ class SnapshotReconstructor(object):
 		self.scan_upstream_repository_act = ActFactory().bake("scan-upstream-repository")
 
 		# snapshot
-		self.snapshot = Snapshot()
+		self._snapshot = Snapshot()
 
 		# dependency space
 		self.detected_projects = {}
@@ -144,10 +144,6 @@ class SnapshotReconstructor(object):
 			except KeyError as e:
 				raise ReconstructionError("Closest commit to %s timestamp for %s not found" % (commit_timestamp, provider_prefix))
 
-			# save all imported packages
-			for package in prefix_classes[prefix]:
-				self.snapshot.addPackage(package, closest_commit["c"])
-
 			# update packages to scan
 			next_projects[prefix] = {
 				"ipprefix": prefix,
@@ -253,8 +249,10 @@ class SnapshotReconstructor(object):
 		# create snapshot
 		for prefix in self.scanned_projects:
 			for ip in sorted(self.scanned_projects[prefix]["paths"]):
-				self.snapshot.addPackage(ip, self.scanned_projects[prefix]["commit"])
+				self._snapshot.addPackage(ip, self.scanned_projects[prefix]["commit"])
+
+		return self
 
 	def snapshot(self):
-		return self.snapshot
+		return self._snapshot
 
