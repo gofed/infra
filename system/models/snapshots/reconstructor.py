@@ -68,6 +68,9 @@ class SnapshotReconstructor(object):
 		:param timestamp: commit timestamp
 		:type  timestamp: integer
 		"""
+		# TODO(jchaloup): search for commits only on master branch!!!
+		# other branches can be in inconsystem state with experimental features
+		# and get picked unintensionaly
 		data = {
 			"repository": repository,
 			"end_timestamp": timestamp
