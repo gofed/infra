@@ -1,6 +1,7 @@
 from system.models.snapshots.reconstructor import SnapshotReconstructor
 import logging
 #logging.basicConfig(level=logging.INFO)
+import json
 
 if __name__ == "__main__":
 
@@ -13,4 +14,4 @@ if __name__ == "__main__":
 	commit = "5e6eb7e19d6385adfabb1f1caea03e732f9348ad"
 	ipprefix = "github.com/coreos/etcd"
 
-	SnapshotReconstructor().reconstruct(repository, commit, ipprefix)
+	print json.dumps(SnapshotReconstructor().reconstruct(repository, commit, ipprefix).snapshot().Godeps())

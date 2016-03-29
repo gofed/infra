@@ -68,6 +68,7 @@ def prepareScanUpstreamRepositoryAct():
 			"username": "coreos",
 			"project": "etcd"
 		},
+		"commit": "5e6eb7e19d6385adfabb1f1caea03e732f9348ad",
 		#"start_date": "2016-03-23",
 		#"end_date": "2016-03-25"
 		#"start_date": "2016-03-10",
