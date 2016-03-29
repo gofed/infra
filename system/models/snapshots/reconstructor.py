@@ -3,7 +3,6 @@
 # 
 #
 # TODO(jchaloup):
-# - fill and return snapshot
 # - move snapshot data type into gofed/lib
 
 from infra.system.core.factory.actfactory import ActFactory
@@ -13,6 +12,7 @@ from gofed_lib.importpathnormalizer import ImportPathNormalizer
 from gofed_lib.importpathparserbuilder import ImportPathParserBuilder
 from .snapshot import Snapshot
 import logging
+import copy
 
 from infra.system.models.graphs.datasets.projectdatasetbuilder import ProjectDatasetBuilder
 from infra.system.models.graphs.datasetdependencygraphbuilder import DatasetDependencyGraphBuilder, LEVEL_GOLANG_PACKAGES
@@ -37,6 +37,7 @@ class SnapshotReconstructor(object):
 		# dependency space
 		self.detected_projects = {}
 		self.unscanned_projects = {}
+		self.scanned_projects = {}
 
 	def _getCommitTimestamp(self, repository, commit):
 		"""Retrieve commit from a repository, returns its commits date
@@ -150,7 +151,7 @@ class SnapshotReconstructor(object):
 			# update packages to scan
 			next_projects[prefix] = {
 				"ipprefix": prefix,
-				"paths": prefix_classes[prefix],
+				"paths": map(lambda l: str(l), prefix_classes[prefix]),
 				"provider": provider,
 				"commit": closest_commit["c"],
 				#"timestamp": closest_commit["d"],
@@ -186,7 +187,8 @@ class SnapshotReconstructor(object):
 			if prefix in self.unscanned_projects:
 				continue
 
-			self.unscanned_projects[prefix] = next_projects[prefix]
+			self.unscanned_projects[prefix] = copy.deepcopy(next_projects[prefix])
+			self.scanned_projects[prefix] = copy.deepcopy(next_projects[prefix])
 
 	def detectIndirectDependencies(self, ipprefix, commit_timestamp):
 		nodes = []
@@ -224,13 +226,15 @@ class SnapshotReconstructor(object):
 			# prefix already covered? Just extend the current coverage
 			if prefix in self.detected_projects:
 				for ip in next_projects[prefix]["paths"]:
-					if ip not in self.detected_projects[prefix]:
+					if str(ip) not in self.detected_projects[prefix]:
 						self.detected_projects[prefix].append(ip)
+						self.scanned_projects[prefix]["paths"].append(ip)
 				continue
 
 			one_at_least = True
-			self.unscanned_projects[prefix] = next_projects[prefix]
-			self.detected_projects[prefix] = next_projects[prefix]["paths"]
+			self.unscanned_projects[prefix] = copy.deepcopy(next_projects[prefix])
+			self.scanned_projects[prefix] = copy.deepcopy(next_projects[prefix])
+			self.detected_projects[prefix] = copy.deepcopy(next_projects[prefix]["paths"])
 
 		return one_at_least
 
@@ -238,12 +242,19 @@ class SnapshotReconstructor(object):
 		# get commit date of project's commit
 		commit_timestamp = self._getCommitTimestamp(repository, commit)
 		# get direct dependencies
-		print "=============DIRECT=============="
+		logging.info("=============DIRECT==============")
 		self.detectDirectDependencies(repository, commit, ipprefix, commit_timestamp)
 
 		# scan detected dependencies
-		print "=============UNDIRECT=============="
+		logging.info("=============UNDIRECT==============")
 		while self.detectIndirectDependencies(ipprefix, commit_timestamp):
-			print "=============UNDIRECT=============="
+			logging.info("=============UNDIRECT==============")
 
-		exit(1)
+		# create snapshot
+		for prefix in self.scanned_projects:
+			for ip in sorted(self.scanned_projects[prefix]["paths"]):
+				self.snapshot.addPackage(ip, self.scanned_projects[prefix]["commit"])
+
+	def snapshot(self):
+		return self.snapshot
+
