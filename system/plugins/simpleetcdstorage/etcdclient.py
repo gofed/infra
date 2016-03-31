@@ -12,9 +12,15 @@ class EtcdClient:
 	"""
 
 	def set(self, key, value):
+		# TODO(jchaloup): check if etcd is actually running
 		logging.info("etcdctl set \"%s\"" % key)
 		p = Popen("etcdctl set \"%s\"" % key, stderr=PIPE, stdout=PIPE, stdin=PIPE, shell=True)
-		p.stdin.write(value)
+		try:
+			p.stdin.write(value)
+		except IOError as e:
+			logging.error("Unable to set %s: %s" % (key, e))
+			return False
+
 		so, se = p.communicate()
 		p.stdin.close()
 		rc = p.returncode
