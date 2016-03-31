@@ -8,10 +8,6 @@
 			"description": "Artefact name",
 			"type": "string"
 		},
-		"project": {
-			"description": "Project name",
-			"type": "string"
-		},
 		"commit": {
 			"description": "Project's commit",
 			"type": "string"
@@ -157,5 +153,5 @@
 			}
 		}
 	},
-	"required": ["artefact", "project", "commit", "data", "product", "distribution", "build", "rpm"]
+	"required": ["artefact", "commit", "data", "product", "distribution", "build", "rpm"]
 }

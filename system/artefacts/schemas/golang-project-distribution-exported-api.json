@@ -8,10 +8,6 @@
 			"description": "Artefact name",
 			"type": "string"
 		},
-		"project": {
-			"description": "Project name",
-			"type": "string"
-		},
 		"commit": {
 			"description": "Project's commit",
 			"type": "string"
@@ -182,7 +178,7 @@
 			"uniqueItems": true
 		}
 	},
-	"required": ["artefact", "project", "commit", "packages", "product", "distribution", "build", "rpm"],
+	"required": ["artefact", "commit", "packages", "product", "distribution", "build", "rpm"],
 	"definitions": {
 		"identifier": {
 			"type": "object",

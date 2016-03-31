@@ -30,10 +30,6 @@
 			"description": "RPM package name",
 			"type": "string"
 		},
-		"project": {
-			"description": "Project name",
-			"type": "string"
-		},
 		"resource": {
 			"description": "Directory with Go source codes",
 			"type": "string"
@@ -41,20 +37,13 @@
 		"commit": {
 			"description": "Project's commit",
 			"type": "string"
-		},
-		"ipprefix": {
-                        "type": "string",
-                        "description": "Import path prefix",
-                        "minLength": 1
-                }
-
+		}
 	},
 	"required": [
 		"product",
 		"distribution",
 		"build",
 		"rpm",
-		"project",
 		"resource",
 		"commit"
 	]

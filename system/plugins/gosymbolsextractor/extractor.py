@@ -7,7 +7,6 @@ from gofed_lib import gosymbolsextractor
 from gofed_lib.types import ExtractionError
 
 CONFIG_SOURCE_CODE_DIRECTORY = "resource"
-CONFIG_SKIPPED_DIRECTORIES = "directories_to_skip"
 DATA_PROJECT = "project"
 DATA_COMMIT = "commit"
 DATA_IPPREFIX = "ipprefix"
@@ -56,7 +55,6 @@ class GoSymbolsExtractor(MetaProcessor):
 
 		"""set implicit states"""
 		self.directory = ""
-		self.noGodeps = []
 
 		self.gosymbolsextractor = None
 
@@ -75,10 +73,6 @@ class GoSymbolsExtractor(MetaProcessor):
 		# set directory with source codes to parse
 		self.directory = data[CONFIG_SOURCE_CODE_DIRECTORY]
 
-		# optional, set a list of directories to be skipped during parsing
-		if CONFIG_SKIPPED_DIRECTORIES in data:
-			self.noGodeps = data[CONFIG_SKIPPED_DIRECTORIES]
-
 		# optional, project, commit, ipprefix
 		if DATA_PROJECT in data:
 			self.project = data[DATA_PROJECT]
@@ -91,8 +85,6 @@ class GoSymbolsExtractor(MetaProcessor):
 
 		self.gosymbolsextractor = gosymbolsextractor.GoSymbolsExtractor(
 			self.directory,
-			self.noGodeps,
-			self.ipprefix,
 			verbose = self.verbose,
 			skip_errors = self.skip_errors
 		)
@@ -125,9 +117,12 @@ class GoSymbolsExtractor(MetaProcessor):
 		artefact["artefact"] = ARTEFACT_GOLANG_PROJECT_PACKAGES
 
 		# project credentials
-		artefact["project"] = self.project
+		if self.project != "":
+			artefact["project"] = self.project
+
 		artefact["commit"] = self.commit
-		artefact["ipprefix"] = self.ipprefix
+		if self.ipprefix != "":
+			artefact["ipprefix"] = self.ipprefix
 
 		data = self.gosymbolsextractor.getProjectPackages()
 

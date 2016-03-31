@@ -50,17 +50,21 @@ class ArtefactDecomposer:
 				"data": pkg_classes[prefix]
 			})
 
-		return {
+		new_artefact = {
 			"artefact": artefact["artefact"],
 			"packages": data,
 			"product": artefact["product"],
-			"project": artefact["project"],
 			"build": artefact["build"],
 			# commit not always right
 			"commit": artefact["commit"],
 			"distribution": artefact["distribution"],
 			"rpm": artefact["rpm"],
 		}
+
+		if "project" in artefact:
+			new_artefact["project"] = artefact["project"],
+
+		return new_artefact
 
 	def _artefact_golang_project_distribution_packages_distribution_prefix_strategy(self, artefact):
 		"""
@@ -179,17 +183,21 @@ class ArtefactDecomposer:
 				"tests": test_classes[prefix] if prefix in test_classes else []
 			})
 
-		return {
+		new_artefact = {
 			"artefact": artefact["artefact"],
 			"data": data,
 			"product": artefact["product"],
-			"project": artefact["project"],
 			"build": artefact["build"],
 			# commit not always right
 			"commit": artefact["commit"],
 			"distribution": artefact["distribution"],
 			"rpm": artefact["rpm"],
 		}
+
+		if "project" in artefact:
+			new_artefact["project"] = artefact["project"],
+
+		return new_artefact
 
 	def decomposeArtefact(self, artefact):
 		if artefact["artefact"] == artefacts.ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_PACKAGES:

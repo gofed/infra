@@ -9,21 +9,6 @@
 			"description": "Directory with Go source codes",
 			"minLength": 1
 		},
-		"directories_to_skip": {
-			"type": "array",
-			"description": "List of directories to skip. E.g. Godeps, vendor, etc.",
-			"items": {
-				"type": "string",
-				"description": "Directory to skip",
-				"minLength": 1
-			},
-			"uniqueItems": true
-		},
-		"project": {
-			"type": "string",
-			"description": "Project name",
-			"minLength": 1
-		},
 		"commit": {
 			"type": "string",
 			"description": "Commit of projetc's source codes",
@@ -35,5 +20,5 @@
 			"minLength": 1
 		}
 	},
-	"required": ["resource", "directories_to_skip", "ipprefix"]
+	"required": ["resource"]
 }
