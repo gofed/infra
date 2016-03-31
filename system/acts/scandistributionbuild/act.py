@@ -6,7 +6,8 @@ from infra.system.artefacts.artefacts import (
 	ARTEFACT_GOLANG_PROJECT_INFO_FEDORA,
 	ARTEFACT_GOLANG_IPPREFIX_TO_PACKAGE_NAME,
 	ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_PACKAGES,
-	ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_EXPORTED_API
+	ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_EXPORTED_API,
+	ARTEFACT_GOLANG_IPPREFIX_TO_RPM
 )
 from gofed_lib.helpers import Build
 
@@ -40,6 +41,25 @@ class ScanDistributionBuildAct(MetaAct):
 			"packages": self.packages
 		}
 
+	def _getIpprefix2RpmArtefact(self, build, product, info_artefact, packages_artefacts):
+		"""For each rpm in packages, construct the mapping
+
+		"""
+		artefacts = []
+		for rpm in packages_artefacts:
+			for prefix in packages_artefacts[rpm]["data"]:
+				 artefacts.append({
+					"artefact": ARTEFACT_GOLANG_IPPREFIX_TO_RPM,
+					"ipprefix": prefix["ipprefix"],
+					"commit": info_artefact["commit"],
+					"rpm": rpm,
+					"product": product,
+					"distribution": info_artefact["distribution"],
+					"name": Build(build).name()
+				})
+
+		return artefacts
+
 	def execute(self):
 		"""Impementation of concrete data processor"""
 
@@ -62,7 +82,8 @@ class ScanDistributionBuildAct(MetaAct):
 				"rpm": rpm_name,
 			}
 
-			ok, self.packages[rpm_name] = self.ff.bake("etcdstoragereader").call(data)
+			#ok, self.packages[rpm_name] = self.ff.bake("etcdstoragereader").call(data)
+			ok = False
 			if not ok:
 				missing_rpms.append(rpm)
 				continue
@@ -98,18 +119,14 @@ class ScanDistributionBuildAct(MetaAct):
 
 		data = self.ff.bake("specdataextractor").call(data)
 
-		project = ""
-		commit = ""
-		ipprefix = ""
+		info_artefact = {}
 		for artefact in data:
 			if artefact["artefact"] == ARTEFACT_GOLANG_PROJECT_INFO_FEDORA:
-				project = artefact["project"]
-				commit = artefact["commit"]
-				continue
+				info_artefact = artefact
+				break
 
-			if artefact["artefact"] == ARTEFACT_GOLANG_IPPREFIX_TO_PACKAGE_NAME:
-				ipprefix = artefact["ipprefix"]
-				continue
+		# TODO(jchaloup): each ipprefix can have its own commit
+		commit = info_artefact["commit"]
 
 		# extract api for each missing rpm
 		for rpm in missing_rpms:
@@ -127,9 +144,7 @@ class ScanDistributionBuildAct(MetaAct):
 				"build": self.build,
 				"rpm": rpm["name"],
 				"resource": resource,
-				"project": project,
-				"commit": commit,
-				"ipprefix": ipprefix
+				"commit": commit
 			}
 
 			data = self.ff.bake("distributiongosymbolsextractor").call(data)
@@ -137,7 +152,14 @@ class ScanDistributionBuildAct(MetaAct):
 			self.exported_api[rpm["name"]] = self._getArtefactFromData(ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_EXPORTED_API, data)
 
 			# TODO(jchaloup): only for testing purposes atm, make an option for storing
-			for artefact in data:
-				rdata = self.ff.bake("etcdstoragewriter").call(artefact)
+			#for artefact in data:
+			#	rdata = self.ff.bake("etcdstoragewriter").call(artefact)
+
+		mapping_artefacts = self._getIpprefix2RpmArtefact(self.build, self.product, info_artefact, self.packages)
+
+		# TODO(jchaloup): only for testing purposes atm, make an option for storing
+		# Everytime there is at least one rpm missing (or srpm), new mapping artefacts can get (re)generated
+		for artefact in mapping_artefacts:
+			rdata = self.ff.bake("etcdstoragewriter").call(artefact)
 
 		return True
