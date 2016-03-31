@@ -78,5 +78,10 @@
 	"key_order": {
 		"repository": ["provider", "username", "project"]
 	}
+},
+{
+	"id": "golang-ipprefix-to-rpm",
+	"artefact": "ARTEFACT_GOLANG_IPPREFIX_TO_RPM",
+	"keys": ["artefact", "product", "distribution", "ipprefix"]
 }
 ]

@@ -13,6 +13,7 @@ from .golangprojectrepositorycommit import GolangProjectRepositoryCommitDriver
 from .golangprojectdistributioninfo import GolangProjectDistributionInfoDriver
 from .golangprojectdistributionbuild import GolangProjectDistributionBuildDriver
 from .cachegolangprojectrepositorycommits import CacheGolangProjectRepositoryCommitsDriver
+from .golangipprefixtorpm import GolangIpprefixToRpmDriver
 
 class ArtefactDriverFactory:
 
@@ -59,5 +60,8 @@ class ArtefactDriverFactory:
 
 		if artefact == artefacts.ARTEFACT_CACHE_GOLANG_PROJECT_REPOSITORY_COMMITS:
 			return CacheGolangProjectRepositoryCommitsDriver()
+
+		if artefact == artefacts.ARTEFACT_GOLANG_IPPREFIX_TO_RPM:
+			return GolangIpprefixToRpmDriver()
 
 		raise ValueError("Invalid artefact: %s" % artefact)

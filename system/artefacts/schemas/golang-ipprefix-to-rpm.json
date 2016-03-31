@@ -1,0 +1,41 @@
+{
+        "schema": "http://json-schema.org/draft-04/schema#",
+        "title": "Golang ipprefix to rpm",
+        "description": "Import path prefix to rpm in distribution mapping",
+        "type": "object",
+        "properties": {
+                "artefact": {
+                        "description": "Artefact name",
+                        "type": "string"
+			"oneOf": [
+				{"enum": ["golang-ipprefix-to-rpm"]}
+			]
+                },
+                "product": {
+                        "description": "Product name",
+                        "type": "string"
+                },
+                "distribution": {
+                        "description": "Distribution name",
+                        "type" : "string"
+                },
+                "ipprefix": {
+                        "description": "Import path prefix",
+                        "type": "string"
+                },
+                "name": {
+                        "description": "Package name",
+                        "type": "string"
+                },
+                "commit": {
+                        "description": "Commit",
+                        "type": "string"
+                },
+                "rpm": {
+                        "description": "Rpm",
+                        "type": "string"
+                }
+
+        },
+        "required": ["artefact", "product", "distribution", "ipprefix", "name", "commit", "rpm"]
+}
