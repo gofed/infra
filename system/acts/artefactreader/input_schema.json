@@ -1,0 +1,645 @@
+{
+    "definitions": {
+        "golang-project-distribution-exported-api": {
+            "required": [
+                "artefact", 
+                "product", 
+                "distribution", 
+                "build", 
+                "rpm"
+            ], 
+            "type": "object", 
+            "description": "artefact key", 
+            "properties": {
+                "distribution": {
+                    "minlength": 1, 
+                    "type": "string", 
+                    "description": "key part"
+                }, 
+                "artefact": {
+                    "oneOf": [
+                        {
+                            "enum": [
+                                "golang-project-distribution-exported-api"
+                            ]
+                        }
+                    ], 
+                    "type": "string", 
+                    "description": "key part"
+                }, 
+                "rpm": {
+                    "minlength": 1, 
+                    "type": "string", 
+                    "description": "key part"
+                }, 
+                "product": {
+                    "minlength": 1, 
+                    "type": "string", 
+                    "description": "key part"
+                }, 
+                "build": {
+                    "minlength": 1, 
+                    "type": "string", 
+                    "description": "key part"
+                }
+            }
+        }, 
+        "golang-project-exported-api": {
+            "required": [
+                "artefact", 
+                "project", 
+                "commit"
+            ], 
+            "type": "object", 
+            "description": "artefact key", 
+            "properties": {
+                "project": {
+                    "minlength": 1, 
+                    "type": "string", 
+                    "description": "key part"
+                }, 
+                "commit": {
+                    "minlength": 1, 
+                    "type": "string", 
+                    "description": "key part"
+                }, 
+                "artefact": {
+                    "oneOf": [
+                        {
+                            "enum": [
+                                "golang-project-exported-api"
+                            ]
+                        }
+                    ], 
+                    "type": "string", 
+                    "description": "key part"
+                }
+            }
+        }, 
+        "golang-project-distribution-build": {
+            "required": [
+                "artefact", 
+                "product", 
+                "distribution", 
+                "build"
+            ], 
+            "type": "object", 
+            "description": "artefact key", 
+            "properties": {
+                "distribution": {
+                    "minlength": 1, 
+                    "type": "string", 
+                    "description": "key part"
+                }, 
+                "artefact": {
+                    "oneOf": [
+                        {
+                            "enum": [
+                                "golang-project-distribution-build"
+                            ]
+                        }
+                    ], 
+                    "type": "string", 
+                    "description": "key part"
+                }, 
+                "product": {
+                    "minlength": 1, 
+                    "type": "string", 
+                    "description": "key part"
+                }, 
+                "build": {
+                    "minlength": 1, 
+                    "type": "string", 
+                    "description": "key part"
+                }
+            }
+        }, 
+        "golang-project-api-diff": {
+            "required": [
+                "artefact", 
+                "project", 
+                "commit1", 
+                "commit2"
+            ], 
+            "type": "object", 
+            "description": "artefact key", 
+            "properties": {
+                "project": {
+                    "minlength": 1, 
+                    "type": "string", 
+                    "description": "key part"
+                }, 
+                "commit2": {
+                    "minlength": 1, 
+                    "type": "string", 
+                    "description": "key part"
+                }, 
+                "artefact": {
+                    "oneOf": [
+                        {
+                            "enum": [
+                                "golang-project-api-diff"
+                            ]
+                        }
+                    ], 
+                    "type": "string", 
+                    "description": "key part"
+                }, 
+                "commit1": {
+                    "minlength": 1, 
+                    "type": "string", 
+                    "description": "key part"
+                }
+            }
+        }, 
+        "golang-project-distribution-packages": {
+            "required": [
+                "artefact", 
+                "product", 
+                "distribution", 
+                "build", 
+                "rpm"
+            ], 
+            "type": "object", 
+            "description": "artefact key", 
+            "properties": {
+                "distribution": {
+                    "minlength": 1, 
+                    "type": "string", 
+                    "description": "key part"
+                }, 
+                "artefact": {
+                    "oneOf": [
+                        {
+                            "enum": [
+                                "golang-project-distribution-packages"
+                            ]
+                        }
+                    ], 
+                    "type": "string", 
+                    "description": "key part"
+                }, 
+                "rpm": {
+                    "minlength": 1, 
+                    "type": "string", 
+                    "description": "key part"
+                }, 
+                "product": {
+                    "minlength": 1, 
+                    "type": "string", 
+                    "description": "key part"
+                }, 
+                "build": {
+                    "minlength": 1, 
+                    "type": "string", 
+                    "description": "key part"
+                }
+            }
+        }, 
+        "golang-project-distribution-info": {
+            "required": [
+                "artefact", 
+                "product", 
+                "distribution", 
+                "project"
+            ], 
+            "type": "object", 
+            "description": "artefact key", 
+            "properties": {
+                "project": {
+                    "minlength": 1, 
+                    "type": "string", 
+                    "description": "key part"
+                }, 
+                "distribution": {
+                    "minlength": 1, 
+                    "type": "string", 
+                    "description": "key part"
+                }, 
+                "artefact": {
+                    "oneOf": [
+                        {
+                            "enum": [
+                                "golang-project-distribution-info"
+                            ]
+                        }
+                    ], 
+                    "type": "string", 
+                    "description": "key part"
+                }, 
+                "product": {
+                    "minlength": 1, 
+                    "type": "string", 
+                    "description": "key part"
+                }
+            }
+        }, 
+        "golang-project-repository-commit": {
+            "required": [
+                "artefact", 
+                "repository", 
+                "commit"
+            ], 
+            "type": "object", 
+            "description": "artefact key", 
+            "properties": {
+                "commit": {
+                    "minlength": 1, 
+                    "type": "string", 
+                    "description": "key part"
+                }, 
+                "artefact": {
+                    "oneOf": [
+                        {
+                            "enum": [
+                                "golang-project-repository-commit"
+                            ]
+                        }
+                    ], 
+                    "type": "string", 
+                    "description": "key part"
+                }, 
+                "repository": {
+                    "required": [
+                        "provider", 
+                        "username", 
+                        "project"
+                    ], 
+                    "type": "object", 
+                    "description": "key part", 
+                    "properties": {
+                        "username": {
+                            "minLength": 1, 
+                            "type": "string", 
+                            "description": "subkey part"
+                        }, 
+                        "project": {
+                            "minLength": 1, 
+                            "type": "string", 
+                            "description": "subkey part"
+                        }, 
+                        "provider": {
+                            "minLength": 1, 
+                            "type": "string", 
+                            "description": "subkey part"
+                        }
+                    }
+                }
+            }
+        }, 
+        "golang-ipprefix-to-rpm": {
+            "required": [
+                "artefact", 
+                "product", 
+                "distribution", 
+                "ipprefix"
+            ], 
+            "type": "object", 
+            "description": "artefact key", 
+            "properties": {
+                "distribution": {
+                    "minlength": 1, 
+                    "type": "string", 
+                    "description": "key part"
+                }, 
+                "artefact": {
+                    "oneOf": [
+                        {
+                            "enum": [
+                                "golang-ipprefix-to-rpm"
+                            ]
+                        }
+                    ], 
+                    "type": "string", 
+                    "description": "key part"
+                }, 
+                "product": {
+                    "minlength": 1, 
+                    "type": "string", 
+                    "description": "key part"
+                }, 
+                "ipprefix": {
+                    "minlength": 1, 
+                    "type": "string", 
+                    "description": "key part"
+                }
+            }
+        }, 
+        "cache-golang-project-repository-commits": {
+            "required": [
+                "artefact", 
+                "repository"
+            ], 
+            "type": "object", 
+            "description": "artefact key", 
+            "properties": {
+                "artefact": {
+                    "oneOf": [
+                        {
+                            "enum": [
+                                "cache-golang-project-repository-commits"
+                            ]
+                        }
+                    ], 
+                    "type": "string", 
+                    "description": "key part"
+                }, 
+                "repository": {
+                    "required": [
+                        "provider", 
+                        "username", 
+                        "project"
+                    ], 
+                    "type": "object", 
+                    "description": "key part", 
+                    "properties": {
+                        "username": {
+                            "minLength": 1, 
+                            "type": "string", 
+                            "description": "subkey part"
+                        }, 
+                        "project": {
+                            "minLength": 1, 
+                            "type": "string", 
+                            "description": "subkey part"
+                        }, 
+                        "provider": {
+                            "minLength": 1, 
+                            "type": "string", 
+                            "description": "subkey part"
+                        }
+                    }
+                }
+            }
+        }, 
+        "golang-project-content-metadata": {
+            "required": [
+                "artefact", 
+                "project", 
+                "commit"
+            ], 
+            "type": "object", 
+            "description": "artefact key", 
+            "properties": {
+                "project": {
+                    "minlength": 1, 
+                    "type": "string", 
+                    "description": "key part"
+                }, 
+                "commit": {
+                    "minlength": 1, 
+                    "type": "string", 
+                    "description": "key part"
+                }, 
+                "artefact": {
+                    "oneOf": [
+                        {
+                            "enum": [
+                                "golang-project-content-metadata"
+                            ]
+                        }
+                    ], 
+                    "type": "string", 
+                    "description": "key part"
+                }
+            }
+        }, 
+        "golang-ipprefix-to-package-name": {
+            "required": [
+                "artefact", 
+                "product", 
+                "distribution", 
+                "ipprefix"
+            ], 
+            "type": "object", 
+            "description": "artefact key", 
+            "properties": {
+                "distribution": {
+                    "minlength": 1, 
+                    "type": "string", 
+                    "description": "key part"
+                }, 
+                "artefact": {
+                    "oneOf": [
+                        {
+                            "enum": [
+                                "golang-ipprefix-to-package-name"
+                            ]
+                        }
+                    ], 
+                    "type": "string", 
+                    "description": "key part"
+                }, 
+                "product": {
+                    "minlength": 1, 
+                    "type": "string", 
+                    "description": "key part"
+                }, 
+                "ipprefix": {
+                    "minlength": 1, 
+                    "type": "string", 
+                    "description": "key part"
+                }
+            }
+        }, 
+        "golang-project-repository-info": {
+            "required": [
+                "artefact", 
+                "repository"
+            ], 
+            "type": "object", 
+            "description": "artefact key", 
+            "properties": {
+                "artefact": {
+                    "oneOf": [
+                        {
+                            "enum": [
+                                "golang-project-repository-info"
+                            ]
+                        }
+                    ], 
+                    "type": "string", 
+                    "description": "key part"
+                }, 
+                "repository": {
+                    "required": [
+                        "provider", 
+                        "username", 
+                        "project"
+                    ], 
+                    "type": "object", 
+                    "description": "key part", 
+                    "properties": {
+                        "username": {
+                            "minLength": 1, 
+                            "type": "string", 
+                            "description": "subkey part"
+                        }, 
+                        "project": {
+                            "minLength": 1, 
+                            "type": "string", 
+                            "description": "subkey part"
+                        }, 
+                        "provider": {
+                            "minLength": 1, 
+                            "type": "string", 
+                            "description": "subkey part"
+                        }
+                    }
+                }
+            }
+        }, 
+        "golang-project-packages": {
+            "required": [
+                "artefact", 
+                "project", 
+                "commit"
+            ], 
+            "type": "object", 
+            "description": "artefact key", 
+            "properties": {
+                "project": {
+                    "minlength": 1, 
+                    "type": "string", 
+                    "description": "key part"
+                }, 
+                "commit": {
+                    "minlength": 1, 
+                    "type": "string", 
+                    "description": "key part"
+                }, 
+                "artefact": {
+                    "oneOf": [
+                        {
+                            "enum": [
+                                "golang-project-packages"
+                            ]
+                        }
+                    ], 
+                    "type": "string", 
+                    "description": "key part"
+                }
+            }
+        }, 
+        "golang-project-info-fedora": {
+            "required": [
+                "artefact", 
+                "project", 
+                "distribution"
+            ], 
+            "type": "object", 
+            "description": "artefact key", 
+            "properties": {
+                "project": {
+                    "minlength": 1, 
+                    "type": "string", 
+                    "description": "key part"
+                }, 
+                "artefact": {
+                    "oneOf": [
+                        {
+                            "enum": [
+                                "golang-project-info-fedora"
+                            ]
+                        }
+                    ], 
+                    "type": "string", 
+                    "description": "key part"
+                }, 
+                "distribution": {
+                    "minlength": 1, 
+                    "type": "string", 
+                    "description": "key part"
+                }
+            }
+        }, 
+        "golang-project-to-package-name": {
+            "required": [
+                "artefact", 
+                "product", 
+                "distribution", 
+                "project"
+            ], 
+            "type": "object", 
+            "description": "artefact key", 
+            "properties": {
+                "project": {
+                    "minlength": 1, 
+                    "type": "string", 
+                    "description": "key part"
+                }, 
+                "distribution": {
+                    "minlength": 1, 
+                    "type": "string", 
+                    "description": "key part"
+                }, 
+                "artefact": {
+                    "oneOf": [
+                        {
+                            "enum": [
+                                "golang-project-to-package-name"
+                            ]
+                        }
+                    ], 
+                    "type": "string", 
+                    "description": "key part"
+                }, 
+                "product": {
+                    "minlength": 1, 
+                    "type": "string", 
+                    "description": "key part"
+                }
+            }
+        }
+    }, 
+    "$schema": "http://json-schema.org/draft-04/schema#", 
+    "anyOf": [
+        {
+            "$ref": "#/definitions/cache-golang-project-repository-commits"
+        }, 
+        {
+            "$ref": "#/definitions/golang-ipprefix-to-package-name"
+        }, 
+        {
+            "$ref": "#/definitions/golang-ipprefix-to-rpm"
+        }, 
+        {
+            "$ref": "#/definitions/golang-project-api-diff"
+        }, 
+        {
+            "$ref": "#/definitions/golang-project-content-metadata"
+        }, 
+        {
+            "$ref": "#/definitions/golang-project-distribution-build"
+        }, 
+        {
+            "$ref": "#/definitions/golang-project-distribution-exported-api"
+        }, 
+        {
+            "$ref": "#/definitions/golang-project-distribution-info"
+        }, 
+        {
+            "$ref": "#/definitions/golang-project-distribution-packages"
+        }, 
+        {
+            "$ref": "#/definitions/golang-project-exported-api"
+        }, 
+        {
+            "$ref": "#/definitions/golang-project-info-fedora"
+        }, 
+        {
+            "$ref": "#/definitions/golang-project-packages"
+        }, 
+        {
+            "$ref": "#/definitions/golang-project-repository-commit"
+        }, 
+        {
+            "$ref": "#/definitions/golang-project-repository-info"
+        }, 
+        {
+            "$ref": "#/definitions/golang-project-to-package-name"
+        }
+    ], 
+    "description": "Definition of act providing artefact data (auto-generated)", 
+    "title": "Artefact reader act"
+}
