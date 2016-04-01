@@ -21,6 +21,7 @@ class ScanDistributionBuildAct(MetaAct):
 
 		self.exported_api = {}
 		self.packages = {}
+		self.mappings = {}
 
 	def setData(self, data):
 		"""Validation and data pre-processing"""
@@ -38,7 +39,8 @@ class ScanDistributionBuildAct(MetaAct):
 		"""Validation and data post-processing"""
 		return {
 			"exported_api": self.exported_api,
-			"packages": self.packages
+			"packages": self.packages,
+			"mappings": self.mappings
 		}
 
 	def _getIpprefix2RpmArtefact(self, build, product, info_artefact, packages_artefacts):
@@ -155,6 +157,9 @@ class ScanDistributionBuildAct(MetaAct):
 				rdata = self.ff.bake("etcdstoragewriter").call(artefact)
 
 		mapping_artefacts = self._getIpprefix2RpmArtefact(self.build, self.product, info_artefact, self.packages)
+
+		for artefact in mapping_artefacts:
+			self.mappings[artefact["ipprefix"]] = artefact
 
 		# TODO(jchaloup): only for testing purposes atm, make an option for storing
 		# Everytime there is at least one rpm missing (or srpm), new mapping artefacts can get (re)generated
