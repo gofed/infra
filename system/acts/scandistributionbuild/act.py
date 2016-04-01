@@ -82,8 +82,7 @@ class ScanDistributionBuildAct(MetaAct):
 				"rpm": rpm_name,
 			}
 
-			#ok, self.packages[rpm_name] = self.ff.bake("etcdstoragereader").call(data)
-			ok = False
+			ok, self.packages[rpm_name] = self.ff.bake("etcdstoragereader").call(data)
 			if not ok:
 				missing_rpms.append(rpm)
 				continue
@@ -152,8 +151,8 @@ class ScanDistributionBuildAct(MetaAct):
 			self.exported_api[rpm["name"]] = self._getArtefactFromData(ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_EXPORTED_API, data)
 
 			# TODO(jchaloup): only for testing purposes atm, make an option for storing
-			#for artefact in data:
-			#	rdata = self.ff.bake("etcdstoragewriter").call(artefact)
+			for artefact in data:
+				rdata = self.ff.bake("etcdstoragewriter").call(artefact)
 
 		mapping_artefacts = self._getIpprefix2RpmArtefact(self.build, self.product, info_artefact, self.packages)
 

@@ -22,8 +22,11 @@ if __name__ == "__main__":
 	# fetch names of the latest builds for rawhide (ping DH if I can use some of it)
 	for pkg in packages:
 		try:
-			data = client.getLatestRPMS("rawhide", "etcd")
+			data = client.getLatestRPMS("rawhide", pkg)
 		except ValueError as e:
+			logging.error(e)
+			continue
+		except KeyError as e:
 			logging.error(e)
 			continue
 
@@ -76,7 +79,7 @@ if __name__ == "__main__":
 		#print "Getting:"
 		#act.getData()
 		#print json.dumps(act.getData())
-		break
+		#break
 # for each build get a list of devel subpackages (make asumption: pkg-devel.noarch.rpm)
 #rpms = session.getLatestRPMS("rawhide", package="etcd")
 
