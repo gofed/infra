@@ -93,15 +93,17 @@ class ResourceClient:
 
 			raise ValueError("Invalid resource specification")
 
-	def _handleRepository(self, provider, username, project):
-		if provider == "github":
-			provider = self.provider.buildGithubRepositoryProvider()
+	def _handleRepository(self, repository):
+		if repository["provider"] in ["github"]:
+			provider = self.provider.buildGitRepositoryProvider()
+		elif repository["provider"] in ["bitbucket"]:
+			provider = self.provider.buildMercurialRepositoryProvider()
 		else:
-			raise ValueError("Unsupported provider: %s" % provider)
+			raise ValueError("Unsupported provider: %s" % repository["provider"])
 
 		# TODO(jchaloup): catch exceptions from provide(...)
 		# product, distribution, build, rpm
-		resource_location =  provider.provide(username, project)
+		resource_location =  provider.provide(repository)
 
 		# TODO(jchaloup): catch exceptions for tarfile
 		tar = tarfile.open(resource_location)
@@ -157,11 +159,7 @@ class ResourceClient:
 			return
 
 		elif resource_type == RESOURCE_REPOSITORY:
-			self.subresource = self._handleRepository(
-				descriptor["provider"],
-				descriptor["username"],
-				descriptor["project"]
-			)
+			self.subresource = self._handleRepository(descriptor["repository"])
 			return
 
 		raise ValueError("ResourceClient: resource type '%s' not implemented" % resource_type)

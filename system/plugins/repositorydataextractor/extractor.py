@@ -7,7 +7,8 @@ from infra.system.helpers.schema_validator import SchemaValidator
 from infra.system.helpers.utils import getScriptDir
 from infra.system.artefacts.artefacts import ARTEFACT_GOLANG_PROJECT_REPOSITORY_INFO, ARTEFACT_GOLANG_PROJECT_REPOSITORY_COMMIT
 
-from gofed_lib.github.client import GithubLocalClient
+from gofed_lib.git.client import GitLocalClient
+from gofed_lib.mercurial.client import MercurialLocalClient
 from gofed_lib.utils import dateToTimestamp
 
 class RepositoryDataExtractor(MetaProcessor):
@@ -21,6 +22,8 @@ class RepositoryDataExtractor(MetaProcessor):
 		self.end_date = ''
 		self.commit = ''
 
+		self.client = None
+
 		self.branches = []
 		self.commits = {}
 
@@ -31,6 +34,14 @@ class RepositoryDataExtractor(MetaProcessor):
 
 		self.repository = data['repository']
 		self.repository_directory = data['resource']
+
+		provider = self.repository["provider"]
+		if provider == "github":
+			self.client = GitLocalClient(self.repository_directory)
+		elif provider == "bitbucket":
+			self.client = MercurialLocalClient(self.repository_directory)
+		else:
+			raise ValueError("Provider '%s' not supported" % provider)
 
 		# TODO(jchaloup): check the date is in required format
 		if 'start_date' in data:
@@ -139,16 +150,14 @@ class RepositoryDataExtractor(MetaProcessor):
 		return self.input_validated
 
 	def execute(self):
-		client = GithubLocalClient(self.repository_directory)
-
 		if self.commit != "":
-			self.commits[""] = client.commit(self.commit)
+			self.commits[""] = self.client.commit(self.commit)
 			return True
 
-		self.branches = client.branches()
+		self.branches = self.client.branches()
 
 		self.commits = {}
 		for branch in self.branches:
-			self.commits[branch] = client.commits(branch, since=self.start_date, to=self.end_date)
+			self.commits[branch] = self.client.commits(branch, since=self.start_date, to=self.end_date)
 
 		return True

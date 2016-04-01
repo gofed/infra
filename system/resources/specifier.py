@@ -79,16 +79,18 @@ class ResourceSpecifier:
 		:type  project:  str
 		"""
 
-		if provider not in ["github"]:
+		if provider not in ["github", "bitbucket"]:
 			raise ValueError("Provider '%s' not supported" % provider)
 
 		# In future, non-upstream repositories can be provided (e.g. dist-git).
 		# For that, create new generate***Repository just with provider different from upstream ones.
 		# In the backend, it will be processed transparently.
 		return {
-			"provider": provider,
-			"username": username,
-			"project": project,
+			"repository": {
+				"provider": provider,
+				"username": username,
+				"project": project
+			},
 			"resource": RESOURCE_REPOSITORY,
 			"subresource": subresource
 		}
