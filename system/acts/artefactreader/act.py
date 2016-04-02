@@ -3,7 +3,8 @@ from infra.system.resources.specifier import ResourceSpecifier
 from infra.system.resources import types
 from infra.system.helpers.utils import getScriptDir
 from infra.system.artefacts.artefacts import (
-	ARTEFACT_GOLANG_IPPREFIX_TO_RPM
+	ARTEFACT_GOLANG_IPPREFIX_TO_RPM,
+	ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_PACKAGES
 )
 
 class ArtefactReaderAct(MetaAct):
@@ -27,7 +28,7 @@ class ArtefactReaderAct(MetaAct):
 
 		# supporting only mapping atm
 		# TODO(jchaloup): extend the artefact to the rest once documented
-		if data["artefact"] == ARTEFACT_GOLANG_IPPREFIX_TO_RPM:
+		if data["artefact"] in [ARTEFACT_GOLANG_IPPREFIX_TO_RPM, ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_PACKAGES]:
 			return True
 
 		return False
