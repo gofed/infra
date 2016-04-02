@@ -226,7 +226,7 @@ class ScanUpstreamRepositoryAct(MetaAct):
 
 		return cache
 
-	def mergeRepositoryInfoArtefacts(self, info1, info2):
+	def _mergeRepositoryInfoArtefacts(self, info1, info2):
 		return {
 			"artefact": ARTEFACT_CACHE_GOLANG_PROJECT_REPOSITORY_COMMITS,
 			"repository": info2["repository"],
@@ -239,7 +239,7 @@ class ScanUpstreamRepositoryAct(MetaAct):
 			# TODO(jchaloup): this needs to be handled if configured to run
 			logging.error("Unable to store cache")
 
-	def generateCacheFromArtefacts(self, repository_info):
+	def _generateCacheFromArtefacts(self, repository_info):
 		"""Generate list of (commit, commit date) pairs from repository info artefact.
 		If any read from a storage fails, the cache can be incomplete.
 		Let's use what we get and give the cache another chance to get reconstructed in another scan.
@@ -271,7 +271,7 @@ class ScanUpstreamRepositoryAct(MetaAct):
 			"commits": cache_commits
 		}
 
-	def retrieveCommitsFromCache(self, cache, start_timestamp, end_timestamp):
+	def _retrieveCommitsFromCache(self, cache, start_timestamp, end_timestamp):
 		# sort commits
 		commit_artefacts = {}
 		for commit in filter(lambda l: l["d"] >= start_timestamp and l["d"] <= end_timestamp, cache["commits"]):
@@ -289,7 +289,7 @@ class ScanUpstreamRepositoryAct(MetaAct):
 
 		return commit_artefacts
 
-	def retrieveSingleCommit(self, repository, commit):
+	def _retrieveSingleCommit(self, repository, commit):
 		data = {
 			"artefact": ARTEFACT_GOLANG_PROJECT_REPOSITORY_COMMIT,
 			"repository": repository,
@@ -324,7 +324,7 @@ class ScanUpstreamRepositoryAct(MetaAct):
 
 		# if a self.commit != "" => request only for particular commit
 		if self.commit != "":
-			self.repository_commits[self.commit] = self.retrieveSingleCommit(self.repository, self.commit)
+			self.repository_commits[self.commit] = self._retrieveSingleCommit(self.repository, self.commit)
 			return True
 
 		# check storage
@@ -385,7 +385,7 @@ class ScanUpstreamRepositoryAct(MetaAct):
 				self.repository_info = info_artefact
 
 				# retrieve commits
-				self.repository_commits = self.retrieveCommitsFromCache(cache, start_timestamp, end_timestamp)
+				self.repository_commits = self._retrieveCommitsFromCache(cache, start_timestamp, end_timestamp)
 
 				return True
 
@@ -443,9 +443,9 @@ class ScanUpstreamRepositoryAct(MetaAct):
 		# info found
 		else:
 			# merge both infos
-			updated_repository_info = self.mergeRepositoryInfoArtefacts(info_artefact, extracted_info_artefact)
+			updated_repository_info = self._mergeRepositoryInfoArtefacts(info_artefact, extracted_info_artefact)
 			# reconstruct cache from info_artefact
-			gen_cache = self.generateCacheFromArtefacts(info_artefact)
+			gen_cache = self._generateCacheFromArtefacts(info_artefact)
 			updated_cache = self._mergeCaches(extracted_cache, gen_cache)
 
 		# store both new info and cache

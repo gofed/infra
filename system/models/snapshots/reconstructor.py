@@ -1,8 +1,3 @@
-#
-# As default, reconstructoror will construct the snapshot for a devel part of a project.
-# 
-#
-
 from infra.system.core.factory.actfactory import ActFactory
 from infra.system.artefacts.artefacts import ARTEFACT_GOLANG_PROJECT_PACKAGES
 from gofed_lib.importpathsdecomposerbuilder import ImportPathsDecomposerBuilder
@@ -60,7 +55,7 @@ class SnapshotReconstructor(object):
 
 		return commits[-1]
 
-	def findClosestCommit(self, repository, timestamp):
+	def _findClosestCommit(self, repository, timestamp):
 		"""Get the oldest commits from the repository that is at most old as timestamp.
 
 		:param repository: repository
@@ -93,7 +88,7 @@ class SnapshotReconstructor(object):
 		# no commit foud => raise exception
 		raise KeyError("Commit not found")
 
-	def detectNextDependencies(self, dependencies, ipprefix, commit_timestamp):
+	def _detectNextDependencies(self, dependencies, ipprefix, commit_timestamp):
 		dependencies = list(set(dependencies))
 		# normalize paths
 		normalizer = ImportPathNormalizer()
@@ -141,7 +136,7 @@ class SnapshotReconstructor(object):
 				raise ReconstructionError("Prefix provider error: %s" % e)
 
 			try:
-				closest_commit = self.findClosestCommit(provider, commit_timestamp)
+				closest_commit = self._findClosestCommit(provider, commit_timestamp)
 			except KeyError as e:
 				raise ReconstructionError("Closest commit to %s timestamp for %s not found" % (commit_timestamp, provider_prefix))
 
@@ -157,7 +152,7 @@ class SnapshotReconstructor(object):
 
 		return next_projects
 
-	def detectDirectDependencies(self, repository, commit, ipprefix, commit_timestamp, mains, tests):
+	def _detectDirectDependencies(self, repository, commit, ipprefix, commit_timestamp, mains, tests):
 		data = {
 			"type": "upstream_source_code",
 			"project": "github.com/coreos/etcd",
@@ -191,7 +186,7 @@ class SnapshotReconstructor(object):
 		# remove duplicates
 		direct_dependencies = list(set(direct_dependencies))
 
-		next_projects = self.detectNextDependencies(direct_dependencies, ipprefix, commit_timestamp)
+		next_projects = self._detectNextDependencies(direct_dependencies, ipprefix, commit_timestamp)
 
 		# update detected projects
 		for project in next_projects:
@@ -205,7 +200,7 @@ class SnapshotReconstructor(object):
 			self.unscanned_projects[prefix] = copy.deepcopy(next_projects[prefix])
 			self.scanned_projects[prefix] = copy.deepcopy(next_projects[prefix])
 
-	def detectIndirectDependencies(self, ipprefix, commit_timestamp):
+	def _detectIndirectDependencies(self, ipprefix, commit_timestamp):
 		nodes = []
 		next_projects = {}
 		for prefix in self.unscanned_projects:
@@ -229,7 +224,7 @@ class SnapshotReconstructor(object):
 
 		nodes = list(set(nodes))
 
-		next_projects = self.detectNextDependencies(nodes, ipprefix, commit_timestamp)
+		next_projects = self._detectNextDependencies(nodes, ipprefix, commit_timestamp)
 		if next_projects == {}:
 			return False
 
@@ -274,11 +269,11 @@ class SnapshotReconstructor(object):
 		commit_timestamp = self._getCommitTimestamp(repository, commit)
 		# get direct dependencies
 		logging.info("=============DIRECT==============")
-		self.detectDirectDependencies(repository, commit, ipprefix, commit_timestamp, mains, tests)
+		self._detectDirectDependencies(repository, commit, ipprefix, commit_timestamp, mains, tests)
 
 		# scan detected dependencies
 		logging.info("=============UNDIRECT==============")
-		while self.detectIndirectDependencies(ipprefix, commit_timestamp):
+		while self._detectIndirectDependencies(ipprefix, commit_timestamp):
 			logging.info("=============UNDIRECT==============")
 
 		# create snapshot
