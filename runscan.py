@@ -8,11 +8,11 @@ from gofed_lib.kojiclient import FakeKojiClient, KojiClient
 from gofed_lib.helpers import Rpm
 
 import logging
-logging.basicConfig(level=logging.INFO)
+#logging.basicConfig(level=logging.INFO)
 
 if __name__ == "__main__":
 
-	client = FakeKojiClient()
+	client = KojiClient()
 
 	act = ScanDistributionBuildAct()
 
@@ -59,7 +59,7 @@ if __name__ == "__main__":
 			}
 		}
 
-		print data["build"]
+		print data
 
 		try:
 			#print "Setting:"
