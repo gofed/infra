@@ -57,7 +57,7 @@ class ScanDistributionBuildAct(MetaAct):
 					"rpm": rpm,
 					"product": product,
 					"distribution": info_artefact["distribution"],
-					"name": Build(build).name()
+					"build": build
 				})
 
 		return artefacts

@@ -23,8 +23,8 @@
                         "description": "Import path prefix",
                         "type": "string"
                 },
-                "name": {
-                        "description": "Package name",
+                "build": {
+                        "description": "Build name",
                         "type": "string"
                 },
                 "commit": {
