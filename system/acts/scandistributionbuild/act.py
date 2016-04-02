@@ -9,7 +9,7 @@ from infra.system.artefacts.artefacts import (
 	ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_EXPORTED_API,
 	ARTEFACT_GOLANG_IPPREFIX_TO_RPM
 )
-from gofed_lib.helpers import Build
+from gofed_lib.helpers import Build, Rpm
 
 class ScanDistributionBuildAct(MetaAct):
 
@@ -49,6 +49,11 @@ class ScanDistributionBuildAct(MetaAct):
 		"""
 		artefacts = []
 		for rpm in packages_artefacts:
+			# Filter out all non-devel rpms
+			name = Rpm(build, rpm).name()
+			if name.endswith("unit-test-devel") or name.endswith("unit-test"):
+				continue
+
 			for prefix in packages_artefacts[rpm]["data"]:
 				 artefacts.append({
 					"artefact": ARTEFACT_GOLANG_IPPREFIX_TO_RPM,
