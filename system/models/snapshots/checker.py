@@ -58,7 +58,8 @@
 from gofed_lib.importpathparserbuilder import ImportPathParserBuilder
 from infra.system.core.factory.actfactory import ActFactory
 from infra.system.artefacts.artefacts import (
-	ARTEFACT_GOLANG_IPPREFIX_TO_RPM
+	ARTEFACT_GOLANG_IPPREFIX_TO_RPM,
+	ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_PACKAGES
 )
 from infra.system.core.acts.types import ActFailedError
 import logging
@@ -83,7 +84,31 @@ class SnapshotChecker(object):
 
 		return artefact["commits"][commit]
 
-	def check(self, snapshot, distribution):
+	def _comparePackages(self, package, upstream_commit, distro_commit):
+		if upstream_commit["cdate"] == distro_commit["cdate"]:
+			return "%s%s is up-to-date%s" % (GREEN, package, ENDC)
+		elif upstream_commit["cdate"] < distro_commit["cdate"]:
+			return "%s%s is newer in distribution%s" % (BLUE, package, ENDC)
+		elif upstream_commit["cdate"] > distro_commit["cdate"]:
+			return "%s%s is outdated in distribution%s" % (RED, package, ENDC)
+
+	def _checkPackageCoverage(self, product, distribution, build, rpm, ipprefix, packages):
+		data = {
+			"artefact": ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_PACKAGES,
+			"product": product,
+			"distribution": distribution,
+			"build": build,
+			"rpm": rpm
+		}
+		artefact = self.artefactreaderact.call(data)
+
+		# get list of defined packages
+		for ipprefix_class in artefact["data"]:
+			if ipprefix_class["ipprefix"] == ipprefix:
+				# All packages covered?
+				return list(set(packages) - set(ipprefix_class["packages"]))
+
+	def check(self, snapshot, product, distribution):
 		"""Check if a given snapshot is covered in a distribution
 		:param snapshot: project snapshot
 		:type  snapshot: Snapshot
@@ -91,44 +116,59 @@ class SnapshotChecker(object):
 		:type  distribution: string
 		"""
 
-		# iprefix -> provider prefix
-		providers = {}
 		packages = snapshot.packages()
-		for package in packages:
-			providers[package] = self.ipparser.parse(package).getProviderSignature()
 
-		# ipprefix -> rpm
+		ipprefixes = {}
+		providers = {}
 		rpms = {}
-
-		# if ipprefix2rpm artefact does not exist => report it and continue, no fallback
-		# TODO(jchaloup): FF: fallback to generic mapping if ipprefix to pkg name
-		# and report that "maybe" the ipprefix is provided by this package
+		upstream = {}
+		not_recognized = []
 		for package in packages:
+			try:
+				self.ipparser.parse(package)
+			except ValueError:
+				not_recognized.append(package)
+				continue
+
+			ipprefix = self.ipparser.getImportPathPrefix()
+			try:
+				ipprefixes[ipprefix].append(package)
+			except KeyError:
+				ipprefixes[ipprefix] = [package]
+
+			# store ipprefix commit (assuming all packages with the same prefix has the same commit)
+			upstream[ipprefix] = packages[package]
+
+			# iprefix -> provider prefix
+			providers[ipprefix] = self.ipparser.getProviderSignature()
+
+			# ipprefix -> rpm
 			data = {
 				"artefact": ARTEFACT_GOLANG_IPPREFIX_TO_RPM,
 				"distribution": "rawhide",
 				"product": "Fedora",
-				"ipprefix": package
+				"ipprefix": ipprefix
 			}
+			# if ipprefix2rpm artefact does not exist => report it and continue, no fallback
+			# TODO(jchaloup): FF: fallback to generic mapping if ipprefix to pkg name
+			# and report that "maybe" the ipprefix is provided by this package
 			try:
-				artefact = self.artefactreaderact.call(data)
+				rpms[ipprefix] = self.artefactreaderact.call(data)
 			except ActFailedError as e:
 				logging.error("Unable to get mapping for %s" % package)
+				pass
+
+		for ipprefix in ipprefixes:
+			if ipprefix not in providers:
+				print "%sUnable to find provider for '%s' ipprefix%s" % (WHITE, ipprefix, ENDC)
 				continue
 
-			rpms[package] = artefact
-
-		for package in packages:
-			if package not in providers:
-				print "%sUnable to find provider for '%s' ipprefix%s" % (WHITE, package, ENDC)
+			if ipprefix not in rpms:
+				print "%sUnable to find ipprefix2rpm mapping '%s' ipprefix%s" % (WHITE, ipprefix, ENDC)
 				continue
 
-			if package not in rpms:
-				print "%sUnable to find ipprefix2rpm mapping '%s' ipprefix%s" % (WHITE, package, ENDC)
-				continue
-
-			upstream_commit = self._getCommitDate(providers[package], packages[package])
-			distro_commit = self._getCommitDate(providers[package], rpms[package]["commit"])
+			upstream_commit = self._getCommitDate(providers[ipprefix], upstream[ipprefix])
+			distro_commit = self._getCommitDate(providers[ipprefix], rpms[ipprefix]["commit"])
 
 			if upstream_commit == {}:
 				logging.error("Unable to retrieve commit info for %s %s" % (package, packages[package]))
@@ -138,15 +178,13 @@ class SnapshotChecker(object):
 				logging.error("Unable to retrieve commit info for %s %s" % (package, rpms[package]["commit"]))
 				continue
 
-			if upstream_commit["cdate"] == distro_commit["cdate"]:
-				print "%s%s is up-to-date%s" % (GREEN, package, ENDC)
-				continue
+			# compare commits
+			comparison = self._comparePackages(ipprefix, upstream_commit, distro_commit)
 
-			if upstream_commit["cdate"] < distro_commit["cdate"]:
-				print "%s%s is newer in distribution%s" % (BLUE, package, ENDC)
-				continue
+			# check if packages in ipprefix class are covered in distribution
+			not_covered = self._checkPackageCoverage(product, distribution, rpms[ipprefix]["build"], rpms[ipprefix]["rpm"], ipprefix, ipprefixes[ipprefix])
 
-			if upstream_commit["cdate"] > distro_commit["cdate"]:
-				print "%s%s is outdated in distribution%s" % (RED, package, ENDC)
-				continue
-
+			if not_covered == []:
+				print "%s: %snot covered: %s%s" % (comparison, RED, not_covered, ENDC)
+			else:
+				print comparison

@@ -13,7 +13,7 @@ if __name__ == "__main__":
 	snapshot = Snapshot()
 	snapshot.readGodepsFile(file)
 
-	SnapshotChecker().check(snapshot, "rawhide")
+	SnapshotChecker().check(snapshot, "Fedora", "rawhide")
 
 	exit(1)
 
