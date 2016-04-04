@@ -553,6 +553,47 @@
                 }
             }
         }, 
+        "golang-distribution-snapshot": {
+            "required": [
+                "artefact", 
+                "distribution"
+            ], 
+            "type": "object", 
+            "description": "artefact key", 
+            "properties": {
+                "artefact": {
+                    "oneOf": [
+                        {
+                            "enum": [
+                                "golang-distribution-snapshot"
+                            ]
+                        }
+                    ], 
+                    "type": "string", 
+                    "description": "key part"
+                }, 
+                "distribution": {
+                    "required": [
+                        "product", 
+                        "version"
+                    ], 
+                    "type": "object", 
+                    "description": "key part", 
+                    "properties": {
+                        "product": {
+                            "minLength": 1, 
+                            "type": "string", 
+                            "description": "subkey part"
+                        }, 
+                        "version": {
+                            "minLength": 1, 
+                            "type": "string", 
+                            "description": "subkey part"
+                        }
+                    }
+                }
+            }
+        }, 
         "golang-project-to-package-name": {
             "required": [
                 "artefact", 
@@ -596,6 +637,9 @@
     "anyOf": [
         {
             "$ref": "#/definitions/cache-golang-project-repository-commits"
+        }, 
+        {
+            "$ref": "#/definitions/golang-distribution-snapshot"
         }, 
         {
             "$ref": "#/definitions/golang-ipprefix-to-package-name"

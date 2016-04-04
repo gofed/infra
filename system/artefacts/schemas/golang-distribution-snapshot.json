@@ -1,0 +1,72 @@
+{
+	"$schema": "http://json-schema.org/draft-04/schema#",
+	"title": "Golang project packages artefact",
+	"description": "Definition of packages of a golang project",
+	"type": "object",
+	"properties": {
+		"artefact": {
+			"description": "Artefact name",
+			"type": "string",
+			"oneOf": [
+ 			       {"enum": ["golang-distribution-snapshot"]}
+			]
+		},
+                "distribution": {
+                        "description": "Distribution",
+                        "type" : "object",
+			"properties": {
+				"product": {
+		                        "description": "Product name",
+		                        "type": "string",
+					"minLength": 1
+		                },
+				"version": {
+		                        "description": "Version name",
+		                        "type": "string",
+					"minLength": 1
+		                }
+			},
+			"required": ["product", "version"]
+                },
+		"go_version": {
+			"description": "Go compiler version",
+			"type": "string"
+		},
+		"timestamp": {
+			"description": "Snapshot's timestamp",
+			"type": "integer"
+		},
+		"builds": {
+			"description": "Builds captured in the snapshot",
+			"type": "array",
+			"items": {
+				"type": "object",
+				"description": "Builds with rpms",
+				"properties": {
+					"name": {
+						"description": "Package name",
+						"type": "string",
+						"minLength": 1
+					},
+					"build": {
+						"description": "Build name",
+						"type": "string",
+						"minLength": 1
+					},
+					"rpms": {
+						"description": "List of rpms",
+						"type": "array",
+						"items": {
+							"description": "Rpm name",
+							"type": "string",
+							"minLength": 1
+						},
+						"uniqueItems": true
+					}
+				},
+				"required": ["name", "build", "rpms"]
+			}
+		}
+	},
+	"required": ["artefact", "distribution", "go_version", "timestamp", "builds"]
+}

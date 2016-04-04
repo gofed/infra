@@ -83,5 +83,13 @@
 	"id": "golang-ipprefix-to-rpm",
 	"artefact": "ARTEFACT_GOLANG_IPPREFIX_TO_RPM",
 	"keys": ["artefact", "product", "distribution", "ipprefix"]
+},
+{
+	"id": "golang-distribution-snapshot",
+	"artefact": "ARTEFACT_GOLANG_DISTRIBUTION_SNAPSHOT",
+	"keys": ["artefact", "distribution"],
+        "key_order": {
+                "distribution": ["product", "version"]
+        }
 }
 ]

@@ -4,7 +4,8 @@ from infra.system.resources import types
 from infra.system.helpers.utils import getScriptDir
 from infra.system.artefacts.artefacts import (
 	ARTEFACT_GOLANG_IPPREFIX_TO_RPM,
-	ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_PACKAGES
+	ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_PACKAGES,
+	ARTEFACT_GOLANG_DISTRIBUTION_SNAPSHOT
 )
 
 class ArtefactReaderAct(MetaAct):
@@ -28,9 +29,10 @@ class ArtefactReaderAct(MetaAct):
 
 		# supporting only mapping atm
 		# TODO(jchaloup): extend the artefact to the rest once documented
-		if data["artefact"] in [ARTEFACT_GOLANG_IPPREFIX_TO_RPM, ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_PACKAGES]:
+		if data["artefact"] in [ARTEFACT_GOLANG_IPPREFIX_TO_RPM, ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_PACKAGES, ARTEFACT_GOLANG_DISTRIBUTION_SNAPSHOT]:
 			return True
 
+		# TODO(jchaloup): raise exception when artefact not supported
 		return False
 
 	def getData(self):
@@ -39,6 +41,7 @@ class ArtefactReaderAct(MetaAct):
 
 	def execute(self):
 		"""Impementation of concrete data processor"""
+		# TODO(jchaloup): raise exception when artefact not found
 		ok, self.artefact = self.ff.bake("etcdstoragereader").call(self.data)
 		if ok:
 			return True
