@@ -81,6 +81,11 @@ class ScanDistributionBuildAct(MetaAct):
 		missing_rpms = []
 		for rpm in self.rpms:
 			rpm_name = rpm["name"]
+
+			# skip srpm
+			if rpm_name.endswith(".srpm.rpm"):
+				continue
+
 			data = {
 				"artefact": ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_PACKAGES,
 				"product": self.product,
