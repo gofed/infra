@@ -1,0 +1,6 @@
+{
+"id": "artefact-writer",
+"class": "ArtefactWriterAct",
+"file": "act.py",
+"version": "1.0-alpha1"
+}
