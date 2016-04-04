@@ -81,7 +81,7 @@ class DistributionSnapshotChecker(object):
 		print "%sscanned %s, failed %s%s" % (YELLOW, self._scanned[key], len(self._failed[key]), ENDC)
 		print ""
 
-	def check(self, distributions, custom_packages, skip_failed = True, full_check = False):
+	def check(self, distributions, custom_packages, blacklist = [], skip_failed = True, full_check = False):
 		"""
 
 		:param distributions: list of distributions, each item as {"product": ..., "version": ...}
@@ -95,7 +95,7 @@ class DistributionSnapshotChecker(object):
 		"""
 		# capture the current distribution snapshot
 		capturer = EcoCapturer(self.koji_client, self.pkgdb_client)
-		snapshots = capturer.captureLatest(distributions, custom_packages).snapshots()
+		snapshots = capturer.captureLatest(distributions, custom_packages, blacklist).snapshots()
 
 		for snapshot in snapshots:
 			new_snapshot = snapshots[snapshot]["snapshot"]
