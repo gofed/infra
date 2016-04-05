@@ -1,0 +1,65 @@
+{
+    "testdatadir": "testdata",
+    "repositories": [
+        {
+            "provider": "github",
+            "username": "eBay",
+            "project": "fabio",
+            "commit": "41a8e0e6903c57f9d593c12e2768b4f7f74a9132"
+        },
+        {
+            "provider": "github",
+            "username": "hectane",
+            "project": "hectane",
+            "commit": "65369ea767f111dc332a1231e132537c47e0523d"
+        },
+        {
+            "provider": "github",
+            "username": "cznic",
+            "project": "ql",
+            "commit": "9cddc341060180c73b0a57b0b0592884b0e05c51"
+        },
+        {
+            "provider": "github",
+            "username": "textnode",
+            "project": "gringo",
+            "commit": "721b395262cc7eb46dec613e9a43a6e57e5045d4"
+        },
+        {
+            "provider": "github",
+            "username": "thcyron",
+            "project": "graphs",
+            "commit": "73d7db16a74c58cd47612e2e91c64273f5b956ab"
+        },
+        {
+            "provider": "github",
+            "username": "beevik",
+            "project": "etree",
+            "commit": "239ec971803db01ca23da8664c41e59f97a21cfc"
+        },
+        {
+            "provider": "github",
+            "username": "rwcarlsen",
+            "project": "goexif",
+            "commit": "e2c31ecc21cbedc8389b6c1205d4034ae92f3f09"
+        },
+        {
+            "provider": "github",
+            "username": "ngmoco",
+            "project": "timber",
+            "commit": "988abfde17386bed90b9cc675b7fb1964e0a46ad"
+        },
+        {
+            "provider": "github",
+            "username": "tonio-ramirez",
+            "project": "dice",
+            "commit": "a7cd9fb52a72d41b361364f0b45a52a538d0e1a8"
+        },
+        {
+            "provider": "github",
+            "username": "jpoirier",
+            "project": "cpu",
+            "commit": "3403179c0b9e278cac5c2777808935e173d119e0"
+        }
+    ]
+}
