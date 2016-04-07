@@ -32,24 +32,14 @@
 					"type": "string",
 					"description": "Import path prefix",
 					"minLength": 1
-				},
-				"directories_to_skip": {
-					"type": "array",
-					"description": "List of directories to skip",
-					"items": {
-						"type": "string",
-						"description": "Directory",
-						"minLength": 1
-					},
-					"uniqueItems": true
 				}
 			},
-			"required": ["type", "project", "commit", "ipprefix", "directories_to_skip"],
+			"required": ["type", "project", "commit", "ipprefix"],
 			"additionalProperties": false
 		},
 		"user_directory": {
 			"type": "object",
-			"description": "Upstream source codes",
+			"description": "User directory",
 			"properties": {
 				"type": {
 					"type": "string",
@@ -63,23 +53,13 @@
 					"description": "Import path prefix",
 					"minLength": 1
 				},
-				"directories_to_skip": {
-					"type": "array",
-					"description": "List of directories to skip",
-					"items": {
-						"type": "string",
-						"description": "Directory",
-						"minLength": 1
-					},
-					"uniqueItems": true
-				},
 				"resource": {
 					"type": "string",
 					"description": "User directory location",
 					"minLength": 1
 				}
 			},
-			"required": ["type", "ipprefix", "directories_to_skip", "resource"],
+			"required": ["type", "ipprefix", "resource"],
 			"additionalProperties": false
 		}
 	}
