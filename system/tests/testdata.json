@@ -123,5 +123,47 @@
             "specfile_url": "http://pkgs.fedoraproject.org/cgit/rpms/golang-github-10gen-openssl.git/plain/golang-github-10gen-openssl.spec",
             "specfile": "golang-github-10gen-openssl.spec"
         }
+    ],
+    "repositories": [
+        {
+            "name": "github.com/eBay/fabio",
+            "clone_url": "https://github.com/eBay/fabio"
+        },
+        {
+            "name": "github.com/hectane/hectane",
+            "clone_url": "https://github.com/hectane/hectane"
+        },
+        {
+            "name": "github.com/cznic/ql",
+            "clone_url": "https://github.com/cznic/ql"
+        },
+        {
+            "name": "github.com/textnode/gringo",
+            "clone_url": "https://github.com/textnode/gringo"
+        },
+        {
+            "name": "github.com/thcyron/graphs",
+            "clone_url": "https://github.com/thcyron/graphs"
+        },
+        {
+            "name": "github.com/beevik/etree",
+            "clone_url": "https://github.com/beevik/etree"
+        },
+        {
+            "name": "github.com/rwcarlsen/goexif",
+            "clone_url": "https://github.com/rwcarlsen/goexif"
+        },
+        {
+            "name": "github.com/ngmoco/timber",
+            "clone_url": "https://github.com/ngmoco/timber"
+        },
+        {
+            "name": "github.com/tonio-ramirez/dice",
+            "clone_url": "https://github.com/tonio-ramirez/dice"
+        },
+        {
+            "name": "github.com/jpoirier/cpu",
+            "clone_url": "https://github.com/jpoirier/cpu"
+        }
     ]
 }
