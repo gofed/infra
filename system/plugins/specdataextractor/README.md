@@ -3,9 +3,12 @@
 Extract the following data from a spec file:
 
 * commit (commit of a golang project specified in the spec file)
-* provider_prefix (repository provider where the project is avaiable)
-* import_path (import path prefix of the project that other projects can import)
+* provider prefix (repository provider where the project is avaiable)
+* import path (import path prefix of the project that other projects can import)
 * last change date (last time the spec file was modified)
+
+Commit, provider prefix, resp. import path are extracted from
+``%commit``, ``%provider_prefix``, resp. ``%import_path`` macros.
 
 ## Input schema
 
@@ -18,7 +21,7 @@ E.g.
 	"product": "Fedora",
 	"distribution": "rawhide",
 	"package": "golang-github-coreos-pkg",
-        "resource": "/home/user/goproject"
+	"resource": "/home/user/goproject"
 }
 ```
 
@@ -38,7 +41,7 @@ data = {
 	"product": "Fedora",
 	"distribution": "rawhide",
 	"package": "golang-github-coreos-pkg",
-        "resource": "/home/user/goproject"
+	"resource": "/home/user/goproject"
 }
 
 
