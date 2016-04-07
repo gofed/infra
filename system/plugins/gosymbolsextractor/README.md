@@ -1,8 +1,6 @@
-## Go symbols extractor
+# Go symbols extractor
 
-### Description
-
-``Go symbols extractor`` plugin extracts definition of data types and functions.
+Extract definition of data types and functions.
 Variables and constants are extracted as a list of IDs without their data type definition.
 All source code files are processed separately. All extracted data are then merged together
 to provide exported API for each golang package. As some variables and constants can be assigned
@@ -11,26 +9,43 @@ is not available.
 
 The plugin is partially written in Go (parser part) and partially in Python (merger and filter part).
 
-### Plugin input
+## Input schema
 
-```vim
+* [input_schema.json](https://github.com/gofed/infra/blob/master/system/plugins/gosymbolsextractor/input_schema.json)
+
+E.g.
+
+```json
 {
-"source_code_directory": "string",
-"directories_to_skip": ["string"],
-"project": "string",
-"commit": "string",
-"ipprefix": "string"
+	"resource": "/home/user/goproject",
+	"project": "github.com/onsi/ginkgo",
+	"commit": "105b4823ee2cbebc2b5c562d9ac50694ecc2c689",
+	"ipprefix": "github.com/onsi/ginkgo"
 }
 ```
 
-[input_schema.json](input_schema.json)
+## Provided artefacts
 
-### Produced artefacts
+* [ARTEFACT_GOLANG_PROJECT_PACKAGES](https://github.com/gofed/infra/blob/master/system/artefacts/schemas/golang-project-packages.json)
+* [ARTEFACT_GOLANG_PROJECT_EXPORTED_API](https://github.com/gofed/infra/blob/master/system/artefacts/schemas/golang-project-exported-api.json)
 
-* [golang-project-packages](/system/artefacts/schemas/golang-project-packages.json)
-* [golang-project-exported-api](/system/artefacts/schemas/golang-project-exported-api.json)
+## Usage
 
-#### Limitations
+```python
+from infra.system.core.factory.functionfactory import FunctionFactory
+
+function = FunctionFactory().bake("gosymbolsextractor")
+data = {
+	"resource": "/home/user/goproject",
+	"project": "github.com/onsi/ginkgo",
+	"commit": "105b4823ee2cbebc2b5c562d9ac50694ecc2c689",
+	"ipprefix": "github.com/onsi/ginkgo"
+}
+
+artefacts = function.call(data)
+```
+
+## Limitations
 
 * variables and constants are mixed together as constants
 * variables and constants does not have data type definition

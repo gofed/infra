@@ -9,6 +9,11 @@
 			"description": "Directory with Go source codes",
 			"minLength": 1
 		},
+		"project": {
+			"type": "string",
+			"description": "Project",
+			"minLength": 1
+		},
 		"commit": {
 			"type": "string",
 			"description": "Commit of projetc's source codes",

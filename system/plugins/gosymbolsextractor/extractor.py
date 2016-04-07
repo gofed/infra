@@ -120,7 +120,9 @@ class GoSymbolsExtractor(MetaProcessor):
 		if self.project != "":
 			artefact["project"] = self.project
 
-		artefact["commit"] = self.commit
+		if self.commit != "":
+			artefact["commit"] = self.commit
+
 		if self.ipprefix != "":
 			artefact["ipprefix"] = self.ipprefix
 
