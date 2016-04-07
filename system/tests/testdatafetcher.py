@@ -3,6 +3,7 @@ import logging
 import os
 import shutil
 import sys
+import tarfile
 import tempfile
 
 import git
@@ -115,6 +116,33 @@ class TestDataFetcher(object):
                     specfile_url, specfile))
             return
 
+    def _fetchRepository(self, targetdir, clone_url, name):
+        self.logger.info('Fetching repository "{}"'.format(name))
+        try:
+            workdir = tempfile.mkdtemp()
+        except IOError:
+            self.logger.error('Cannot create temporary working directory')
+            return
+        try:
+            try:
+                repo = git.Repo.clone_from(clone_url, workdir)
+            except git.exc.GitCommandError:
+                self.logger.error(
+                    'Cannot clone git repository "{}" to "{}"'.format(
+                        clone_url, workdir))
+                return
+            pid = ProjectID.get(name, 'repository')
+            archive = os.path.join(targetdir, pid) + '.tar.gz'
+            try:
+                with tarfile.open(archive, 'w:gz') as tar:
+                    tar.add(workdir, arcname='')
+            except (IOError, tarfile.TarError):
+                self.logger.error(
+                    'Cannot create archive "{}"'.format(archive))
+                return
+        finally:
+            shutil.rmtree(workdir, ignore_errors=True)
+
     def fetchProjects(self, targetdir, projects):
         for project in projects:
             self._fetchProject(
@@ -126,6 +154,11 @@ class TestDataFetcher(object):
             self._fetchPackage(
                 targetdir, package['specfile_url'], package['specfile'],
                 package['name'])
+
+    def fetchRepositories(self, targetdir, repositories):
+        for repository in repositories:
+            self._fetchRepository(
+                targetdir, repository['clone_url'], repository['name'])
 
 
 if __name__ == '__main__':
@@ -151,3 +184,5 @@ if __name__ == '__main__':
         configuration['testdatadir'], configuration['projects'])
     fetcher.fetchPackages(
         configuration['testdatadir'], configuration['packages'])
+    fetcher.fetchRepositories(
+        configuration['testdatadir'], configuration['repositories'])
