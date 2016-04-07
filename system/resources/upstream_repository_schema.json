@@ -1,0 +1,79 @@
+{
+	"$schema": "http://json-schema.org/draft-04/schema#",
+	"title": "Upstream repository resource specification",
+	"description": "Upstream repository resource specification",
+	"type": "object",
+	"properties": {
+		"repository": {
+			"anyOf": [
+				{ "$ref": "#/definitions/github" },
+				{ "$ref": "#/definitions/bitbucket" }
+			]
+		},
+		"resource": {
+			"type": "string",
+			"description": "Requested resource",
+			"oneOf": [
+				{"enum": ["repository"]}
+			]
+		},
+		"subresource": {
+			"type": "string",
+			"description": "Requested subresource from resource",
+			"oneOf": [
+				{"enum": ["directory-tree"]}
+			]
+		}
+	},
+	"required": ["repository", "resource", "subresource"],
+	"definitions": {
+		"github": {
+			"description": "Github repository",
+			"type": "object",
+			"properties": {
+				"provider": {
+					"description": "Provider",
+					"type": "string",
+					"oneOf": [
+						{"enum": ["github"]}
+					]
+				},
+				"username": {
+					"description": "Github username",
+					"type": "string",
+					"minLength": 1
+				},
+				"project": {
+					"description": "Github project",
+					"type": "string",
+					"minLength": 1
+				}
+			},
+			"required": ["provider", "username", "project"]
+		},
+		"bitbucket": {
+			"description": "Bitbucket repository",
+			"type": "object",
+			"properties": {
+				"provider": {
+					"description": "Provider",
+					"type": "string",
+					"oneOf": [
+						{"enum": ["bitbucket"]}
+					]
+				},
+				"username": {
+					"description": "Bitbucket username",
+					"type": "string",
+					"minLength": 1
+				},
+				"project": {
+					"description": "Bitbucket project",
+					"type": "string",
+					"minLength": 1
+				}
+			},
+			"required": ["provider", "username", "project"]
+		}
+	}
+}
