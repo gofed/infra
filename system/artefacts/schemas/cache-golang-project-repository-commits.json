@@ -6,7 +6,7 @@
 	"properties": {
 		"artefact": {
 			"description": "Artefact name",
-			"type": "string"
+			"type": "string",
 			"oneOf": [
 				{"enum": ["cache-golang-project-repository-commits"]}
 			]
