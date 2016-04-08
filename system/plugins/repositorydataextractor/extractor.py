@@ -52,7 +52,7 @@ class RepositoryDataExtractor(MetaProcessor):
 		if 'end_date' in data:
 			self.end_date = dateToTimestamp(data["end_date"])
 		else:
-			self.end_date = int(time.mktime((datetime.date.today() + datetime.timedelta(hours=24)).timetuple()))
+			self.end_date = int(time.time() + 86400)
 
 		if 'start_timestamp' in data:
 			self.start_date = data["start_timestamp"]
