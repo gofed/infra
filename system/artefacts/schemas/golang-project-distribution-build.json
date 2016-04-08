@@ -1,53 +1,47 @@
 {
-  "$schema": "http://json-schema.org/draft-04/schema#",
-  "description": "Build information",
-  "title": "Golang project distribution build",
-  "type": "object",
-  "properties": {
-    "artefact": {
-      "description": "Artefact name",
-      "type": "string"
-    },
-    "bdate": {
-      "description": "Build completion date",
-      "type": "string"
-    },
-    "author": {
-      "description": "Build owner name",
-      "type": "string"
-    },
-    "build": {
-      "description": "Build name",
-      "type": "string"
-    },
-    "architectures": {
-      "description": "List of architectures",
-      "type": "array",
-      "items": {
-        "description": "Architecture",
-        "type": "string"
-      }
-    },
-    "rpms": {
-      "description": "List of RPMs",
-      "type": "array",
-      "items": {
-        "description": "RPM",
-        "type": "string"
-      }
-    },
-    "koji": {
-      "description": "Build Koji webpage",
-      "type": "string"
-    }
-  },
-  "required": [
-    "artefact",
-    "bdate",
-    "author",
-    "build",
-    "architectures",
-    "rpms",
-    "koji"
-  ]
+	"$schema": "http://json-schema.org/draft-04/schema#",
+	"description": "Build information",
+	"title": "Golang project distribution build",
+	"type": "object",
+	"properties": {
+		"artefact": {
+			"description": "Artefact name",
+			"type": "string"
+		},
+		"name": {
+			"description": "Build name",
+			"type": "string"
+		},
+		"build_date": {
+			"description": "Build completion date",
+			"type": "integer"
+		},
+		"author": {
+			"description": "Build owner name",
+			"type": "string"
+		},
+		"architectures": {
+			"description": "List of architectures",
+			"type": "array",
+			"items": {
+				"description": "Architecture",
+				"type": "string"
+			},
+			"uniqueItems": true
+		},
+		"rpms": {
+			"description": "List of RPMs",
+			"type": "array",
+			"items": {
+				"description": "RPM",
+				"type": "string"
+			},
+			"uniqueItems": true
+		},
+		"build_url": {
+			"description": "Build url",
+			"type": "string"
+		}
+	},
+	"required": ["artefact", "name", "build_date", "author", "architectures", "rpms", "build_url"]
 }

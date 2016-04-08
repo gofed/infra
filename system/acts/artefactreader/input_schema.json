@@ -196,44 +196,6 @@
                 }
             }
         }, 
-        "golang-project-distribution-info": {
-            "required": [
-                "artefact", 
-                "product", 
-                "distribution", 
-                "project"
-            ], 
-            "type": "object", 
-            "description": "artefact key", 
-            "properties": {
-                "project": {
-                    "minlength": 1, 
-                    "type": "string", 
-                    "description": "key part"
-                }, 
-                "distribution": {
-                    "minlength": 1, 
-                    "type": "string", 
-                    "description": "key part"
-                }, 
-                "artefact": {
-                    "oneOf": [
-                        {
-                            "enum": [
-                                "golang-project-distribution-info"
-                            ]
-                        }
-                    ], 
-                    "type": "string", 
-                    "description": "key part"
-                }, 
-                "product": {
-                    "minlength": 1, 
-                    "type": "string", 
-                    "description": "key part"
-                }
-            }
-        }, 
         "golang-project-repository-commit": {
             "required": [
                 "artefact", 
@@ -442,6 +404,47 @@
                 }
             }
         }, 
+        "golang-distribution-snapshot": {
+            "required": [
+                "artefact", 
+                "distribution"
+            ], 
+            "type": "object", 
+            "description": "artefact key", 
+            "properties": {
+                "artefact": {
+                    "oneOf": [
+                        {
+                            "enum": [
+                                "golang-distribution-snapshot"
+                            ]
+                        }
+                    ], 
+                    "type": "string", 
+                    "description": "key part"
+                }, 
+                "distribution": {
+                    "required": [
+                        "product", 
+                        "version"
+                    ], 
+                    "type": "object", 
+                    "description": "key part", 
+                    "properties": {
+                        "product": {
+                            "minLength": 1, 
+                            "type": "string", 
+                            "description": "subkey part"
+                        }, 
+                        "version": {
+                            "minLength": 1, 
+                            "type": "string", 
+                            "description": "subkey part"
+                        }
+                    }
+                }
+            }
+        }, 
         "golang-project-repository-info": {
             "required": [
                 "artefact", 
@@ -553,44 +556,41 @@
                 }
             }
         }, 
-        "golang-distribution-snapshot": {
+        "golang-project-distribution-package-builds": {
             "required": [
                 "artefact", 
-                "distribution"
+                "product", 
+                "distribution", 
+                "package"
             ], 
             "type": "object", 
             "description": "artefact key", 
             "properties": {
+                "distribution": {
+                    "minlength": 1, 
+                    "type": "string", 
+                    "description": "key part"
+                }, 
                 "artefact": {
                     "oneOf": [
                         {
                             "enum": [
-                                "golang-distribution-snapshot"
+                                "golang-project-distribution-package-builds"
                             ]
                         }
                     ], 
                     "type": "string", 
                     "description": "key part"
                 }, 
-                "distribution": {
-                    "required": [
-                        "product", 
-                        "version"
-                    ], 
-                    "type": "object", 
-                    "description": "key part", 
-                    "properties": {
-                        "product": {
-                            "minLength": 1, 
-                            "type": "string", 
-                            "description": "subkey part"
-                        }, 
-                        "version": {
-                            "minLength": 1, 
-                            "type": "string", 
-                            "description": "subkey part"
-                        }
-                    }
+                "product": {
+                    "minlength": 1, 
+                    "type": "string", 
+                    "description": "key part"
+                }, 
+                "package": {
+                    "minlength": 1, 
+                    "type": "string", 
+                    "description": "key part"
                 }
             }
         }, 
@@ -660,7 +660,7 @@
             "$ref": "#/definitions/golang-project-distribution-exported-api"
         }, 
         {
-            "$ref": "#/definitions/golang-project-distribution-info"
+            "$ref": "#/definitions/golang-project-distribution-package-builds"
         }, 
         {
             "$ref": "#/definitions/golang-project-distribution-packages"

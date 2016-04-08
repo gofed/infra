@@ -10,7 +10,7 @@ from .golangprojecttopackagename import GolangProjectToPackageNameKeyGenerator
 from .golangprojectcontentmetadata import GolangProjectContentMetadataKeyGenerator
 from .golangprojectrepositoryinfo import GolangProjectRepositoryInfoKeyGenerator
 from .golangprojectrepositorycommit import GolangProjectRepositoryCommitKeyGenerator
-from .golangprojectdistributioninfo import GolangProjectDistributionInfoKeyGenerator
+from .golangprojectdistributionpackagebuilds import GolangProjectDistributionPackageBuildsKeyGenerator
 from .golangprojectdistributionbuild import GolangProjectDistributionBuildKeyGenerator
 from .cachegolangprojectrepositorycommits import CacheGolangProjectRepositoryCommitsKeyGenerator
 from .golangipprefixtorpm import GolangIpprefixToRpmKeyGenerator
@@ -53,8 +53,8 @@ class KeyGeneratorFactory:
 		if artefact == artefacts.ARTEFACT_GOLANG_PROJECT_REPOSITORY_COMMIT:
 			return GolangProjectRepositoryCommitKeyGenerator()
 
-		if artefact == artefacts.ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_INFO:
-			return GolangProjectDistributionInfoKeyGenerator()
+		if artefact == artefacts.ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_PACKAGE_BUILDS:
+			return GolangProjectDistributionPackageBuildsKeyGenerator()
 
 		if artefact == artefacts.ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_BUILD:
 			return GolangProjectDistributionBuildKeyGenerator()

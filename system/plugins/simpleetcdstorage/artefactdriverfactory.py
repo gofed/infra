@@ -10,7 +10,7 @@ from .golangprojecttopackagename import GolangProjectToPackageNameDriver
 from .golangprojectcontentmetadata import GolangProjectContentMetadataDriver
 from .golangprojectrepositoryinfo import GolangProjectRepositoryInfoDriver
 from .golangprojectrepositorycommit import GolangProjectRepositoryCommitDriver
-from .golangprojectdistributioninfo import GolangProjectDistributionInfoDriver
+from .golangprojectdistributionpackagebuilds import GolangProjectDistributionPackageBuildsDriver
 from .golangprojectdistributionbuild import GolangProjectDistributionBuildDriver
 from .cachegolangprojectrepositorycommits import CacheGolangProjectRepositoryCommitsDriver
 from .golangipprefixtorpm import GolangIpprefixToRpmDriver
@@ -53,8 +53,8 @@ class ArtefactDriverFactory:
 		if artefact == artefacts.ARTEFACT_GOLANG_PROJECT_REPOSITORY_COMMIT:
 			return GolangProjectRepositoryCommitDriver()
 
-		if artefact == artefacts.ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_INFO:
-			return GolangProjectDistributionInfoDriver()
+		if artefact == artefacts.ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_PACKAGE_BUILDS:
+			return GolangProjectDistributionPackageBuildsDriver()
 
 		if artefact == artefacts.ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_BUILD:
 			return GolangProjectDistributionBuildDriver()

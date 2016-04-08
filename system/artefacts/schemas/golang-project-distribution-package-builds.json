@@ -1,0 +1,35 @@
+{
+	"$schema": "http://json-schema.org/draft-04/schema#",
+	"description": "Distribution package builds information",
+	"title": "Golang project distribution package builds",
+	"type": "object",
+	"properties": {
+		"artefact": {
+			"description": "Artefact name",
+			"type": "string"
+		},
+		"product": {
+			"description": "Product name",
+			"type": "string"
+		},
+		"distribution": {
+			"description": "Distribution name",
+			"type": "string"
+		},
+		"package": {
+			"description": "Distribution project",
+			"type": "string"
+		},
+		"builds": {
+			"description": "List of build names",
+			"type": "array",
+			"items": {
+				"description": "Build name",
+				"type": "string",
+				"minLength": 1
+			},
+			"uniqueItems": true
+		}
+	},
+	"required": ["product", "distribution", "package", "builds"]
+}

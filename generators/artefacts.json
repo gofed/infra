@@ -62,9 +62,9 @@
 
 },
 	{
-	"id": "golang-project-distribution-info",
-	"artefact": "ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_INFO",
-	"keys": ["artefact", "product", "distribution", "project"]
+	"id": "golang-project-distribution-package-builds",
+	"artefact": "ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_PACKAGE_BUILDS",
+	"keys": ["artefact", "product", "distribution", "package"]
 },
 {
 	"id": "golang-project-distribution-build",

@@ -5,6 +5,7 @@ from gofed_resources.proposal.providerbuilder import ProviderBuilder
 from gofed_resources.proposal.mercurialrepositoryretriever import MercurialRepositoryRetriever
 
 from gofed_lib.pkgdb.client import PkgDBClient, FakePkgDBClient
+from gofed_lib.kojiclient import KojiClient
 import json
 
 if __name__ == "__main__":
@@ -17,4 +18,6 @@ if __name__ == "__main__":
 	#print MercurialRepositoryRetriever().retrieve({"provider": "bitbucket", "username": "ww", "project": "goautoneg"})
 
 	#print PkgDBClient().packageExists("golang-github-coreos-common")
-	print json.dumps(FakePkgDBClient().getGolangPackages())
+	#print json.dumps(FakePkgDBClient().getGolangPackages())
+
+	print KojiClient().getPackageBuilds("f24", "golang-bitbucket-ww-goautoneg")
