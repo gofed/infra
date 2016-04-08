@@ -3,11 +3,11 @@ import os
 
 import pytest
 
-from infra.system.plugins.distributionbuildextractor.extractor import DistributionBuildExtractor
+from infra.system.plugins.distributionpackagebuildsextractor.extractor import DistributionPackageBuildsExtractor
 from infra.system.helpers.artefact_schema_validator import ArtefactSchemaValidator
 
 
-CONFIG_FILE_NAME = 'distributionbuildextractor.json'
+CONFIG_FILE_NAME = 'distributionpackagebuildsextractor.json'
 
 
 configuration = {}
@@ -22,24 +22,22 @@ def pytest_generate_tests(metafunc):
     except IOError:
         raise RuntimeError(
             'Cannot load configuration from "{}"'.format(configfile))
-    if 'project' in metafunc.fixturenames:
-        metafunc.parametrize('project', configuration['projects'])
+    if 'package' in metafunc.fixturenames:
+        metafunc.parametrize('package', configuration['package'])
 
 
-class TestRepositoryDataExtractor(object):
+class TestDistributionPackagesBuildsExtractor(object):
 
     @pytest.fixture(autouse=True)
     def prepare(self, request, project):
         self.input_data = {
-            'project': project['name'],
+            'package': project['name'],
             'product': project['product'],
-            'distribution': project['distribution'],
-            'repository': project['repository'],
-            'clone_url': project['repository'],
+            'distribution': project['distribution']
         }
 
     def test_valid_output(self, project):
-        plugin = DistributionBuildExtractor()
+        plugin = DistributionPackageBuildsExtractor()
         assert plugin.setData(self.input_data)
         assert plugin.execute()
         output_data = plugin.getData()

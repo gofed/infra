@@ -1,0 +1,55 @@
+{
+    "testdatadir": "testdata",
+    "projects": [
+        {
+            "name": "golang-github-armon-go-radix",
+            "product": "Fedora",
+            "distribution": "f24"
+        },
+        {
+            "name": "golang-github-spacemonkeygo-spacelog",
+            "product": "Fedora",
+            "distribution": "f24"
+        },
+        {
+            "name": "golang-github-prometheus-prometheus",
+            "product": "Fedora",
+            "distribution": "f24"
+        },
+        {
+            "name": "golang-github-golang-glog",
+            "product": "Fedora",
+            "distribution": "f24"
+        },
+        {
+            "name": "golang-github-onsi-ginkgo",
+            "product": "Fedora",
+            "distribution": "f24"
+        },
+        {
+            "name": "golang-github-influxdb-influxdb",
+            "product": "Fedora",
+            "distribution": "f24"
+        },
+        {
+            "name": "golang-github-google-btree",
+            "product": "Fedora",
+            "distribution": "f24"
+        },
+        {
+            "name": "golang-github-golang-appengine",
+            "product": "Fedora",
+            "distribution": "f24"
+        },
+        {
+            "name": "golang-github-docker-libcontainer",
+            "product": "Fedora",
+            "distribution": "f24"
+        },
+        {
+            "name": "golang-github-10gen-openssl",
+            "product": "Fedora",
+            "distribution": "f24"
+        }
+    ]
+}
