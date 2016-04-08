@@ -82,13 +82,35 @@ def prepareScanUpstreamRepositoryAct():
 
 	return (data, act)
 
+def prepareGoApiDiff():
+	data = {
+		"reference": {
+			"type": "upstream_source_code",
+			"project": "github.com/bradfitz/http2",
+			"commit": "f8202bc903bda493ebba4aa54922d78430c2c42f",
+			"ipprefix": "github.com/bradfitz/http1"
+		},
+		"compared_with": {
+			"type": "upstream_source_code",
+			"project": "github.com/bradfitz/http2",
+			"commit": "953b51136f12cb27503bec0f659432fd1fa97770",
+			"ipprefix": "github.com/bradfitz/http1"
+		}
+	}
+
+	act = ActFactory().bake("go-exported-api-diff")
+
+	return (data, act)
+
+
 if __name__ == "__main__":
 
 	#data, act = prepareSpecModelDataProviderActWithUpstream()
 	#data, act = prepareSpecModelDataProviderActWithUserDirectory()
 	#data, act = prepareScanDistributionBuildAct()
 	#data, act = prepareGoCodeInspectionActWithUpstream()
-	data, act = prepareScanUpstreamRepositoryAct()
+	#data, act = prepareScanUpstreamRepositoryAct()
+	data, act = prepareGoApiDiff()
 
 	print json.dumps(act.call(data))
 

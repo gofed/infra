@@ -15,6 +15,11 @@ class GoApiDiff(MetaProcessor):
 
 	Algorithm:
 	- both APIs must be of the same project
+
+	api_2 is new
+	api_1 is old
+
+	Result of comparison is new - old, i,e, api_2 - api_1
 	"""
 
 	def __init__(self):

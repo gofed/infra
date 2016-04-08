@@ -1,0 +1,6 @@
+{
+"id": "go-exported-api-diff",
+"class": "GoExportedApiDiff",
+"file": "act.py",
+"version": "1.0-alpha1"
+}
