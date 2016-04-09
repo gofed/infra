@@ -83,10 +83,10 @@ class RepositoryDataExtractor(MetaProcessor):
 
 			commits = commits | set(self.commits[branch].keys())
 
-		data['start_timestamp'] = start_date
-		data['end_timestamp'] = end_date
+		data['start'] = start_date
+		data['end'] = end_date
 
-		data['coverage'] = [{'start_timestamp': start_date, 'end_timestamp': end_date}]
+		data['coverage'] = [{'start': start_date, 'end': end_date}]
 
 		data['commits'] = list(commits)
 
@@ -111,14 +111,12 @@ class RepositoryDataExtractor(MetaProcessor):
 		if not self.input_validated:
 			return []
 
-		data = []
-
 		if self.commit != "":
 			return self._generateGolangProjectRepositoryCommit(self.commits[""])
 
-		data.append(self._generateGolangProjectRepositoryInfo())
+		info = self._generateGolangProjectRepositoryInfo()
 		validator = ArtefactSchemaValidator(ARTEFACT_GOLANG_PROJECT_REPOSITORY_INFO)
-		if not validator.validate(data[0]):
+		if not validator.validate(info):
 			logging.error('%s is not valid' % ARTEFACT_GOLANG_PROJECT_REPOSITORY_INFO)
 			return {}
 
@@ -138,10 +136,14 @@ class RepositoryDataExtractor(MetaProcessor):
 		#		logging.error('%s is not valid' % ARTEFACT_GOLANG_PROJECT_REPOSITORY_COMMIT)
 		#		return {}
 
+		repo_commits = []
 		for commit in commits_data:
-			data.append(commits_data[commit])
+			repo_commits.append(commits_data[commit])
 
-		return data
+		return {
+			"info": info,
+			"commits": repo_commits
+		}
 
 	def _validateInput(self, data):
 		validator = SchemaValidator()
