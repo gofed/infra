@@ -29,7 +29,26 @@
 				"minLength": 1
 			},
 			"uniqueItems": true
+		},
+		"coverage": {
+			"description": "List of covered date intervals",
+			"type": "array",
+			"items": {
+				"description": "date interval",
+				"type": "object",
+				"properties": {
+					"start": {
+						"description": "start timestamp",
+						"type": "integer"
+					},
+					"end": {
+						"description": "end timestamp",
+						"type": "integer"
+					}
+				},
+				"required": ["start", "end"]
+			}
 		}
 	},
-	"required": ["product", "distribution", "package", "builds"]
+	"required": ["product", "distribution", "package", "builds", "coverage"]
 }

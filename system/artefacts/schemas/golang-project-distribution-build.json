@@ -8,12 +8,16 @@
 			"description": "Artefact name",
 			"type": "string"
 		},
+		"product": {
+			"description": "Product name",
+			"type": "string"
+		},
 		"name": {
 			"description": "Build name",
 			"type": "string"
 		},
-		"build_date": {
-			"description": "Build completion date",
+		"build_ts": {
+			"description": "Build completion timestamp",
 			"type": "integer"
 		},
 		"author": {
@@ -43,5 +47,5 @@
 			"type": "string"
 		}
 	},
-	"required": ["artefact", "name", "build_date", "author", "architectures", "rpms", "build_url"]
+	"required": ["artefact", "product", "name", "build_ts", "author", "architectures", "rpms", "build_url"]
 }

@@ -13,9 +13,6 @@ from gofed_lib.utils import dateToTimestamp
 
 from gofed_lib.kojiclient import KojiClient
 
-KOJISERVER = "http://koji.fedoraproject.org/kojihub/"
-
-
 class DistributionPackageBuildsExtractor(MetaProcessor):
 
 	def __init__(self):
@@ -69,33 +66,36 @@ class DistributionPackageBuildsExtractor(MetaProcessor):
 		if not self.input_validated:
 			return []
 
-		data = []
+		package_builds = self._generateGolangProjectDistributionPackageBuilds()
+
+		builds = []
 		for build in self.builds:
 			artefact = self._generateGolangProjectDistributionBuild(self.builds[build])
-			validator = ArtefactSchemaValidator(ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_BUILD)
-			if not validator.validate(artefact):
-				logging.error('%s is not valid' % ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_BUILD)
-				return {}
-			data.append(artefact)
+			#validator = ArtefactSchemaValidator(ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_BUILD)
+			#if not validator.validate(artefact):
+			#	logging.error('%s is not valid' % ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_BUILD)
+			#	return {}
+			builds.append(artefact)
 
-		artefact = self._generateGolangProjectDistributionPackageBuilds()
-		validator = ArtefactSchemaValidator(ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_PACKAGE_BUILDS)
-		if not validator.validate(artefact):
-			logging.error('%s is not valid' % ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_PACKAGE_BUILDS)
-			return {}
+		#validator = ArtefactSchemaValidator(ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_PACKAGE_BUILDS)
+		#if not validator.validate(artefact):
+		#	logging.error('%s is not valid' % ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_PACKAGE_BUILDS)
+		#	return {}
 
-		data.append(artefact)
-
-		return data
+		return {
+			"package_builds": package_builds,
+			"builds": builds
+		}
 
 	def _generateGolangProjectDistributionBuild(self, build):
 		artefact = {}
 
 		artefact["artefact"] = ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_BUILD
-
-		artefact["build_date"] = build['build_date']
-		artefact["author"] = build['author']
+		artefact["product"] = self.product
 		artefact["name"] = build['name']
+
+		artefact["build_ts"] = build['build_ts']
+		artefact["author"] = build['author']
 		artefact["architectures"] = list(build['architectures'])
 		artefact["rpms"] = build['rpms']
 		artefact["build_url"] = "http://koji.fedoraproject.org/koji/buildinfo?buildID=" + str(build['id'])
@@ -111,6 +111,15 @@ class DistributionPackageBuildsExtractor(MetaProcessor):
 		artefact["product"] = self.product
 		artefact["distribution"] = self.distribution
 		artefact["builds"] = self.builds.keys()
+
+		start_ts = self.end_ts
+		end_ts = self.start_ts
+
+		for build in self.builds:
+			start_ts = min(start_ts, self.builds[build]["build_ts"])
+			end_ts = max(end_ts, self.builds[build]["build_ts"])
+
+		artefact["coverage"] = [{"start": start_ts, "end": end_ts}]
 
 		return artefact
 
