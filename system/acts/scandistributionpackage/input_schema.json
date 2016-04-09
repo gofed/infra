@@ -1,0 +1,37 @@
+{
+	"$schema": "http://json-schema.org/draft-04/schema#",
+	"title": "Distribution package builds act",
+	"description": "Distribution package builds act",
+	"type": "object",
+	"properties": {
+		"product": {
+			"description": "Product name",
+			"type": "string"
+		},
+		"distribution": {
+			"description": "Distribution name",
+			"type": "string"
+		},
+		"package": {
+			"description": "Distribution package",
+			"type": "string"
+		},
+		"start_date": {
+			"description": "Search for builds not older than",
+			"type": "string"
+		},
+		"end_date": {
+			"description": "Search for builds not younger than",
+			"type": "string"
+		},
+		"start_timestamp": {
+			"description": "Search for builds not older than",
+			"type": "integer"
+		},
+		"end_timestamp": {
+			"description": "Search for builds not younger than",
+			"type": "integer"
+		}
+	},
+	"required": ["product", "distribution", "package"]
+}

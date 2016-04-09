@@ -68,17 +68,35 @@ def prepareScanUpstreamRepositoryAct():
 			"username": "coreos",
 			"project": "etcd"
 		},
-		"commit": "5e6eb7e19d6385adfabb1f1caea03e732f9348ad",
-		#"start_date": "2016-03-23",
-		#"end_date": "2016-03-25"
+		"branch": "release-2.2",
+		#"commit": "5e6eb7e19d6385adfabb1f1caea03e732f9348ad",
+		#"start_date": "2016-01-23",
+		#"end_date": "2016-03-25",
 		#"start_date": "2016-03-10",
-		#"end_date": "2016-03-22"
-		"start_date": "2016-03-15",
-		"end_date": "2016-03-17"
+		#"end_date": "2016-03-22",
+		"start_date": "2016-01-25",
+		"end_date": "2016-03-10",
+		#"start_date": "2016-03-15",
+		#"end_date": "2016-03-17"
 
 	}
 
 	act = ActFactory().bake("scan-upstream-repository")
+
+	return (data, act)
+
+def prepareScanDistributionPackageAct():
+	data = {
+		"package": "etcd",
+		"product": "Fedora",
+		"distribution": "f24",
+		#"start_timestamp": 1400131190,
+		#"end_timestamp": 1460131190,
+		#"start_timestamp": 1436561736,
+		#"end_timestamp": 1449492889,
+	}
+
+	act = ActFactory().bake("scan-distribution-package")
 
 	return (data, act)
 
@@ -110,7 +128,8 @@ if __name__ == "__main__":
 	#data, act = prepareScanDistributionBuildAct()
 	#data, act = prepareGoCodeInspectionActWithUpstream()
 	#data, act = prepareScanUpstreamRepositoryAct()
-	data, act = prepareGoApiDiff()
+	#data, act = prepareGoApiDiff()
+	data, act = prepareScanDistributionPackageAct()
 
 	print json.dumps(act.call(data))
 
