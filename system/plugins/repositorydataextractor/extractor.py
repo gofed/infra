@@ -65,15 +65,26 @@ class RepositoryDataExtractor(MetaProcessor):
 		if 'commit' in data:
 			self.commit = data["commit"]
 
+		# Extract data from a single branch?
+		self.branch = ""
+		if 'branch' in data:
+			self.branch = data["branch"]
+
 		return True
 
-	def _generateGolangProjectRepositoryInfo(self):
-		data = {}
-		data['artefact'] = ARTEFACT_GOLANG_PROJECT_REPOSITORY_INFO
-		data['repository'] = self.repository
-		data['branches'] = self.branches
+	def _generateGolangProjectRepositoryInfo(self, branches):
+		data = {
+			"artefact": ARTEFACT_GOLANG_PROJECT_REPOSITORY_INFO,
+			"repository": self.repository,
+			"branches": []
+		}
 
-		commits = set([])
+		for branch in branches:
+			data["branches"].append({
+				"branch": branch,
+				"commits": branches[branch]
+			})
+
 		start_date = self.end_date
 		end_date = self.start_date
 		for branch in self.commits:
@@ -81,14 +92,10 @@ class RepositoryDataExtractor(MetaProcessor):
 				start_date = min(start_date, self.commits[branch][commit]["cdate"])
 				end_date = max(end_date, self.commits[branch][commit]["cdate"])
 
-			commits = commits | set(self.commits[branch].keys())
+		data["start"] = start_date
+		data["end"] = end_date
 
-		data['start'] = start_date
-		data['end'] = end_date
-
-		data['coverage'] = [{'start': start_date, 'end': end_date}]
-
-		data['commits'] = list(commits)
+		data["coverage"] = [{"start": start_date, "end": end_date}]
 
 		return data
 
@@ -114,20 +121,25 @@ class RepositoryDataExtractor(MetaProcessor):
 		if self.commit != "":
 			return self._generateGolangProjectRepositoryCommit(self.commits[""])
 
-		info = self._generateGolangProjectRepositoryInfo()
-		validator = ArtefactSchemaValidator(ARTEFACT_GOLANG_PROJECT_REPOSITORY_INFO)
-		if not validator.validate(info):
-			logging.error('%s is not valid' % ARTEFACT_GOLANG_PROJECT_REPOSITORY_INFO)
-			return {}
-
 		commits_data = {}
+		branches = {}
 		# TODO(jchaloup) this is quite redundant, make it better!!!
 		for branch in self.commits:
 			for commit in self.commits[branch]:
+				try:
+					branches[branch].append(commit)
+				except KeyError:
+					branches[branch] = [commit]
+
 				if commit in commits_data:
 					continue
 
 				commits_data[commit] = self._generateGolangProjectRepositoryCommit(self.commits[branch][commit])
+
+		# from all branches (up to master) filter out all commits that are already covered in master branch
+		if "master" in branches:
+			for branch in filter(lambda l: l != "master", branches.keys()):
+				branches[branch] = list(set(branches[branch]) - set(branches["master"]))
 
 		# TODO(jchaloup): move validation to unit-tests
 		#for commit in commits_data:
@@ -136,13 +148,20 @@ class RepositoryDataExtractor(MetaProcessor):
 		#		logging.error('%s is not valid' % ARTEFACT_GOLANG_PROJECT_REPOSITORY_COMMIT)
 		#		return {}
 
+		info = self._generateGolangProjectRepositoryInfo(branches)
+		validator = ArtefactSchemaValidator(ARTEFACT_GOLANG_PROJECT_REPOSITORY_INFO)
+		if not validator.validate(info):
+			logging.error('%s is not valid' % ARTEFACT_GOLANG_PROJECT_REPOSITORY_INFO)
+			return {}
+
 		repo_commits = []
 		for commit in commits_data:
 			repo_commits.append(commits_data[commit])
 
 		return {
 			"info": info,
-			"commits": repo_commits
+			"commits": repo_commits,
+			"branches": branches
 		}
 
 	def _validateInput(self, data):
@@ -159,6 +178,16 @@ class RepositoryDataExtractor(MetaProcessor):
 		self.branches = self.client.branches()
 
 		self.commits = {}
+
+		# just a single branch
+		if self.branch != "":
+			if self.branch not in self.branches:
+				raise ValueError("Requested branch '%s' not found" % self.branch)
+
+			self.commits[self.branch] = self.client.commits(self.branch, since=self.start_date, to=self.end_date)
+			return True
+
+		# all branches
 		for branch in self.branches:
 			self.commits[branch] = self.client.commits(branch, since=self.start_date, to=self.end_date)
 

@@ -18,9 +18,28 @@
 			"description": "List of branches",
 			"type": "array",
 			"items": {
-				"description": "Branch name",
-				"type": "string"
-			}
+				"description": "Branch",
+				"type": "object",
+				"properties": {
+					"branch": {
+						"description": "Branch name",
+						"type": "string",
+						"minLength": 1
+					},
+					"commits": {
+						"description": "List of commits for a branch",
+						"type": "array",
+						"items": {
+							"description": "Commit hexsha",
+							"type": "string",
+							"minLength": 1
+						},
+						"uniqueItems": true
+					}
+				},
+				"required": ["branch", "commits"]
+			},
+			"uniqueItems": true
 		},
 		"coverage": {
 			"description": "List of covered date intervals",
@@ -40,21 +59,12 @@
 				},
 				"required": ["start", "end"]
 			}
-		},
-		"commits": {
-			"description": "List of commits",
-			"type": "array",
-			"items": {
-				"description": "Commit hexsha",
-				"type": "string"
-			}
 		}
 	},
 	"required": [
 		"artefact",
 		"repository",
-		"branches",
-		"commits"
+		"branches"
 	],
 	"definitions": {
 		"github": {

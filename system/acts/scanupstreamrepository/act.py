@@ -197,11 +197,33 @@ class ScanUpstreamRepositoryAct(MetaAct):
 		}
 
 	def _mergeRepositoryInfoArtefacts(self, info1, info2, coverage):
-		# TOOD(jchaloup): This does not return repository_info!!!! it is cache, fix it
+		# merge branches
+		branches1 = {}
+		for branch in info1["branches"]:
+			branches1[branch["branch"]] = branch["commits"]
+
+		branches2 = {}
+		for branch in info2["branches"]:
+			branches2[branch["branch"]] = branch["commits"]
+
+		b1_set = set(branches1.keys())
+		b2_set = set(branches2.keys())
+
+		branches = {}
+		for branch in list(b1_set & b2_set):
+			branches[branch] = list(set(branches1[branch]) | set(branches2[branch]))
+
+		for branch in list((b1_set - b2_set)):
+			branches[branch] = branches1[branch]
+
+		for branch in list((b2_set - b1_set)):
+			branches[branch] = branches2[branch]
+
+		# merged info artefact
 		return {
 			"artefact": ARTEFACT_CACHE_GOLANG_PROJECT_REPOSITORY_COMMITS,
 			"repository": info2["repository"],
-			"commits": list(set(info1["commits"]) | set(info2["commits"])),
+			"branches": branches,
 			"coverage": coverage
 		}
 
@@ -424,7 +446,6 @@ class ScanUpstreamRepositoryAct(MetaAct):
 				extracted_info_artefact,
 				extracted_item_set_cache.intervals()
 			)
-
 		# store both new info and cache
 		self._storeInfo(updated_repository_info)
 		self._storeCache(
