@@ -81,7 +81,7 @@ from infra.system.artefacts.artefacts import (
 )
 
 from gofed_lib.utils import dateToTimestamp
-from infra.system.helpers.cacheintervalmerger import CacheIntervalMerger, CacheIntervalBreaker
+from infra.system.helpers.itemsetcache.itemsetcache import ItemSetCache
 from gofed_lib.utils import intervalCovered
 from infra.system.core.acts.types import ActDataError
 import logging
@@ -159,87 +159,66 @@ class ScanUpstreamRepositoryAct(MetaAct):
 
 		return self.ff.bake("repositorydataextractor").call(data)
 
-	def _processRepositoryData(self, repository_artefacts):
+	def _storeRepositoryData(self, repository_commit_artefacts):
 		"""Store all commit artefacts, return list of stored commits
 		and repository_info artefact.
 
 		"""
 		stored_commits = []
 		not_stored_commits = []
-		info_artefact = {}
-		for artefact in repository_artefacts:
-			if artefact["artefact"] == ARTEFACT_GOLANG_PROJECT_REPOSITORY_COMMIT:
-				# even if a commit does not get stored, index it
-				self.repository_commits[artefact["commit"]] = artefact
+		for artefact in repository_commit_artefacts:
+			# even if a commit does not get stored, index it
+			self.repository_commits[artefact["commit"]] = artefact
 
-				# TODO(jchaloup): just for testing purposes, make it configurable
-				# store artefact
-				if not self.ff.bake("etcdstoragewriter").call(artefact):
-					not_stored_commits.append({
-						"c": artefact["commit"],
-						"d": artefact["cdate"]
-					})
-					logging.error("Unable to store artefact: %s" % json.dumps(artefact))
-					continue
-
-				stored_commits.append({
-					"c": artefact["commit"],
-					"d": artefact["cdate"]
+			# TODO(jchaloup): just for testing purposes, make it configurable
+			# store artefact
+			if not self.ff.bake("etcdstoragewriter").call(artefact):
+				not_stored_commits.append({
+					"item": artefact["commit"],
+					"point": artefact["cdate"]
 				})
+				logging.error("Unable to store artefact: %s" % json.dumps(artefact))
+				continue
 
-			elif artefact["artefact"] == ARTEFACT_GOLANG_PROJECT_REPOSITORY_INFO:
-				info_artefact = artefact
+			stored_commits.append({
+				"item": artefact["commit"],
+				"point": artefact["cdate"]
+			})
 
-		return (info_artefact, stored_commits, not_stored_commits)
+		return (stored_commits, not_stored_commits)
 
-	def _generateNewCache(self, commits, coverage):
+	def _generateNewCache(self, itemsetcache):
 		# construct cache
 		return {
 			"artefact": ARTEFACT_CACHE_GOLANG_PROJECT_REPOSITORY_COMMITS,
 			"repository": self.repository,
-			"coverage": coverage,
-			"commits": commits
+			"coverage": itemsetcache.intervals(),
+			"commits": itemsetcache.items()
 		}
 
-	def _mergeCacheCommits(self, commits1, commits2):
-		commits = {}
-
-		for commit in commits1:
-			commits[commit["c"]] = commit
-
-		for commit in commits2:
-			commits[commit["c"]] = commit
-
-		return commits.values()
-
-	def _mergeCaches(self, cache1, cache2):
-		cache = {
-			"artefact": ARTEFACT_CACHE_GOLANG_PROJECT_REPOSITORY_COMMITS,
-			"repository": cache2["repository"]
-		}
-
-		# merge cache intervals
-		cache["coverage"] = CacheIntervalMerger().merge(cache1["coverage"], cache2["coverage"])
-
-		# merge commits
-		cache["commits"] = self._mergeCacheCommits(cache1["commits"], cache2["commits"])
-
-		return cache
-
-	def _mergeRepositoryInfoArtefacts(self, info1, info2):
+	def _mergeRepositoryInfoArtefacts(self, info1, info2, coverage):
+		# TOOD(jchaloup): This does not return repository_info!!!! it is cache, fix it
 		return {
 			"artefact": ARTEFACT_CACHE_GOLANG_PROJECT_REPOSITORY_COMMITS,
 			"repository": info2["repository"],
 			"commits": list(set(info1["commits"]) | set(info2["commits"])),
-			"coverage": CacheIntervalMerger().merge(info1["coverage"], info2["coverage"])
+			"coverage": coverage
 		}
 
 	def _storeCache(self, cache):
 		if not self.ff.bake("etcdstoragewriter").call(cache):
-			# TODO(jchaloup): this needs to be handled if configured to run
-			logging.error("Unable to store cache")
+			# TODO(jchaloup): based on the configuration raise exception
+			# I would like to have the cache saved too
+			# Again, for just retrieval of data this is not necassary
+			raise ActDataError("Unable to store cache-repository-info: %s" % json.dumps(cache))
 
-	def _generateCacheFromArtefacts(self, repository_info):
+	def _storeInfo(self, info):
+		if not self.ff.bake("etcdstoragewriter").call(info):
+			# TODO(jchaloup): if the act is run just to retrieve the artefacts, log the error and continue
+			# if it is meant for scanning, raise the exception
+			raise ActDataError("Unable to store repository-info: %s" % json.dumps(info))
+
+	def _generatePointsFromRepositoryInfoArtefact(self, repository_info):
 		"""Generate list of (commit, commit date) pairs from repository info artefact.
 		If any read from a storage fails, the cache can be incomplete.
 		Let's use what we get and give the cache another chance to get reconstructed in another scan.
@@ -247,7 +226,7 @@ class ScanUpstreamRepositoryAct(MetaAct):
 		:param repository_info: repository info artefact
 		:type  repository_info: artefact
 		"""
-		cache_commits = []
+		items = []
 		for commit in repository_info["commits"]:
 			# construct a storage request for each commit
 			data = {
@@ -259,33 +238,28 @@ class ScanUpstreamRepositoryAct(MetaAct):
 			# retrieve commit date for each commit
 			commit_found, commit_data = self.ff.bake("etcdstoragereader").call(data)
 			if commit_found:
-				cache_commits.append({
-					"c": commit_data["commit"],
-					"d": commit_data["cdate"]
+				items.append({
+					"item": commit_data["commit"],
+					"point": commit_data["cdate"]
 				})
 
-		return {
-			"artefact": ARTEFACT_CACHE_GOLANG_PROJECT_REPOSITORY_COMMITS,
-			"repository": repository_info["repository"],
-			"coverage": repository_info["coverage"],
-			"commits": cache_commits
-		}
+		return items
 
-	def _retrieveCommitsFromCache(self, cache, start_timestamp, end_timestamp):
+	def _retrieveCommitsFromCache(self, cache, start, end):
 		# sort commits
 		commit_artefacts = {}
-		for commit in filter(lambda l: l["d"] >= start_timestamp and l["d"] <= end_timestamp, cache["commits"]):
+		for commit in filter(lambda l: l["point"] >= start and l["point"] <= end, cache["commits"]):
 			# construct a storage request for each commit
 			data = {
 				"artefact": ARTEFACT_GOLANG_PROJECT_REPOSITORY_COMMIT,
 				"repository": cache["repository"],
-				"commit": commit["c"]
+				"commit": commit["item"]
 			}
 
 			# retrieve commit date for each commit
 			commit_found, commit_data = self.ff.bake("etcdstoragereader").call(data)
 			if commit_found:
-				commit_artefacts[commit["c"]] = commit_data
+				commit_artefacts[commit["item"]] = commit_data
 
 		return commit_artefacts
 
@@ -351,20 +325,20 @@ class ScanUpstreamRepositoryAct(MetaAct):
 		if cache_found and (self.end_date != "" or self.end_timestamp != "") and (self.start_date != "" or self.start_timestamp != ""):
 			# both ends of date interval are specified
 			if self.start_date != "":
-				start_timestamp = dateToTimestamp(self.start_date)
+				start = dateToTimestamp(self.start_date)
 			else:
-				start_timestamp = self.start_timestamp
+				start = self.start_timestamp
 
 			if self.end_date != "":
-				end_timestamp = dateToTimestamp(self.end_date)
+				end = dateToTimestamp(self.end_date)
 			else:
-				end_timestamp = self.end_timestamp
+				end = self.end_timestamp
 
-			req_interval = (start_timestamp, end_timestamp)
+			req_interval = (start, end)
 
 			covered = False
 			for coverage in cache["coverage"]:
-				coverage_interval = (coverage["start_timestamp"], coverage["end_timestamp"])
+				coverage_interval = (coverage["start"], coverage["end"])
 				# if date interval not covered => extract
 				if intervalCovered(req_interval, coverage_interval):
 					covered = True
@@ -379,36 +353,34 @@ class ScanUpstreamRepositoryAct(MetaAct):
 				}
 
 				info_found, info_artefact = self.ff.bake("etcdstoragereader").call(data)
-				if not info_found:
-					raise ActDataError("Unable to retrieve repository-info")
+				if info_found:
+					self.repository_info = info_artefact
 
-				self.repository_info = info_artefact
+					# retrieve commits (if any of them not found, continue)
+					self.repository_commits = self._retrieveCommitsFromCache(cache, start, end)
 
-				# retrieve commits
-				self.repository_commits = self._retrieveCommitsFromCache(cache, start_timestamp, end_timestamp)
+					return True
 
-				return True
-
-		# ============================================
-		# cache not found or data interval not covered
-		# ============================================
+		# ================================================================
+		# cache not found, info not retrieved or data interval not covered
+		# ================================================================
 
 		# extract artefacts
 		data = self._extractRepositoryData()
 		# store commit artefacts, get a list of stored commits and into artefact
-		extracted_info_artefact, stored_commits, not_stored_commits = self._processRepositoryData(data)
+		extracted_info_artefact = data["info"]
+		stored_commits, not_stored_commits = self._storeRepositoryData(data["commits"])
+
 		# if some commits are not stored, break the coverate interval into subintervals
-		coverage = CacheIntervalBreaker().decompose(stored_commits, not_stored_commits)
+		extracted_item_set_cache = ItemSetCache().addItems(stored_commits, not_stored_commits)
+
 		# return unchanged repository info artefact
 		self.repository_info = extracted_info_artefact
 		# update the artefact to be stored with a list of stored commits
-		extracted_info_artefact["coverage"] = coverage
+		extracted_info_artefact["coverage"] = extracted_item_set_cache.intervals()
 		# update the list of commits being stored
-		extracted_info_artefact["commits"] = map(lambda l: l["c"], stored_commits)
+		extracted_info_artefact["commits"] = map(lambda l: l["item"], extracted_item_set_cache.items())
 		# TODO(jchaloup): check for empty list of commits => we end here
-
-		# generate cache for the extracted data
-		extracted_cache = self._generateNewCache(stored_commits, coverage)
 
 		# =============================================
 		# if no cache found
@@ -439,26 +411,24 @@ class ScanUpstreamRepositoryAct(MetaAct):
 		# info not found
 		if not info_found:
 			updated_repository_info = extracted_info_artefact
-			updated_cache = extracted_cache
 		# info found
 		else:
+			extracted_item_set_cache.addItems(
+				# reconstruct points info_artefact
+				self._generatePointsFromRepositoryInfoArtefact(info_artefact)
+			)
+
 			# merge both infos
-			updated_repository_info = self._mergeRepositoryInfoArtefacts(info_artefact, extracted_info_artefact)
-			# reconstruct cache from info_artefact
-			gen_cache = self._generateCacheFromArtefacts(info_artefact)
-			updated_cache = self._mergeCaches(extracted_cache, gen_cache)
+			updated_repository_info = self._mergeRepositoryInfoArtefacts(
+				info_artefact,
+				extracted_info_artefact,
+				extracted_item_set_cache.intervals()
+			)
 
 		# store both new info and cache
-		if not self.ff.bake("etcdstoragewriter").call(updated_repository_info):
-			# TODO(jchaloup): if the act is run just to retrieve the artefacts, log the error and continue
-			# if it is meant for scanning, raise the exception
-			raise ActDataError("Unable to store repository-info: %s" % json.dumps(updated_repository_info))
-
-		# store the cache
-		if not self.ff.bake("etcdstoragewriter").call(updated_cache):
-			# TODO(jchaloup): based on the configuration raise exception
-			# I would like to have the cache saved too
-			# Again, for just retrieval of data this is not necassary
-			raise ActDataError("Unable to store repository-info: %s" % json.dumps(updated_cache))
+		self._storeInfo(updated_repository_info)
+		self._storeCache(
+			self._generateNewCache(extracted_item_set_cache)
+		)
 
 		return True

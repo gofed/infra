@@ -24,16 +24,16 @@
 				"description": "date interval",
 				"type": "object",
 				"properties": {
-					"start_timestamp": {
+					"start": {
 						"description": "start timestamp",
 						"type": "integer"
 					},
-					"end_timestamp": {
+					"end": {
 						"description": "end timestamp",
 						"type": "integer"
 					}
 				},
-				"required": ["start_date", "end_date"]
+				"required": ["start", "end"]
 			}
 		},
 		"commits": {
@@ -43,18 +43,18 @@
 				"description": "Commit with commit date timestamps",
 				"type": "object",
 				"properties": {
-					"c": {
+					"item": {
 						"description": "commit",
 						"type": "string",
 						"minLength": 1
 					},
-					"d": {
+					"point": {
 						"description": "commit data timestamp",
 						"type": "string",
 						"minLength": 1
 					}
 				},
-				"required": ["c", "d"]
+				"required": ["item", "point"]
 			},
 			"uniqueItems": true
 		}

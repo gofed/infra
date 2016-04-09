@@ -29,16 +29,16 @@
 				"description": "date interval",
 				"type": "object",
 				"properties": {
-					"start_timestamp": {
+					"start": {
 						"description": "start timestamp",
 						"type": "integer"
 					},
-					"end_timestamp": {
+					"end": {
 						"description": "end timestamp",
 						"type": "integer"
 					}
 				},
-				"required": ["start_timestamp", "end_timestamp"]
+				"required": ["start", "end"]
 			}
 		},
 		"commits": {
