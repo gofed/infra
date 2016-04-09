@@ -15,6 +15,7 @@ from .golangprojectdistributionbuild import GolangProjectDistributionBuildKeyGen
 from .cachegolangprojectrepositorycommits import CacheGolangProjectRepositoryCommitsKeyGenerator
 from .golangipprefixtorpm import GolangIpprefixToRpmKeyGenerator
 from .golangdistributionsnapshot import GolangDistributionSnapshotKeyGenerator
+from .cachegolangprojectdistributionpackagebuilds import CacheGolangProjectDistributionPackageBuildsKeyGenerator
 
 class KeyGeneratorFactory:
 
@@ -67,5 +68,8 @@ class KeyGeneratorFactory:
 
 		if artefact == artefacts.ARTEFACT_GOLANG_DISTRIBUTION_SNAPSHOT:
 			return GolangDistributionSnapshotKeyGenerator()
+
+		if artefact == artefacts.ARTEFACT_CACHE_GOLANG_PROJECT_DISTRIBUTION_PACKAGE_BUILDS:
+			return CacheGolangProjectDistributionPackageBuildsKeyGenerator()
 
 		raise ValueError("Invalid artefact: %s" % artefact)

@@ -69,7 +69,7 @@
 {
 	"id": "golang-project-distribution-build",
 	"artefact": "ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_BUILD",
-	"keys": ["artefact", "product", "distribution", "build"]
+	"keys": ["artefact", "product", "name"]
 },
 {
 	"id": "cache-golang-project-repository-commits",
@@ -91,5 +91,10 @@
         "key_order": {
                 "distribution": ["product", "version"]
         }
+},
+{
+	"id": "cache-golang-project-distribution-package-builds",
+	"artefact": "ARTEFACT_CACHE_GOLANG_PROJECT_DISTRIBUTION_PACKAGE_BUILDS",
+	"keys": ["artefact", "product", "distribution", "package"]
 }
 ]

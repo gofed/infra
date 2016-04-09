@@ -1,0 +1,76 @@
+{
+	"$schema": "http://json-schema.org/draft-04/schema#",
+	"title": "Golang distribution package builds cache",
+	"description": "Build list of builds with theirs build time",
+	"type": "object",
+	"properties": {
+		"artefact": {
+			"description": "Artefact name",
+			"type": "string",
+			"oneOf": [
+				{"enum": ["cache-golang-project-distribution-package-builds"]}
+			]
+		},
+		"product": {
+			"description": "Product name",
+			"type": "string"
+		},
+		"distribution": {
+			"description": "Distribution name",
+			"type": "string"
+		},
+		"package": {
+			"description": "Distribution package",
+			"type": "string"
+		},
+		"coverage": {
+			"description": "List of covered date intervals",
+			"type": "array",
+			"items": {
+				"description": "date interval",
+				"type": "object",
+				"properties": {
+					"start": {
+						"description": "start timestamp",
+						"type": "integer"
+					},
+					"end": {
+						"description": "end timestamp",
+						"type": "integer"
+					}
+				},
+				"required": ["start", "end"]
+			}
+		},
+		"builds": {
+			"description": "List of builds",
+			"type": "array",
+			"items": {
+				"description": "Build with build time timestamps",
+				"type": "object",
+				"properties": {
+					"item": {
+						"description": "build",
+						"type": "string",
+						"minLength": 1
+					},
+					"point": {
+						"description": "commit data timestamp",
+						"type": "string",
+						"minLength": 1
+					}
+				},
+				"required": ["item", "point"]
+			},
+			"uniqueItems": true
+		}
+	},
+	"required": [
+		"artefact",
+		"product",
+		"distribution",
+		"package",
+		"coverage",
+		"builds"
+	]
+}

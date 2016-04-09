@@ -80,17 +80,11 @@
             "required": [
                 "artefact", 
                 "product", 
-                "distribution", 
-                "build"
+                "name"
             ], 
             "type": "object", 
             "description": "artefact key", 
             "properties": {
-                "distribution": {
-                    "minlength": 1, 
-                    "type": "string", 
-                    "description": "key part"
-                }, 
                 "artefact": {
                     "oneOf": [
                         {
@@ -107,7 +101,7 @@
                     "type": "string", 
                     "description": "key part"
                 }, 
-                "build": {
+                "name": {
                     "minlength": 1, 
                     "type": "string", 
                     "description": "key part"
@@ -331,6 +325,44 @@
                             "description": "subkey part"
                         }
                     }
+                }
+            }
+        }, 
+        "cache-golang-project-distribution-package-builds": {
+            "required": [
+                "artefact", 
+                "product", 
+                "distribution", 
+                "package"
+            ], 
+            "type": "object", 
+            "description": "artefact key", 
+            "properties": {
+                "distribution": {
+                    "minlength": 1, 
+                    "type": "string", 
+                    "description": "key part"
+                }, 
+                "artefact": {
+                    "oneOf": [
+                        {
+                            "enum": [
+                                "cache-golang-project-distribution-package-builds"
+                            ]
+                        }
+                    ], 
+                    "type": "string", 
+                    "description": "key part"
+                }, 
+                "product": {
+                    "minlength": 1, 
+                    "type": "string", 
+                    "description": "key part"
+                }, 
+                "package": {
+                    "minlength": 1, 
+                    "type": "string", 
+                    "description": "key part"
                 }
             }
         }, 
@@ -635,6 +667,9 @@
     }, 
     "$schema": "http://json-schema.org/draft-04/schema#", 
     "anyOf": [
+        {
+            "$ref": "#/definitions/cache-golang-project-distribution-package-builds"
+        }, 
         {
             "$ref": "#/definitions/cache-golang-project-repository-commits"
         }, 
