@@ -125,6 +125,10 @@ class ScanUpstreamRepositoryAct(MetaAct):
 		if 'commit' in data:
 			self.commit = data["commit"]
 
+		self.branch = ""
+		if 'branch' in data:
+			self.branch = data["branch"]
+
 		return True
 
 	def getData(self):
@@ -267,10 +271,29 @@ class ScanUpstreamRepositoryAct(MetaAct):
 
 		return items
 
-	def _retrieveCommitsFromCache(self, cache, start, end):
-		# sort commits
+	def _truncateRepositoryInfoArtefact(self, info, branches):
+		info["branches"] = filter(lambda l: l["branch"] in branches, info["branches"])
+		return info
+
+	def _retrieveCommitsFromCache(self, cache, info, start, end):
+		branch_commits = []
+		if self.branch != "":
+			found = False
+			for branch in info["branches"]:
+				if branch["branch"] == self.branch:
+					found = True
+					branch_commits = branch["commits"]
+
+			if not found:
+				return {}
+
 		commit_artefacts = {}
 		for commit in filter(lambda l: l["point"] >= start and l["point"] <= end, cache["commits"]):
+			if self.branch != "":
+				# commit in a given branch?
+				if commit["item"] not in branch_commits:
+					continue
+
 			# construct a storage request for each commit
 			data = {
 				"artefact": ARTEFACT_GOLANG_PROJECT_REPOSITORY_COMMIT,
@@ -376,11 +399,12 @@ class ScanUpstreamRepositoryAct(MetaAct):
 
 				info_found, info_artefact = self.ff.bake("etcdstoragereader").call(data)
 				if info_found:
-					self.repository_info = info_artefact
-
 					# retrieve commits (if any of them not found, continue)
-					self.repository_commits = self._retrieveCommitsFromCache(cache, start, end)
-
+					self.repository_commits = self._retrieveCommitsFromCache(cache, info_artefact, start, end)
+					if self.branch != "":
+						self.repository_info = self._truncateRepositoryInfoArtefact(info_artefact, [self.branch])
+					else:
+						self.repository_info = info_artefact
 					return True
 
 		# ================================================================
@@ -400,8 +424,6 @@ class ScanUpstreamRepositoryAct(MetaAct):
 		self.repository_info = extracted_info_artefact
 		# update the artefact to be stored with a list of stored commits
 		extracted_info_artefact["coverage"] = extracted_item_set_cache.intervals()
-		# update the list of commits being stored
-		extracted_info_artefact["commits"] = map(lambda l: l["item"], extracted_item_set_cache.items())
 		# TODO(jchaloup): check for empty list of commits => we end here
 
 		# =============================================
