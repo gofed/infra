@@ -7,9 +7,8 @@ from infra.system.helpers.schema_validator import SchemaValidator
 from infra.system.helpers.utils import getScriptDir
 from infra.system.artefacts.artefacts import ARTEFACT_GOLANG_PROJECT_REPOSITORY_INFO, ARTEFACT_GOLANG_PROJECT_REPOSITORY_COMMIT
 
-from gofed_lib.git.client import GitLocalClient
-from gofed_lib.mercurial.client import MercurialLocalClient
 from gofed_lib.utils import dateToTimestamp
+from gofed_lib.repositoryclientbuilder import RepositoryClientBuilder
 
 class RepositoryDataExtractor(MetaProcessor):
 
@@ -35,13 +34,7 @@ class RepositoryDataExtractor(MetaProcessor):
 		self.repository = data['repository']
 		self.repository_directory = data['resource']
 
-		provider = self.repository["provider"]
-		if provider == "github":
-			self.client = GitLocalClient(self.repository_directory)
-		elif provider == "bitbucket":
-			self.client = MercurialLocalClient(self.repository_directory)
-		else:
-			raise ValueError("Provider '%s' not supported" % provider)
+		self.client = RepositoryClientBuilder().buildWithLocalClient(self.repository, self.repository_directory)
 
 		# TODO(jchaloup): check the date is in required format
 		if 'start_date' in data:
