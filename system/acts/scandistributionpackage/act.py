@@ -75,7 +75,6 @@ class ScanDistributionPackageAct(MetaAct):
 	def _extractItemSetInfo(self):
 		# no cache => extract the data
 		data = {
-			"artefact": ARTEFACT_CACHE_GOLANG_PROJECT_DISTRIBUTION_PACKAGE_BUILDS,
 			"product": self.product,
 			"distribution": self.distribution,
 			"package": self.package
@@ -93,7 +92,7 @@ class ScanDistributionPackageAct(MetaAct):
 
 		return self.ff.bake("distributionpackagebuildsextractor").call(data)
 
-	def _storeItems(self, items):
+	def _storeItems(self, items, item_key="name", point_key="build_ts"):
 		"""Store all items, return list of stored commits
 
 		:param items: artefact/item
@@ -109,15 +108,15 @@ class ScanDistributionPackageAct(MetaAct):
 			# store item
 			if not self.ff.bake("etcdstoragewriter").call(item):
 				not_stored_items.append({
-					"item": item["name"],
-					"point": item["build_ts"]
+					"item": item[item_key],
+					"point": item[point_key]
 				})
 				logging.error("Unable to store item: %s" % json.dumps(item))
 				continue
 
 			stored_items.append({
-				"item": item["name"],
-				"point": item["build_ts"]
+				"item": item[item_key],
+				"point": item[point_key]
 			})
 
 		return (stored_items, not_stored_items)
@@ -157,7 +156,7 @@ class ScanDistributionPackageAct(MetaAct):
 			# if it is meant for scanning, raise the exception
 			raise ActDataError("Unable to store itemset info artefact: %s" % json.dumps(info))
 
-	def _generatePointsFromItemSetInfoArtefact(self, itemset_info):
+	def _generatePointsFromItemSetInfoArtefact(self, itemset_info, item_key="name", point_key="build_ts"):
 		"""Generate list of (item, point) pairs from itemset info artefact.
 		If any read from a storage fails, the cache can be incomplete.
 		Let's use what we get and give the cache another chance to get reconstructed in another scan.
@@ -166,20 +165,20 @@ class ScanDistributionPackageAct(MetaAct):
 		:type  itemset_info: artefact
 		"""
 		items = []
-		for item in itemset_info["commits"]:
+		for item in itemset_info["builds"]:
 			# construct a storage request for each item
 			data = {
-				"artefact": ARTEFACT_GOLANG_PROJECT_REPOSITORY_COMMIT,
-				"repository": itemset_info["repository"],
-				"commit": item
+				"artefact": ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_BUILD,
+				"product": self.product,
+				item_key: item
 			}
 
 			# retrieve item point for each item
 			item_found, item_data = self.ff.bake("etcdstoragereader").call(data)
 			if item_found:
 				items.append({
-					"item": item_data["commit"],
-					"point": item_data["cdate"]
+					"item": item_data[item_key],
+					"point": item_data[point_key]
 				})
 
 		return items
@@ -246,6 +245,7 @@ class ScanDistributionPackageAct(MetaAct):
 				if intervalCovered(req_interval, coverage_interval):
 					covered = True
 					break
+
 			# data interval is covered, retrieve a list of all relevant commits
 			if covered:
 				# retrieve repository info artefact
@@ -311,7 +311,6 @@ class ScanDistributionPackageAct(MetaAct):
 		}
 
 		info_found, itemset_info = self.ff.bake("etcdstoragereader").call(data)
-		info_found = False
 		# info not found
 		if not info_found:
 			updated_itemset_info = extracted_itemset_info
@@ -328,6 +327,7 @@ class ScanDistributionPackageAct(MetaAct):
 				extracted_itemset_info,
 				extracted_itemset_cache.intervals()
 			)
+
 		# store both new info and cache
 		self._storeInfo(updated_itemset_info)
 		self._storeCache(
