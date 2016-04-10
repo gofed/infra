@@ -92,9 +92,6 @@ class RepositoryDataExtractor(MetaProcessor):
 				start_date = min(start_date, self.commits[branch][commit]["cdate"])
 				end_date = max(end_date, self.commits[branch][commit]["cdate"])
 
-		data["start"] = start_date
-		data["end"] = end_date
-
 		data["coverage"] = [{"start": start_date, "end": end_date}]
 
 		return data

@@ -95,8 +95,8 @@ class ScanUpstreamRepositoryAct(MetaAct):
 			"%s/input_schema.json" % getScriptDir(__file__)
 		)
 
-		self.repository_info = {}
-		self.repository_commits = {}
+		self.itemset_info = {}
+		self.items = {}
 
 	def setData(self, data):
 		"""Validation and data pre-processing"""
@@ -134,11 +134,11 @@ class ScanUpstreamRepositoryAct(MetaAct):
 	def getData(self):
 		"""Validation and data post-processing"""
 		return {
-			"info": self.repository_info,
-			"commits": self.repository_commits
+			"info": self.itemset_info,
+			"commits": self.items
 		}
 
-	def _extractRepositoryData(self):
+	def _extractItemSetInfo(self):
 		# no cache => extract the data
 		resource = ResourceSpecifier().generateUpstreamRepository(
 			self.repository["provider"],
@@ -163,33 +163,34 @@ class ScanUpstreamRepositoryAct(MetaAct):
 
 		return self.ff.bake("repositorydataextractor").call(data)
 
-	def _storeRepositoryData(self, repository_commit_artefacts):
-		"""Store all commit artefacts, return list of stored commits
-		and repository_info artefact.
+	def _storeItems(self, items, item_key="commit", point_key="cdate"):
+		"""Store all items, return list of stored commits
 
+		:param items: artefact/item
+		:type  items: [artefact]
 		"""
-		stored_commits = []
-		not_stored_commits = []
-		for artefact in repository_commit_artefacts:
+		stored_items = []
+		not_stored_items = []
+		for item in items:
 			# even if a commit does not get stored, index it
-			self.repository_commits[artefact["commit"]] = artefact
+			self.items[item["commit"]] = item
 
 			# TODO(jchaloup): just for testing purposes, make it configurable
-			# store artefact
-			if not self.ff.bake("etcdstoragewriter").call(artefact):
-				not_stored_commits.append({
-					"item": artefact["commit"],
-					"point": artefact["cdate"]
+			# store item
+			if not self.ff.bake("etcdstoragewriter").call(item):
+				not_stored_items.append({
+					"item": item[item_key],
+					"point": item[point_key]
 				})
-				logging.error("Unable to store artefact: %s" % json.dumps(artefact))
+				logging.error("Unable to store item: %s" % json.dumps(item))
 				continue
 
-			stored_commits.append({
-				"item": artefact["commit"],
-				"point": artefact["cdate"]
+			stored_items.append({
+				"item": item[item_key],
+				"point": item[point_key]
 			})
 
-		return (stored_commits, not_stored_commits)
+		return (stored_items, not_stored_items)
 
 	def _generateNewCache(self, itemsetcache):
 		# construct cache
@@ -200,7 +201,7 @@ class ScanUpstreamRepositoryAct(MetaAct):
 			"commits": itemsetcache.items()
 		}
 
-	def _mergeRepositoryInfoArtefacts(self, info1, info2, coverage):
+	def _mergeItemSetInfoArtefacts(self, info1, info2, coverage):
 		# merge branches
 		branches1 = {}
 		for branch in info1["branches"]:
@@ -236,38 +237,40 @@ class ScanUpstreamRepositoryAct(MetaAct):
 			# TODO(jchaloup): based on the configuration raise exception
 			# I would like to have the cache saved too
 			# Again, for just retrieval of data this is not necassary
-			raise ActDataError("Unable to store cache-repository-info: %s" % json.dumps(cache))
+			raise ActDataError("Unable to store cache: %s" % json.dumps(cache))
 
 	def _storeInfo(self, info):
 		if not self.ff.bake("etcdstoragewriter").call(info):
 			# TODO(jchaloup): if the act is run just to retrieve the artefacts, log the error and continue
 			# if it is meant for scanning, raise the exception
-			raise ActDataError("Unable to store repository-info: %s" % json.dumps(info))
+			raise ActDataError("Unable to store itemset info artefact: %s" % json.dumps(info))
 
-	def _generatePointsFromRepositoryInfoArtefact(self, repository_info):
-		"""Generate list of (commit, commit date) pairs from repository info artefact.
+	def _generatePointsFromItemSetInfoArtefact(self, itemset_info, item_key="commit", point_key="cdate"):
+		"""Generate list of (item, point) pairs from itemset info artefact.
 		If any read from a storage fails, the cache can be incomplete.
 		Let's use what we get and give the cache another chance to get reconstructed in another scan.
 
-		:param repository_info: repository info artefact
-		:type  repository_info: artefact
+		:param itemset_info: itemset info artefact
+		:type  itemset_info: artefact
 		"""
 		items = []
-		for commit in repository_info["commits"]:
-			# construct a storage request for each commit
-			data = {
-				"artefact": ARTEFACT_GOLANG_PROJECT_REPOSITORY_COMMIT,
-				"repository": repository_info["repository"],
-				"commit": commit
-			}
+		print itemset_info
+		for branch in itemset_info["branches"]:
+			for item in branch["commits"]:
+				# construct a storage request for each item
+				data = {
+					"artefact": ARTEFACT_GOLANG_PROJECT_REPOSITORY_COMMIT,
+					"repository": itemset_info["repository"],
+					item_key: item
+				}
 
-			# retrieve commit date for each commit
-			commit_found, commit_data = self.ff.bake("etcdstoragereader").call(data)
-			if commit_found:
-				items.append({
-					"item": commit_data["commit"],
-					"point": commit_data["cdate"]
-				})
+				# retrieve item point for each item
+				item_found, item_data = self.ff.bake("etcdstoragereader").call(data)
+				if item_found:
+					items.append({
+						"item": item_data[item_key],
+						"point": item_data[point_key]
+					})
 
 		return items
 
@@ -275,7 +278,7 @@ class ScanUpstreamRepositoryAct(MetaAct):
 		info["branches"] = filter(lambda l: l["branch"] in branches, info["branches"])
 		return info
 
-	def _retrieveCommitsFromCache(self, cache, info, start, end):
+	def _retrieveItemsFromCache(self, cache, info, start, end):
 		branch_commits = []
 		if self.branch != "":
 			found = False
@@ -338,12 +341,12 @@ class ScanUpstreamRepositoryAct(MetaAct):
 	def execute(self):
 		"""Impementation of concrete data processor"""
 
-		self.repository_info = {}
-		self.repository_commits = {}
+		self.itemset_info = {}
+		self.items = {}
 
 		# if a self.commit != "" => request only for particular commit
 		if self.commit != "":
-			self.repository_commits[self.commit] = self._retrieveSingleCommit(self.repository, self.commit)
+			self.items[self.commit] = self._retrieveSingleCommit(self.repository, self.commit)
 			return True
 
 		# check storage
@@ -397,14 +400,14 @@ class ScanUpstreamRepositoryAct(MetaAct):
 					"repository": self.repository
 				}
 
-				info_found, info_artefact = self.ff.bake("etcdstoragereader").call(data)
+				info_found, itemset_info = self.ff.bake("etcdstoragereader").call(data)
 				if info_found:
 					# retrieve commits (if any of them not found, continue)
-					self.repository_commits = self._retrieveCommitsFromCache(cache, info_artefact, start, end)
+					self.items = self._retrieveItemsFromCache(cache, itemset_info, start, end)
 					if self.branch != "":
-						self.repository_info = self._truncateRepositoryInfoArtefact(info_artefact, [self.branch])
+						self.itemset_info = self._truncateRepositoryInfoArtefact(itemset_info, [self.branch])
 					else:
-						self.repository_info = info_artefact
+						self.itemset_info = itemset_info
 					return True
 
 		# ================================================================
@@ -412,18 +415,18 @@ class ScanUpstreamRepositoryAct(MetaAct):
 		# ================================================================
 
 		# extract artefacts
-		data = self._extractRepositoryData()
-		# store commit artefacts, get a list of stored commits and into artefact
-		extracted_info_artefact = data["info"]
-		stored_commits, not_stored_commits = self._storeRepositoryData(data["commits"])
+		data = self._extractItemSetInfo()
+		# store item artefacts, get a list of stored items and item set info artefact
+		extracted_itemset_info = data["info"]
+		stored_items, not_stored_items = self._storeItems(data["commits"])
 
-		# if some commits are not stored, break the coverate interval into subintervals
-		extracted_item_set_cache = ItemSetCache().addItems(stored_commits, not_stored_commits)
+		# create the cache from extracted item
+		extracted_itemset_cache = ItemSetCache().addItems(stored_items, not_stored_items)
 
-		# return unchanged repository info artefact
-		self.repository_info = extracted_info_artefact
-		# update the artefact to be stored with a list of stored commits
-		extracted_info_artefact["coverage"] = extracted_item_set_cache.intervals()
+		# return unchanged repository that was extracted
+		self.itemset_info = extracted_itemset_info
+		# update the coverage intervals with the list of stored items
+		extracted_itemset_info["coverage"] = extracted_itemset_cache.intervals()
 		# TODO(jchaloup): check for empty list of commits => we end here
 
 		# =============================================
@@ -451,27 +454,28 @@ class ScanUpstreamRepositoryAct(MetaAct):
 			"repository": self.repository
 		}
 
-		info_found, info_artefact = self.ff.bake("etcdstoragereader").call(data)
+		info_found, itemset_info = self.ff.bake("etcdstoragereader").call(data)
 		# info not found
 		if not info_found:
-			updated_repository_info = extracted_info_artefact
+			updated_itemset_info = extracted_itemset_info
 		# info found
 		else:
-			extracted_item_set_cache.addItems(
-				# reconstruct points info_artefact
-				self._generatePointsFromRepositoryInfoArtefact(info_artefact)
+			extracted_itemset_cache.addItems(
+				# reconstruct points
+				self._generatePointsFromItemSetInfoArtefact(itemset_info)
 			)
 
 			# merge both infos
-			updated_repository_info = self._mergeRepositoryInfoArtefacts(
-				info_artefact,
-				extracted_info_artefact,
-				extracted_item_set_cache.intervals()
+			updated_itemset_info = self._mergeItemSetInfoArtefacts(
+				itemset_info,
+				extracted_itemset_info,
+				extracted_itemset_cache.intervals()
 			)
+
 		# store both new info and cache
-		self._storeInfo(updated_repository_info)
+		self._storeInfo(updated_itemset_info)
 		self._storeCache(
-			self._generateNewCache(extracted_item_set_cache)
+			self._generateNewCache(extracted_itemset_cache)
 		)
 
 		return True
