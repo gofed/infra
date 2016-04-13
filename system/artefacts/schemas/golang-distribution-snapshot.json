@@ -53,6 +53,10 @@
 						"type": "string",
 						"minLength": 1
 					},
+					"build_ts": {
+						"description": "Build creation timestamp",
+						"type": "integer"
+					},
 					"rpms": {
 						"description": "List of rpms",
 						"type": "array",
@@ -64,7 +68,7 @@
 						"uniqueItems": true
 					}
 				},
-				"required": ["name", "build", "rpms"]
+				"required": ["name", "build", "build_ts", "rpms"]
 			}
 		}
 	},
