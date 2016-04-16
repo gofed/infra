@@ -1,0 +1,12 @@
+[{
+"id": "filestoragereader",
+"class": "StorageReader",
+"file": "storagereader.py",
+"version": "1.0-alpha1"
+},
+{
+"id": "filestoragewriter",
+"class": "StorageWriter",
+"file": "storagewriter.py",
+"version": "1.0-alpha1"
+}]
