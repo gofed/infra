@@ -1,75 +1,31 @@
 from infra.system.artefacts import artefacts
-from .golangprojectdistributionexportedapi import GolangProjectDistributionExportedApiDriver
-from .golangprojectdistributionpackages import GolangProjectDistributionPackagesDriver
-from .golangipprefixtopackagename import GolangIpprefixToPackageNameDriver
-from .golangprojectexportedapi import GolangProjectExportedApiDriver
-from .golangprojectpackages import GolangProjectPackagesDriver
-from .golangprojectinfofedora import GolangProjectInfoFedoraDriver
-from .golangprojectapidiff import GolangProjectApiDiffDriver
-from .golangprojecttopackagename import GolangProjectToPackageNameDriver
-from .golangprojectcontentmetadata import GolangProjectContentMetadataDriver
-from .golangprojectrepositoryinfo import GolangProjectRepositoryInfoDriver
-from .golangprojectrepositorycommit import GolangProjectRepositoryCommitDriver
-from .golangprojectdistributionpackagebuilds import GolangProjectDistributionPackageBuildsDriver
-from .golangprojectdistributionbuild import GolangProjectDistributionBuildDriver
-from .cachegolangprojectrepositorycommits import CacheGolangProjectRepositoryCommitsDriver
-from .golangipprefixtorpm import GolangIpprefixToRpmDriver
-from .golangdistributionsnapshot import GolangDistributionSnapshotDriver
-from .cachegolangprojectdistributionpackagebuilds import CacheGolangProjectDistributionPackageBuildsDriver
+from .artefactdriver import ArtefactDriver
 
-class ArtefactDriverFactory:
+class ArtefactDriverFactory(object):
+
+	def __init__(self):
+		self.artefacts = []
+
+		self.artefacts.append(artefacts.ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_EXPORTED_API)
+		self.artefacts.append(artefacts.ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_PACKAGES)
+		self.artefacts.append(artefacts.ARTEFACT_GOLANG_IPPREFIX_TO_PACKAGE_NAME)
+		self.artefacts.append(artefacts.ARTEFACT_GOLANG_PROJECT_EXPORTED_API)
+		self.artefacts.append(artefacts.ARTEFACT_GOLANG_PROJECT_PACKAGES)
+		self.artefacts.append(artefacts.ARTEFACT_GOLANG_PROJECT_INFO_FEDORA)
+		self.artefacts.append(artefacts.ARTEFACT_GOLANG_PROJECTS_API_DIFF)
+		self.artefacts.append(artefacts.ARTEFACT_GOLANG_PROJECT_TO_PACKAGE_NAME)
+		self.artefacts.append(artefacts.ARTEFACT_GOLANG_PROJECT_CONTENT_METADATA)
+		self.artefacts.append(artefacts.ARTEFACT_GOLANG_PROJECT_REPOSITORY_INFO)
+		self.artefacts.append(artefacts.ARTEFACT_GOLANG_PROJECT_REPOSITORY_COMMIT)
+		self.artefacts.append(artefacts.ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_PACKAGE_BUILDS)
+		self.artefacts.append(artefacts.ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_BUILD)
+		self.artefacts.append(artefacts.ARTEFACT_CACHE_GOLANG_PROJECT_REPOSITORY_COMMITS)
+		self.artefacts.append(artefacts.ARTEFACT_GOLANG_IPPREFIX_TO_RPM)
+		self.artefacts.append(artefacts.ARTEFACT_GOLANG_DISTRIBUTION_SNAPSHOT)
+		self.artefacts.append(artefacts.ARTEFACT_CACHE_GOLANG_PROJECT_DISTRIBUTION_PACKAGE_BUILDS)
 
 	def build(self, artefact):
+		if artefact not in self.artefacts:
+			raise KeyError("Artefact '%s' not supported" % artefact)
 
-		if artefact == artefacts.ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_EXPORTED_API:
-			return GolangProjectDistributionExportedApiDriver()
-
-		if artefact == artefacts.ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_PACKAGES:
-			return GolangProjectDistributionPackagesDriver()
-
-		if artefact == artefacts.ARTEFACT_GOLANG_IPPREFIX_TO_PACKAGE_NAME:
-			return GolangIpprefixToPackageNameDriver()
-
-		if artefact == artefacts.ARTEFACT_GOLANG_PROJECT_EXPORTED_API:
-			return GolangProjectExportedApiDriver()
-
-		if artefact == artefacts.ARTEFACT_GOLANG_PROJECT_PACKAGES:
-			return GolangProjectPackagesDriver()
-
-		if artefact == artefacts.ARTEFACT_GOLANG_PROJECT_INFO_FEDORA:
-			return GolangProjectInfoFedoraDriver()
-
-		if artefact == artefacts.ARTEFACT_GOLANG_PROJECTS_API_DIFF:
-			return GolangProjectApiDiffDriver()
-
-		if artefact == artefacts.ARTEFACT_GOLANG_PROJECT_TO_PACKAGE_NAME:
-			return GolangProjectToPackageNameDriver()
-
-		if artefact == artefacts.ARTEFACT_GOLANG_PROJECT_CONTENT_METADATA:
-			return GolangProjectContentMetadataDriver()
-
-		if artefact == artefacts.ARTEFACT_GOLANG_PROJECT_REPOSITORY_INFO:
-			return GolangProjectRepositoryInfoDriver()
-
-		if artefact == artefacts.ARTEFACT_GOLANG_PROJECT_REPOSITORY_COMMIT:
-			return GolangProjectRepositoryCommitDriver()
-
-		if artefact == artefacts.ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_PACKAGE_BUILDS:
-			return GolangProjectDistributionPackageBuildsDriver()
-
-		if artefact == artefacts.ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_BUILD:
-			return GolangProjectDistributionBuildDriver()
-
-		if artefact == artefacts.ARTEFACT_CACHE_GOLANG_PROJECT_REPOSITORY_COMMITS:
-			return CacheGolangProjectRepositoryCommitsDriver()
-
-		if artefact == artefacts.ARTEFACT_GOLANG_IPPREFIX_TO_RPM:
-			return GolangIpprefixToRpmDriver()
-
-		if artefact == artefacts.ARTEFACT_GOLANG_DISTRIBUTION_SNAPSHOT:
-			return GolangDistributionSnapshotDriver()
-
-		if artefact == artefacts.ARTEFACT_CACHE_GOLANG_PROJECT_DISTRIBUTION_PACKAGE_BUILDS:
-			return CacheGolangProjectDistributionPackageBuildsDriver()
-
-		raise ValueError("Invalid artefact: %s" % artefact)
+		return ArtefactDriver(artefact)
