@@ -152,5 +152,8 @@ class GoSymbolsExtractor(MetaProcessor):
 		except ExtractionError as e:
 			logging.error("GoSymbolExtractor: %s" % e)
 			return False
+		except OSError as e:
+			logging.error(e)
+			return False
 		return True
 
