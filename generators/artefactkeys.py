@@ -15,9 +15,9 @@ class %sKeyGenerator(MetaArtefactKeyGenerator):
 """
 
 class_template_extended = """
-			keys.append(self.value2key(data[key], delimiter, key, %s))
+			keys = keys + self.value2key(data[key], delimiter, key, %s)
 
-		return delimiter.join(keys)
+		return keys
 """
 
 class_template_end = """

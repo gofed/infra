@@ -19,7 +19,7 @@ class MetaArtefactKeyGenerator:
 
 	def value2key(self, value, delimiter, key, key_order):
 		if type(value) in [type(""), type(u"")]:
-			return self.truncateKey(value)
+			return [self.truncateKey(value)]
 
 		if type(value) != type({}):
 			raise ValueError("Second level key is not dictionary")
@@ -34,5 +34,5 @@ class MetaArtefactKeyGenerator:
 
 			keys.append(self.truncateKey(value[vkey]))
 
-		return delimiter.join(keys)
+		return keys
 

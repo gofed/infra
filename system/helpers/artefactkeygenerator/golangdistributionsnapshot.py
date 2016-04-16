@@ -10,6 +10,6 @@ class GolangDistributionSnapshotKeyGenerator(MetaArtefactKeyGenerator):
 			if key not in data:
 				raise ValueError("golang-distribution-snapshot: %s key missing" % key)
 
-			keys.append(self.value2key(data[key], delimiter, key, {"distribution": ["product", "version"]}))
+			keys = keys + self.value2key(data[key], delimiter, key, {"distribution": ["product", "version"]})
 
-		return delimiter.join(keys)
+		return keys
