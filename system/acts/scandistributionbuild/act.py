@@ -10,6 +10,7 @@ from infra.system.artefacts.artefacts import (
 	ARTEFACT_GOLANG_IPPREFIX_TO_RPM
 )
 from gofed_lib.helpers import Build, Rpm
+import logging
 
 class ScanDistributionBuildAct(MetaAct):
 
@@ -67,6 +68,14 @@ class ScanDistributionBuildAct(MetaAct):
 
 		return artefacts
 
+	def _storeData(self, data):
+		for artefact in data:
+			try:
+				self.ff.bake(self.write_storage_plugin).call(artefact)
+			except IOError as e:
+				logging.error(e)
+				# Just log the data could not be stored
+
 	def execute(self):
 		"""Impementation of concrete data processor"""
 
@@ -94,14 +103,22 @@ class ScanDistributionBuildAct(MetaAct):
 				"rpm": rpm_name,
 			}
 
-			ok, self.packages[rpm_name] = self.ff.bake("etcdstoragereader").call(data)
-			if not ok:
+			if not self.retrieve_artefacts:
+				missing_rpms.append(rpm)
+				continue
+
+			try:
+				self.packages[rpm_name] = self.ff.bake(self.read_storage_plugin).call(data)
+			except KeyError as e:
+				logging.error(e)
 				missing_rpms.append(rpm)
 				continue
 
 			data["artefact"] = ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_EXPORTED_API
-			ok, self.exported_api[rpm_name] = self.ff.bake("etcdstoragereader").call(data)
-			if not ok:
+			try:
+				self.exported_api[rpm_name] = self.ff.bake(self.read_storage_plugin).call(data)
+			except KeyError as e:
+				logging.error(e)
 				missing_rpms.append(rpm)
 				continue
 
@@ -162,18 +179,14 @@ class ScanDistributionBuildAct(MetaAct):
 			self.packages[rpm["name"]] = self._getArtefactFromData(ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_PACKAGES, data)
 			self.exported_api[rpm["name"]] = self._getArtefactFromData(ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_EXPORTED_API, data)
 
-			# TODO(jchaloup): only for testing purposes atm, make an option for storing
-			for artefact in data:
-				rdata = self.ff.bake("etcdstoragewriter").call(artefact)
+			self._storeData(data)
 
 		mapping_artefacts = self._getIpprefix2RpmArtefact(self.build, self.product, info_artefact, self.packages)
 
 		for artefact in mapping_artefacts:
 			self.mappings[artefact["ipprefix"]] = artefact
 
-		# TODO(jchaloup): only for testing purposes atm, make an option for storing
 		# Everytime there is at least one rpm missing (or srpm), new mapping artefacts can get (re)generated
-		for artefact in mapping_artefacts:
-			rdata = self.ff.bake("etcdstoragewriter").call(artefact)
+		self._storeData(mapping_artefacts)
 
 		return True

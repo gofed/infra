@@ -1,5 +1,6 @@
 from infra.system.helpers.schema_validator import SchemaValidator
 from infra.system.core.factory.functionfactory import FunctionFactory
+from infra.system.config.config import Config
 
 class MetaAct:
 	"""
@@ -21,6 +22,11 @@ class MetaAct:
 	def __init__(self, schema):
 		self.schema = schema
 		self.ff = FunctionFactory()
+		config = Config()
+		self.read_storage_plugin = config.readStoragePlugin()
+		self.write_storage_plugin = config.writeStoragePlugin()
+		self.retrieve_artefacts = config.retrieveArtefacts()
+		self.store_artefacts = config.storeArtefacts()
 
 	def process(self):
 		"""Implementation of request handler"""

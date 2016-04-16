@@ -1,5 +1,4 @@
 from infra.system.core.meta.metaact import MetaAct
-from infra.system.resources.specifier import ResourceSpecifier
 from infra.system.resources import types
 from infra.system.helpers.utils import getScriptDir
 from infra.system.artefacts.artefacts import (
@@ -41,9 +40,13 @@ class ArtefactReaderAct(MetaAct):
 
 	def execute(self):
 		"""Impementation of concrete data processor"""
-		# TODO(jchaloup): raise exception when artefact not found
-		ok, self.artefact = self.ff.bake("etcdstoragereader").call(self.data)
-		if ok:
-			return True
+		if not self.retrieve_artefacts:
+			return False
 
-		return False
+		# TODO(jchaloup): raise exception when artefact not found
+		try:
+			self.artefact = self.ff.bake(self.read_storage_plugin).call(self.data)
+		except KeyError:
+			return False
+
+		return True

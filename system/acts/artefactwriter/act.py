@@ -40,8 +40,13 @@ class ArtefactWriterAct(MetaAct):
 
 	def execute(self):
 		"""Impementation of concrete data processor"""
-		# TODO(jchaloup): raise exception when artefact not found
-		if self.ff.bake("etcdstoragewriter").call(self.data):
-			return True
+		if not self.store_artefacts:
+			return False
 
-		return False
+		# TODO(jchaloup): raise exception when artefact not found
+		try:
+			self.ff.bake("etcdstoragewriter").call(self.data)
+		except IOError:
+			return False
+
+		return True

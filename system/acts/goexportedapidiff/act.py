@@ -68,13 +68,15 @@ class GoExportedApiDiff(MetaAct):
 	def _getExportedApiArtefact(self, data):
 		# if the input is upstream source code, check the storage
 		if data["type"] == INPUT_TYPE_UPSTREAM_SOURCE_CODE:
-			ok, golang_project_exported_api = self.ff.bake("etcdstoragereader").call({
-				"artefact": ARTEFACT_GOLANG_PROJECT_EXPORTED_API,
-				"project": data["project"],
-				"commit": data["commit"]
-			})
-			if ok:
-				return golang_project_exported_api
+			if self.retrieve_artefacts:
+				try:
+					return self.ff.bake(self.read_storage_plugin).call({
+						"artefact": ARTEFACT_GOLANG_PROJECT_EXPORTED_API,
+						"project": data["project"],
+						"commit": data["commit"]
+					})
+				except:
+					pass
 
 			artefacts = self.ff.bake("gosymbolsextractor").call(data)
 			golang_project_exported_api = self._getArtefactFromData(
@@ -82,9 +84,11 @@ class GoExportedApiDiff(MetaAct):
 				artefacts
 			)
 
-			# TODO(jchaloup): just for testing purposes
-			for artefact in artefacts:
-				data = self.ff.bake("etcdstoragewriter").call(artefact)
+			if self.store_artefacts:
+				try:
+					self.ff.bake(self.write_storage_plugin).call(golang_project_exported_api)
+				except IOError:
+					pass
 
 			return golang_project_exported_api
 
@@ -96,7 +100,7 @@ class GoExportedApiDiff(MetaAct):
 
 
 	def execute(self):
-		"""Impementation of concrete data processor"""
+		"""Implementation of concrete data processor"""
 		reference_artefact = self._getExportedApiArtefact(self.reference)
 		compared_with_artefact = self._getExportedApiArtefact(self.compared_with)
 

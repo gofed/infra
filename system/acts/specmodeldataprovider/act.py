@@ -64,56 +64,89 @@ class SpecModelDataProviderAct(MetaAct):
 			self.golang_project_content_metadata
 		]
 
+	def _readPackagesData(self, project, commit):
+		return self.ff.bake(self.read_storage_plugin).call({
+			"artefact": ARTEFACT_GOLANG_PROJECT_PACKAGES,
+			"project": project,
+			"commit": commit
+		})
+
+	def _readContentData(self, project, commit):
+		return self.ff.bake(self.read_storage_plugin).call({
+			"artefact": ARTEFACT_GOLANG_PROJECT_CONTENT_METADATA,
+			"project": project,
+			"commit": commit
+		})
+
+	def _extractPackagesData(self, store = False):
+		artefacts = self.ff.bake("gosymbolsextractor").call(self.data)
+		self.golang_project_packages = self._getArtefactFromData(
+			ARTEFACT_GOLANG_PROJECT_PACKAGES,
+			artefacts
+		)
+
+		if not store:
+			return
+
+		if not self.store_artefacts:
+			return
+
+		try:
+			data = self.ff.bake(self.write_storage_plugin).call(self.golang_project_packages)
+		except IOError as e:
+			logging.error(e)
+			# Just log the data could not be stored
+
+	def _extractContentData(self, input_data, store = False):
+		self.golang_project_content_metadata = self.ff.bake("goprojectcontentmetadataextractor").call(input_data)
+
+		if not store:
+			return
+
+		if not self.store_artefacts:
+			return
+
+		try:
+			data = self.ff.bake(self.write_storage_plugin).call(self.golang_project_content_metadata)
+		except IOError as e:
+			logging.error(e)
+			# Just log the data could not be stored
+
 	def execute(self):
 		"""Impementation of concrete data processor"""
-		if self.data["type"] == INPUT_TYPE_UPSTREAM_SOURCE_CODE:
+		if self.retrieve_artefacts and self.data["type"] == INPUT_TYPE_UPSTREAM_SOURCE_CODE:
 			# Get golang-project-packages artefact
-			ok, self.golang_project_packages = self.ff.bake("etcdstoragereader").call({
-				"artefact": ARTEFACT_GOLANG_PROJECT_PACKAGES,
-				"project": self.data["project"],
-				"commit": self.data["commit"]
-			})
-			if not ok:
-				self.golang_project_packages = self._getArtefactFromData(
-					ARTEFACT_GOLANG_PROJECT_PACKAGES,
-					self.ff.bake("gosymbolsextractor").call(self.data)
+			try:
+				self.golang_project_packages = self._readPackagesData(
+					self.data["project"],
+					self.data["commit"]
 				)
-
-				# store the data
-				# TODO(jchaloup): check it was actually successful
-				# TODO(jchaloup): this is for testing only, remove after switching to production
-				self.ff.bake("etcdstoragewriter").call(self.golang_project_packages)
+			except KeyError as e:
+				self._extractPackagesData(True)
 
 			# Get golang-project-content-metadata
-			ok, self.golang_project_content_metadata = self.ff.bake("etcdstoragereader").call({
-				"artefact": ARTEFACT_GOLANG_PROJECT_CONTENT_METADATA,
-				"project": self.data["project"],
-				"commit": self.data["commit"]
-			})
-			if not ok:
+			try:
+				self.golang_project_content_metadata = self._readContentData(
+					self.data["project"],
+					self.data["commit"]
+				)
+			except KeyError as e:
 				data = {
 					"resource": self.data["resource"],
 					"project": self.data["project"],
 					"commit": self.data["commit"]
 				}
-				self.golang_project_content_metadata = self.ff.bake("goprojectcontentmetadataextractor").call(data)
-				# store the data
-				# TODO(jchaloup): check it was actually successful
-				# TODO(jchaloup): this is for testing only, remove after switching to production
-				self.ff.bake("etcdstoragewriter").call(self.golang_project_content_metadata)
-
+				self._extractContentData(data, True)
 		else:
 			# Get golang-project-packages artefact
-			self.golang_project_packages = self._getArtefactFromData(
-				ARTEFACT_GOLANG_PROJECT_PACKAGES,
-				self.ff.bake("gosymbolsextractor").call(self.data)
-			)
+			self._extractPackagesData(False)
 
 			# Get golang-project-content-metadata artefact
 			data = {
 				"resource": self.data["resource"]
 			}
-			self.golang_project_content_metadata = self.ff.bake("goprojectcontentmetadataextractor").call(data)
+
+			self._extractContentData(data, False)
 
 		if self.golang_project_packages == {}:
 			raise acttypes.ActDataError("Unable to get 'golang-project-packages' artefact")

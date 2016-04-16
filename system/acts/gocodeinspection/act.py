@@ -49,29 +49,45 @@ class GoCodeInspectionAct(MetaAct):
 		"""Validation and data post-processing"""
 		return self.golang_project_packages
 
+	def _extractData(self, store = False):
+		artefacts = self.ff.bake("gosymbolsextractor").call(self.data)
+		self.golang_project_packages = self._getArtefactFromData(
+			ARTEFACT_GOLANG_PROJECT_PACKAGES,
+			artefacts
+		)
+
+		if not store:
+			return
+
+		if not self.store_artefacts:
+			return
+
+		for artefact in artefacts:
+			try:
+				data = self.ff.bake(self.write_storage_plugin).call(artefact)
+			except IOError as e:
+				logging.error(e)
+				# Just log the data could not be stored
+
+	def _readData(self, project, commit):
+		return self.ff.bake(self.read_storage_plugin).call({
+			"artefact": ARTEFACT_GOLANG_PROJECT_PACKAGES,
+			"project": project,
+			"commit": commit
+		})
+
 	def execute(self):
 		"""Impementation of concrete data processor"""
-		if self.data["type"] == INPUT_TYPE_UPSTREAM_SOURCE_CODE:
-			ok, self.golang_project_packages = self.ff.bake("etcdstoragereader").call({
-				"artefact": ARTEFACT_GOLANG_PROJECT_PACKAGES,
-				"project": self.data["project"],
-				"commit": self.data["commit"]
-			})
-			if not ok:
-				artefacts = self.ff.bake("gosymbolsextractor").call(self.data)
-				self.golang_project_packages = self._getArtefactFromData(
-					ARTEFACT_GOLANG_PROJECT_PACKAGES,
-					artefacts
+		if self.retrieve_artefacts and self.data["type"] == INPUT_TYPE_UPSTREAM_SOURCE_CODE:
+			try:
+				self.golang_project_packages = self._readData(
+					self.data["project"],
+					self.data["commit"]
 				)
-
-				# TODO(jchaloup): just for testing purposes
-				for artefact in artefacts:
-					data = self.ff.bake("etcdstoragewriter").call(artefact)
+			except KeyError as e:
+				self._extractData(True)
 		else:
-			self.golang_project_packages = self._getArtefactFromData(
-				ARTEFACT_GOLANG_PROJECT_PACKAGES,
-				self.ff.bake("gosymbolsextractor").call(self.data)
-			)
+				self._extractData(False)
 
 		if self.golang_project_packages == {}:
 			return False

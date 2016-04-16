@@ -175,14 +175,15 @@ class ScanUpstreamRepositoryAct(MetaAct):
 			# even if a commit does not get stored, index it
 			self.items[item["commit"]] = item
 
-			# TODO(jchaloup): just for testing purposes, make it configurable
 			# store item
-			if not self.ff.bake("etcdstoragewriter").call(item):
+			try:
+				self.ff.bake(self.write_storage_plugin).call(item)
+			except IOError as e:
 				not_stored_items.append({
 					"item": item[item_key],
 					"point": item[point_key]
 				})
-				logging.error("Unable to store item: %s" % json.dumps(item))
+				logging.error("Unable to store item: %s. Cause: e" % (json.dumps(item), e))
 				continue
 
 			stored_items.append({
@@ -233,17 +234,26 @@ class ScanUpstreamRepositoryAct(MetaAct):
 		}
 
 	def _storeCache(self, cache):
-		if not self.ff.bake("etcdstoragewriter").call(cache):
-			# TODO(jchaloup): based on the configuration raise exception
+		if not self.store_artefacts:
+			return
+
+		try:
+			self.ff.bake(self.write_storage_plugin).call(cache)
+		except IOError as e:
 			# I would like to have the cache saved too
 			# Again, for just retrieval of data this is not necassary
-			raise ActDataError("Unable to store cache: %s" % json.dumps(cache))
+			raise ActDataError("Unable to store cache: %s. Cause: %s" % (json.dumps(cache), e))
 
 	def _storeInfo(self, info):
-		if not self.ff.bake("etcdstoragewriter").call(info):
+		if not self.store_artefacts:
+			return
+
+		try:
+			self.ff.bake(self.write_storage_plugin).call(info)
+		except IOError as e:
 			# TODO(jchaloup): if the act is run just to retrieve the artefacts, log the error and continue
 			# if it is meant for scanning, raise the exception
-			raise ActDataError("Unable to store itemset info artefact: %s" % json.dumps(info))
+			raise ActDataError("Unable to store itemset info artefact: %s" % (json.dumps(info), e))
 
 	def _generatePointsFromItemSetInfoArtefact(self, itemset_info, item_key="commit", point_key="cdate"):
 		"""Generate list of (item, point) pairs from itemset info artefact.
@@ -253,6 +263,9 @@ class ScanUpstreamRepositoryAct(MetaAct):
 		:param itemset_info: itemset info artefact
 		:type  itemset_info: artefact
 		"""
+		if not self.retrieve_artefacts:
+			return []
+
 		items = []
 		print itemset_info
 		for branch in itemset_info["branches"]:
@@ -265,12 +278,15 @@ class ScanUpstreamRepositoryAct(MetaAct):
 				}
 
 				# retrieve item point for each item
-				item_found, item_data = self.ff.bake("etcdstoragereader").call(data)
-				if item_found:
-					items.append({
-						"item": item_data[item_key],
-						"point": item_data[point_key]
-					})
+				try:
+					item_data = self.ff.bake(self.read_storage_plugin).call(data)
+				except KeyError:
+					continue
+
+				items.append({
+					"item": item_data[item_key],
+					"point": item_data[point_key]
+				})
 
 		return items
 
@@ -279,6 +295,9 @@ class ScanUpstreamRepositoryAct(MetaAct):
 		return info
 
 	def _retrieveItemsFromCache(self, cache, info, start, end):
+		if not self.retrieve_artefacts:
+			return {}
+
 		branch_commits = []
 		if self.branch != "":
 			found = False
@@ -290,26 +309,29 @@ class ScanUpstreamRepositoryAct(MetaAct):
 			if not found:
 				return {}
 
-		commit_artefacts = {}
-		for commit in filter(lambda l: l["point"] >= start and l["point"] <= end, cache["commits"]):
+		items = {}
+		for item in filter(lambda l: l["point"] >= start and l["point"] <= end, cache["commits"]):
 			if self.branch != "":
 				# commit in a given branch?
-				if commit["item"] not in branch_commits:
+				if item["item"] not in branch_commits:
 					continue
 
 			# construct a storage request for each commit
 			data = {
 				"artefact": ARTEFACT_GOLANG_PROJECT_REPOSITORY_COMMIT,
 				"repository": cache["repository"],
-				"commit": commit["item"]
+				"commit": item["item"]
 			}
 
 			# retrieve commit date for each commit
-			commit_found, commit_data = self.ff.bake("etcdstoragereader").call(data)
-			if commit_found:
-				commit_artefacts[commit["item"]] = commit_data
+			try:
+				item_data = self.ff.bake(self.read_storage_plugin).call(data)
+			except KeyError:
+				continue
 
-		return commit_artefacts
+			items[item["item"]] = item_data
+
+		return items
 
 	def _retrieveSingleCommit(self, repository, commit):
 		data = {
@@ -319,9 +341,10 @@ class ScanUpstreamRepositoryAct(MetaAct):
 		}
 
 		# retrieve commit date for each commit
-		commit_found, commit_data = self.ff.bake("etcdstoragereader").call(data)
-		if commit_found:
-			return commit_data
+		try:
+			return self.ff.bake(self.read_storage_plugin).call(data)
+		except KeyError:
+			pass
 
 		# commit not found, extract it
 		resource = ResourceSpecifier().generateUpstreamRepository(
@@ -368,7 +391,14 @@ class ScanUpstreamRepositoryAct(MetaAct):
 			"repository": self.repository
 		}
 
-		cache_found, cache = self.ff.bake("etcdstoragereader").call(data)
+		cache_found = False
+		if self.retrieve_artefacts:
+			cache_found = True
+			try:
+				cache = self.ff.bake(self.read_storage_plugin).call(data)
+			except KeyError:
+				cache_found = False
+
 		# Is the date interval covered?
 		if cache_found and (self.end_date != "" or self.end_timestamp != "") and (self.start_date != "" or self.start_timestamp != ""):
 			# both ends of date interval are specified
@@ -400,7 +430,7 @@ class ScanUpstreamRepositoryAct(MetaAct):
 					"repository": self.repository
 				}
 
-				info_found, itemset_info = self.ff.bake("etcdstoragereader").call(data)
+				info_found, itemset_info = self.ff.bake(self.read_storage_plugin).call(data)
 				if info_found:
 					# retrieve commits (if any of them not found, continue)
 					self.items = self._retrieveItemsFromCache(cache, itemset_info, start, end)
@@ -454,7 +484,14 @@ class ScanUpstreamRepositoryAct(MetaAct):
 			"repository": self.repository
 		}
 
-		info_found, itemset_info = self.ff.bake("etcdstoragereader").call(data)
+		info_found = False
+		if self.retrieve_artefacts:
+			info_found = True
+			try:
+				itemset_info = self.ff.bake(self.read_storage_plugin).call(data)
+			except KeyError:
+				info_found = False
+
 		# info not found
 		if not info_found:
 			updated_itemset_info = extracted_itemset_info
