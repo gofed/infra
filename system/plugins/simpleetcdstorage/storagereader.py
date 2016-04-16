@@ -1,4 +1,3 @@
-import logging
 import json
 from infra.system.core.meta.metastoragereader import MetaStorageReader
 from .artefactdriverfactory import ArtefactDriverFactory
@@ -12,12 +11,10 @@ class StorageReader(MetaStorageReader):
 		type  data: dictionary
 		"""
 		if "artefact" not in data:
-			logging.error("artefact key not found in %s" % json.dumps(data))
-			return False, {}
+			raise KeyError("artefact key not found in %s" % json.dumps(data))
 
 		driver = ArtefactDriverFactory().build(data["artefact"])
 		if driver == None:
-			logging.error("artefact driver for %s not found" % data["artefact"])
-			return False, {}
+			raise KeyError("artefact driver for %s not found" % data["artefact"])
 
 		return driver.retrieve(data)

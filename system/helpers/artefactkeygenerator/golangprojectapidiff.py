@@ -12,4 +12,4 @@ class GolangProjectApiDiffKeyGenerator(MetaArtefactKeyGenerator):
 
 			keys.append(self.truncateKey(data[key]))
 
-		return delimiter.join(keys)
+		return keys

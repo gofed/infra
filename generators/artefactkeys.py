@@ -23,7 +23,7 @@ class_template_extended = """
 class_template_end = """
 			keys.append(self.truncateKey(data[key]))
 
-		return delimiter.join(keys)
+		return keys
 """
 
 def generateKeyClass(key_spec):
