@@ -184,7 +184,7 @@ class SnapshotChecker(object):
 			# check if packages in ipprefix class are covered in distribution
 			not_covered = self._checkPackageCoverage(product, distribution, rpms[ipprefix]["build"], rpms[ipprefix]["rpm"], ipprefix, ipprefixes[ipprefix])
 
-			if not_covered == []:
+			if not_covered != []:
 				print "%s: %snot covered: %s%s" % (comparison, RED, not_covered, ENDC)
 			else:
 				print comparison
