@@ -45,7 +45,7 @@ class ArtefactWriterAct(MetaAct):
 
 		# TODO(jchaloup): raise exception when artefact not found
 		try:
-			self.ff.bake("etcdstoragewriter").call(self.data)
+			self.ff.bake(self.write_storage_plugin).call(self.data)
 		except IOError:
 			return False
 

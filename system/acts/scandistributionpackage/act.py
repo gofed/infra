@@ -139,7 +139,7 @@ class ScanDistributionPackageAct(MetaAct):
 	def _mergeItemSetInfoArtefacts(self, info1, info2, coverage):
 		# merged info artefact
 		return {
-			"artefact": ARTEFACT_CACHE_GOLANG_PROJECT_DISTRIBUTION_PACKAGE_BUILDS,
+			"artefact": ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_PACKAGE_BUILDS,
 			"product": info2["product"],
 			"distribution": info2["distribution"],
 			"package": info2["package"],

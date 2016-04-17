@@ -227,7 +227,7 @@ class ScanUpstreamRepositoryAct(MetaAct):
 
 		# merged info artefact
 		return {
-			"artefact": ARTEFACT_CACHE_GOLANG_PROJECT_REPOSITORY_COMMITS,
+			"artefact": ARTEFACT_GOLANG_PROJECT_REPOSITORY_INFO,
 			"repository": info2["repository"],
 			"branches": branches,
 			"coverage": coverage
