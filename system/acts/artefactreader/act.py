@@ -4,7 +4,8 @@ from infra.system.helpers.utils import getScriptDir
 from infra.system.artefacts.artefacts import (
 	ARTEFACT_GOLANG_IPPREFIX_TO_RPM,
 	ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_PACKAGES,
-	ARTEFACT_GOLANG_DISTRIBUTION_SNAPSHOT
+	ARTEFACT_GOLANG_DISTRIBUTION_SNAPSHOT,
+	ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_PACKAGE_BUILDS
 )
 
 class ArtefactReaderAct(MetaAct):
@@ -28,7 +29,12 @@ class ArtefactReaderAct(MetaAct):
 
 		# supporting only mapping atm
 		# TODO(jchaloup): extend the artefact to the rest once documented
-		if data["artefact"] in [ARTEFACT_GOLANG_IPPREFIX_TO_RPM, ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_PACKAGES, ARTEFACT_GOLANG_DISTRIBUTION_SNAPSHOT]:
+		if data["artefact"] in [
+			ARTEFACT_GOLANG_IPPREFIX_TO_RPM,
+			ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_PACKAGES,
+			ARTEFACT_GOLANG_DISTRIBUTION_SNAPSHOT,
+			ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_PACKAGE_BUILDS
+			]:
 			return True
 
 		# TODO(jchaloup): raise exception when artefact not supported
