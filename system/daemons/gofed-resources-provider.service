@@ -1,0 +1,11 @@
+[Unit]
+Description=Resource provider GC
+After=multi-user.target
+
+[Service]
+Type=idle
+Environment=PYTHONPATH=/home/jchaloup/Projects/gofed
+ExecStart=/usr/bin/python /home/jchaloup/Projects/gofed/infra/system/daemons/resourceproviderdaemon.py
+
+[Install]
+WantedBy=multi-user.target
