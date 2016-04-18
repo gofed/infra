@@ -6,6 +6,8 @@ from infra.system.core.factory.actfactory import ActFactory
 from gofed_lib.distributionsnapshot import DistributionSnapshot
 from gofed_lib.utils import BLUE, YELLOW, ENDC, WHITE
 
+from infra.system.artefacts.artefacts import ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_PACKAGE_BUILDS
+
 class DistributionBuildsFetcher(object):
 
 	def __init__(self, pkgdb_client):
@@ -52,13 +54,35 @@ class DistributionBuildsFetcher(object):
 			builds = DistributionSnapshot().read(data).builds()
 			for build in builds:
 				if builds[build]["build_ts"] >= since:
-					print "%sScanning %s ...%s" % (BLUE, build, ENDC)
+					print "%s  Scanning %s ...%s" % (BLUE, build, ENDC)
+					# get package's items info artefact
+					try:
+						items_info = self.artefactreaderact.call({
+							"artefact": ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_PACKAGE_BUILDS,
+							"product": distribution["product"],
+							"distribution": dist_tag,
+							"package": build
+						})
+					except ActFailedError as e:
+						items_info = None
+
+					# if items_info artefact for package is found, take the build timestamp
+					# of the youngest covered build
+					if items_info == None:
+						start_ts = since
+					else:
+						start_ts = 0
+						for coverage in items_info["coverage"]:
+							start_ts = max(coverage["end"], start_ts)
+						# end is always > 0
+						start_ts = start_ts - 1
+
 					try:
 						self.scan_act.call({
 							"package": build,
 							"product": distribution["product"],
 							"distribution": dist_tag,
-							"start_timestamp": since,
+							"start_timestamp": start_ts,
 							"end_timestamp": to
 						})
 					except ActFailedError as e:
