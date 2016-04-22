@@ -1,8 +1,8 @@
 from infra.system.core.meta.metaprocessor import MetaProcessor
 from infra.system.artefacts.artefacts import ARTEFACT_GOLANG_PROJECTS_API_DIFF
 import logging
-from infra.system.helpers.utils import getScriptDir
-from gofed_lib import goapidiff
+from gofed_lib.utils import getScriptDir
+from gofed_lib.go.apidiff import apidiff
 
 class GoApiDiff(MetaProcessor):
 	"""
@@ -47,7 +47,7 @@ class GoApiDiff(MetaProcessor):
 		if not self._validateInput(data):
 			return False
 
-		self.apidiff = goapidiff.GoApiDiff(
+		self.apidiff = apidiff.GoApiDiff(
 			data["exported_api_1"]["packages"],
 			data["exported_api_2"]["packages"]
 		)
@@ -68,7 +68,7 @@ class GoApiDiff(MetaProcessor):
 			"project": self.project,
 			"commit1": self.commit1,
 			"commit2": self.commit2,
-			"data": self.apidiff.getProjectsApiDiff()
+			"data": self.apidiff.apiDiff()
 		}
 
 	def execute(self):
