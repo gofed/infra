@@ -1,22 +1,26 @@
 from infra.system.core.meta.metaprocessor import MetaProcessor
 from infra.system.helpers.schema_validator import SchemaValidator
 from infra.system.helpers.artefact_schema_validator import ArtefactSchemaValidator
-from infra.system.helpers.utils import getScriptDir
+from gofed_lib.utils import getScriptDir
 from infra.system.artefacts.artefacts import (
 	ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_BUILD,
 	ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_PACKAGE_BUILDS
 )
 import logging
-import koji
 import time
 from gofed_lib.utils import dateToTimestamp
 
-from gofed_lib.kojiclient import KojiClient
+from gofed_lib.distribution.clients.koji.client import KojiClient
 
 class DistributionPackageBuildsExtractor(MetaProcessor):
 
-	def __init__(self):
-		self.input_validated = False
+	def __init__(self, input_schema = "%s/input_schema.json" % getScriptDir(__file__)):
+		MetaProcessor.__init__(
+			self,
+			input_schema
+		)
+
+		self._client = KojiClient()
 
 		self.project = ""
 		self.product = ""
@@ -26,18 +30,11 @@ class DistributionPackageBuildsExtractor(MetaProcessor):
 		self.start_date = ""
 		self.end_date = ""
 
-		self.builds = []
-
-	def _validateInput(self, data):
-		validator = SchemaValidator()
-		schema = "%s/input_schema.json" % getScriptDir(__file__)
-		self.input_validated = validator.validateFromFile(schema, data)
-		return self.input_validated
+		self.builds = {}
 
 	def setData(self, data):
-		self.input_validated = False
 		if not self._validateInput(data):
-			return []
+			return False
 
 		self.package = data["package"]
 		self.product = data["product"]
@@ -63,9 +60,6 @@ class DistributionPackageBuildsExtractor(MetaProcessor):
 		return True
 
 	def getData(self):
-		if not self.input_validated:
-			return []
-
 		package_builds = self._generateGolangProjectDistributionPackageBuilds()
 
 		builds = []
@@ -125,7 +119,7 @@ class DistributionPackageBuildsExtractor(MetaProcessor):
 
 	def execute(self):
 
-		self.builds = KojiClient().getPackageBuilds(
+		self.builds = self._client.getPackageBuilds(
 			self.distribution,
 			self.package,
 			since = self.start_ts,
