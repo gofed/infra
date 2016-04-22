@@ -1,10 +1,10 @@
 from infra.system.core.meta.metaprocessor import MetaProcessor
 from infra.system.artefacts.artefacts import ARTEFACT_GOLANG_PROJECT_PACKAGES, ARTEFACT_GOLANG_PROJECT_EXPORTED_API
-import logging
 from infra.system.helpers.artefact_schema_validator import ArtefactSchemaValidator
 from infra.system.helpers.utils import getScriptDir
-from gofed_lib import gosymbolsextractor
+from gofed_lib.go.symbolsextractor import extractor
 from gofed_lib.types import ExtractionError
+import logging
 
 CONFIG_SOURCE_CODE_DIRECTORY = "resource"
 DATA_PROJECT = "project"
@@ -58,6 +58,9 @@ class GoSymbolsExtractor(MetaProcessor):
 
 		self.gosymbolsextractor = None
 
+		self._packages = {}
+		self._exported_api = []
+
 	def setVerbose(self):
 		self.verbose = True
 
@@ -83,7 +86,7 @@ class GoSymbolsExtractor(MetaProcessor):
 		if DATA_IPPREFIX in data:
 			self.ipprefix = data[DATA_IPPREFIX]
 
-		self.gosymbolsextractor = gosymbolsextractor.GoSymbolsExtractor(
+		self.gosymbolsextractor = extractor.GoSymbolsExtractor(
 			self.directory,
 			verbose = self.verbose,
 			skip_errors = self.skip_errors
@@ -96,17 +99,17 @@ class GoSymbolsExtractor(MetaProcessor):
 
 		data.append(self._generateGolangProjectPackagesArtefact())
 		# TODO(jchaloup): move validation to unit-tests
-		validator = ArtefactSchemaValidator(ARTEFACT_GOLANG_PROJECT_PACKAGES)
-		if not validator.validate(data[0]):
-			logging.error("%s is not valid" % ARTEFACT_GOLANG_PROJECT_PACKAGES)
-			return {}
+		#validator = ArtefactSchemaValidator(ARTEFACT_GOLANG_PROJECT_PACKAGES)
+		#if not validator.validate(data[0]):
+		#	logging.error("%s is not valid" % ARTEFACT_GOLANG_PROJECT_PACKAGES)
+		#	return {}
 
 		data.append(self._generateGolangProjectExportedAPI())
 		# TODO(jchaloup): move validation to unit-tests
-		validator = ArtefactSchemaValidator(ARTEFACT_GOLANG_PROJECT_EXPORTED_API)
-		if not validator.validate(data[1]):
-			logging.error("%s is not valid" % ARTEFACT_GOLANG_PROJECT_EXPORTED_API)
-			return {}
+		#validator = ArtefactSchemaValidator(ARTEFACT_GOLANG_PROJECT_EXPORTED_API)
+		#if not validator.validate(data[1]):
+		#	logging.error("%s is not valid" % ARTEFACT_GOLANG_PROJECT_EXPORTED_API)
+		#	return {}
 
 		return data
 
@@ -126,9 +129,7 @@ class GoSymbolsExtractor(MetaProcessor):
 		if self.ipprefix != "":
 			artefact["ipprefix"] = self.ipprefix
 
-		data = self.gosymbolsextractor.getProjectPackages()
-
-		artefact["data"] = data
+		artefact["data"] = self._packages
 
 		return artefact
 
@@ -142,7 +143,7 @@ class GoSymbolsExtractor(MetaProcessor):
 		data["project"] = self.project
 		data["commit"] = self.commit
 
-		data["packages"] = self.gosymbolsextractor.getProjectExportedAPI()
+		data["packages"] = self._exported_api
 
 		return data
 
@@ -155,5 +156,9 @@ class GoSymbolsExtractor(MetaProcessor):
 		except OSError as e:
 			logging.error(e)
 			return False
+
+		self._packages = self.gosymbolsextractor.packages()
+		self._exported_api = self.gosymbolsextractor.exportedApi()
+
 		return True
 
