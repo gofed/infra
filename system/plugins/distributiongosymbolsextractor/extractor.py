@@ -8,7 +8,7 @@ from infra.system.artefacts.artefacts import (
 )
 
 from infra.system.helpers.artefactdecomposer import ArtefactDecomposer
-from gofed_lib.importpathparserbuilder import ImportPathParserBuilder
+from gofed_lib.go.importpath.parserbuilder import ImportPathParserBuilder
 
 
 class DistributionGoSymbolsExtractor(GoSymbolsExtractor):
@@ -23,6 +23,9 @@ class DistributionGoSymbolsExtractor(GoSymbolsExtractor):
 		self.distribution = ""
 		self.rpm = ""
 		self.build = ""
+
+		self._packages = {}
+		self._exported_api = {}
 
 	def setData(self, data):
 		if not GoSymbolsExtractor.setData(self, data):
@@ -41,17 +44,17 @@ class DistributionGoSymbolsExtractor(GoSymbolsExtractor):
 
 		data.append(self._generateGolangProjectDistributionPackagesArtefact())
 		# TODO(jchaloup): move validation to unit-tests
-		validator = ArtefactSchemaValidator(ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_PACKAGES)
-		if not validator.validate(data[0]):
-			logging.error("%s is not valid" % ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_PACKAGES)
-			return {}
+		#validator = ArtefactSchemaValidator(ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_PACKAGES)
+		#if not validator.validate(data[0]):
+		#	logging.error("%s is not valid" % ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_PACKAGES)
+		#	return {}
 
 		data.append(self._generateGolangProjectDistributionExportedAPI())
 		# TODO(jchaloup): move validation to unit-tests
-		validator = ArtefactSchemaValidator(ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_EXPORTED_API)
-		if not validator.validate(data[1]):
-			logging.error("%s is not valid" % ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_EXPORTED_API)
-			return {}
+		#validator = ArtefactSchemaValidator(ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_EXPORTED_API)
+		#if not validator.validate(data[1]):
+		#	logging.error("%s is not valid" % ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_EXPORTED_API)
+		#	return {}
 
 		return data
 
@@ -65,7 +68,7 @@ class DistributionGoSymbolsExtractor(GoSymbolsExtractor):
 		artefact["build"] = self.build
 		artefact["commit"] = self.commit
 
-		ad = ArtefactDecomposer(ImportPathParserBuilder().buildWithLocalMappingForIPPrefixDecomposer())
+		ad = ArtefactDecomposer(ImportPathParserBuilder().buildDefault())
 		return ad.decomposeArtefact(artefact)
 
 	def _generateGolangProjectDistributionExportedAPI(self):
@@ -78,7 +81,7 @@ class DistributionGoSymbolsExtractor(GoSymbolsExtractor):
 		artefact["build"] = self.build
 		artefact["commit"] = self.commit
 
-		ad = ArtefactDecomposer(ImportPathParserBuilder().buildWithLocalMappingForIPPrefixDecomposer())
+		ad = ArtefactDecomposer(ImportPathParserBuilder().buildDefault())
 		return ad.decomposeArtefact(artefact)
 
 	def execute(self):
