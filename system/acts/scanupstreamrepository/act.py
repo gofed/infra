@@ -95,8 +95,8 @@ class ScanUpstreamRepositoryAct(MetaAct):
 			"%s/input_schema.json" % getScriptDir(__file__)
 		)
 
-		self.itemset_info = {}
-		self.items = {}
+		self._itemset_info = {}
+		self._items = {}
 
 	def setData(self, data):
 		"""Validation and data pre-processing"""
@@ -134,8 +134,8 @@ class ScanUpstreamRepositoryAct(MetaAct):
 	def getData(self):
 		"""Validation and data post-processing"""
 		return {
-			"info": self.itemset_info,
-			"commits": self.items
+			ARTEFACT_GOLANG_PROJECT_REPOSITORY_INFO: self._itemset_info,
+			ARTEFACT_GOLANG_PROJECT_REPOSITORY_COMMIT: self._items
 		}
 
 	def _extractItemSetInfo(self):
@@ -173,7 +173,7 @@ class ScanUpstreamRepositoryAct(MetaAct):
 		not_stored_items = []
 		for item in items:
 			# even if a commit does not get stored, index it
-			self.items[item["commit"]] = item
+			self._items[item["commit"]] = item
 
 			# store item
 			try:
@@ -364,12 +364,12 @@ class ScanUpstreamRepositoryAct(MetaAct):
 	def execute(self):
 		"""Impementation of concrete data processor"""
 
-		self.itemset_info = {}
-		self.items = {}
+		self._itemset_info = {}
+		self._items = {}
 
 		# if a self.commit != "" => request only for particular commit
 		if self.commit != "":
-			self.items[self.commit] = self._retrieveSingleCommit(self.repository, self.commit)
+			self._items[self.commit] = self._retrieveSingleCommit(self.repository, self.commit)
 			return True
 
 		# check storage
@@ -433,11 +433,11 @@ class ScanUpstreamRepositoryAct(MetaAct):
 				info_found, itemset_info = self.ff.bake(self.read_storage_plugin).call(data)
 				if info_found:
 					# retrieve commits (if any of them not found, continue)
-					self.items = self._retrieveItemsFromCache(cache, itemset_info, start, end)
+					self._items = self._retrieveItemsFromCache(cache, itemset_info, start, end)
 					if self.branch != "":
-						self.itemset_info = self._truncateRepositoryInfoArtefact(itemset_info, [self.branch])
+						self._itemset_info = self._truncateRepositoryInfoArtefact(itemset_info, [self.branch])
 					else:
-						self.itemset_info = itemset_info
+						self._itemset_info = itemset_info
 					return True
 
 		# ================================================================
@@ -454,7 +454,7 @@ class ScanUpstreamRepositoryAct(MetaAct):
 		extracted_itemset_cache = ItemSetCache().addItems(stored_items, not_stored_items)
 
 		# return unchanged repository that was extracted
-		self.itemset_info = extracted_itemset_info
+		self._itemset_info = extracted_itemset_info
 		# update the coverage intervals with the list of stored items
 		extracted_itemset_info["coverage"] = extracted_itemset_cache.intervals()
 		# TODO(jchaloup): check for empty list of commits => we end here
