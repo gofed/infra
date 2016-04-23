@@ -4,33 +4,16 @@ import tempfile
 import uuid
 from shutil import move
 from gofed_lib.utils import runCommand
-from gofed_lib.helpers import Build
+from gofed_lib.distribution.helpers import Build
 import os
 
-class ResourceClient:
-	"""Communication with resource provider and retrieve requested resources.
-
-	Every retrieved resource needs to be extracted before provided for processing.
-	As client is responsible for extraction, it is responsible for cleaning up.
-	Thus, every retrieved resource is extracting into working directory.
-
-	As the working directory is not used as a cache (not yet),
-	it is not requered to store its content for a long time.
-	Thus, every resource inside the directory which lives longer than
-	predefined amount of time can be deleted.
-	"""
+class ResourceHandler(object):
 
 	def __init__(self, resource_provider, working_directory):
 		self.provider = resource_provider
-		self.subresource = ""
 		self.working_directory = working_directory
 
-	def _validate(self):
-		"""Validate descriptor
-		"""
-		raise NotImplementedError
-
-	def _handleUpstreamSourceCode(self, project, commit):
+	def handleUpstreamSourceCode(self, project, commit):
 		provider = self.provider.buildGithubSourceCodeProvider()
 		# TODO(jchaloup): catch exceptions from provide(...)
 		resource_location =  provider.provide(project, commit)
@@ -60,7 +43,7 @@ class ResourceClient:
 		move(dirpath, resource_dest)
 		return "%s/%s" % (resource_dest, rootdir)
 
-	def _handleRpm(self, product, distribution, build, rpm, subresource):
+	def handleRpm(self, product, distribution, build, rpm, subresource):
 			provider = self.provider.buildRpmProvider()
 			# TODO(jchaloup): catch exceptions from provide(...)
 			# product, distribution, build, rpm
@@ -93,7 +76,7 @@ class ResourceClient:
 
 			raise ValueError("Invalid resource specification")
 
-	def _handleRepository(self, repository):
+	def handleRepository(self, repository):
 		if repository["provider"] in ["github"]:
 			provider = self.provider.buildGitRepositoryProvider()
 		elif repository["provider"] in ["bitbucket"]:
@@ -129,6 +112,29 @@ class ResourceClient:
 
 		return "%s/%s" % (resource_dest, rootdir)
 
+class ResourceClient:
+	"""Communication with resource provider and retrieve requested resources.
+
+	Every retrieved resource needs to be extracted before provided for processing.
+	As client is responsible for extraction, it is responsible for cleaning up.
+	Thus, every retrieved resource is extracting into working directory.
+
+	As the working directory is not used as a cache (not yet),
+	it is not requered to store its content for a long time.
+	Thus, every resource inside the directory which lives longer than
+	predefined amount of time can be deleted.
+	"""
+
+	def __init__(self, resource_provider, working_directory):
+		self._subresource = ""
+
+		self._resource_handler = ResourceHandler(resource_provider, working_directory)
+
+	def _validate(self):
+		"""Validate descriptor
+		"""
+		raise NotImplementedError
+
 	def retrieve(self, descriptor):
 		"""Retrieve subresource specified in descriptor
 		"""
@@ -140,31 +146,34 @@ class ResourceClient:
 			if descriptor["location"].startswith("file://"):
 				if descriptor["resource-type"] == RESOURCE_TYPE_DIRECTORY:
 					# TODO(jchaloup): check if the directory exists
-					self.subresource = descriptor["location"][7:]
-					return
+					self._subresource = descriptor["location"][7:]
+					return self
+				else:
+					raise ValueError("resource-type '%s' not supported" % descriptor["resource-type"])
 				# Extract the directory
 				#elif self.descriptor["resource-type"] == RESOURCE_TYPE_TARBALL:
+			raise ValueError("Location protocol not supported. Only file:// currently supported.")
 		elif resource_type == RESOURCE_UPSTREAM_SOURCE_CODES:
-			self.subresource = self._handleUpstreamSourceCode(descriptor["project"], descriptor["commit"])
-			return
+			self._subresource = self._resource_handler.handleUpstreamSourceCode(descriptor["project"], descriptor["commit"])
+			return self
 
 		elif resource_type == RESOURCE_RPM:
-			self.subresource = self._handleRpm(
+			self._subresource = self._resource_handler.handleRpm(
 				descriptor["product"],
 				descriptor["distribution"],
 				descriptor["build"],
 				descriptor["rpm"],
 				descriptor["subresource"]
 			)
-			return
+			return self
 
 		elif resource_type == RESOURCE_REPOSITORY:
-			self.subresource = self._handleRepository(descriptor["repository"])
-			return
+			self._subresource = self._resource_handler.handleRepository(descriptor["repository"])
+			return self
 
 		raise ValueError("ResourceClient: resource type '%s' not implemented" % resource_type)
 
-	def getSubresource(self):
+	def subresource(self):
 		"""Return location of subresource
 		"""
-		return self.subresource
+		return self._subresource

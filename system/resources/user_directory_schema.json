@@ -20,7 +20,7 @@
 			"type": "string",
 			"description": "Requested resource",
 			"oneOf": [
-				{"enum": ["upstream-source-code"]}
+				{"enum": ["user-directory"]}
 			]
 		},
 		"subresource": {
