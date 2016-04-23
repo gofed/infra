@@ -4,16 +4,19 @@ import datetime
 import logging
 from infra.system.helpers.artefact_schema_validator import ArtefactSchemaValidator
 from infra.system.helpers.schema_validator import SchemaValidator
-from infra.system.helpers.utils import getScriptDir
 from infra.system.artefacts.artefacts import ARTEFACT_GOLANG_PROJECT_REPOSITORY_INFO, ARTEFACT_GOLANG_PROJECT_REPOSITORY_COMMIT
 
+from gofed_lib.utils import getScriptDir
 from gofed_lib.utils import dateToTimestamp
-from gofed_lib.repositoryclientbuilder import RepositoryClientBuilder
+from gofed_lib.repository.repositoryclientbuilder import RepositoryClientBuilder
 
 class RepositoryDataExtractor(MetaProcessor):
 
-	def __init__(self):
-		self.input_validated = False
+	def __init__(self, input_schema = "%s/input_schema.json" % getScriptDir(__file__)):
+		MetaProcessor.__init__(
+			self,
+			input_schema
+		)
 
 		self.repository = {}
 		self.repository_directory = ''
@@ -21,20 +24,15 @@ class RepositoryDataExtractor(MetaProcessor):
 		self.end_date = ''
 		self.commit = ''
 
-		self.client = None
-
 		self.branches = []
 		self.commits = {}
 
 	def setData(self, data):
-		self.input_validated = False
 		if not self._validateInput(data):
 			return False
 
 		self.repository = data['repository']
 		self.repository_directory = data['resource']
-
-		self.client = RepositoryClientBuilder().buildWithLocalClient(self.repository, self.repository_directory)
 
 		# TODO(jchaloup): check the date is in required format
 		if 'start_date' in data:
@@ -105,9 +103,6 @@ class RepositoryDataExtractor(MetaProcessor):
 		return data
 
 	def getData(self):
-		if not self.input_validated:
-			return []
-
 		if self.commit != "":
 			return self._generateGolangProjectRepositoryCommit(self.commits[""])
 
@@ -139,10 +134,10 @@ class RepositoryDataExtractor(MetaProcessor):
 		#		return {}
 
 		info = self._generateGolangProjectRepositoryInfo(branches)
-		validator = ArtefactSchemaValidator(ARTEFACT_GOLANG_PROJECT_REPOSITORY_INFO)
-		if not validator.validate(info):
-			logging.error('%s is not valid' % ARTEFACT_GOLANG_PROJECT_REPOSITORY_INFO)
-			return {}
+		#validator = ArtefactSchemaValidator(ARTEFACT_GOLANG_PROJECT_REPOSITORY_INFO)
+		#if not validator.validate(info):
+		#	logging.error('%s is not valid' % ARTEFACT_GOLANG_PROJECT_REPOSITORY_INFO)
+		#	return {}
 
 		repo_commits = []
 		for commit in commits_data:
@@ -154,18 +149,14 @@ class RepositoryDataExtractor(MetaProcessor):
 			"branches": branches
 		}
 
-	def _validateInput(self, data):
-		validator = SchemaValidator()
-		schema = '%s/input_schema.json' % getScriptDir(__file__)
-		self.input_validated = validator.validateFromFile(schema, data)
-		return self.input_validated
-
 	def execute(self):
+		repo_client = RepositoryClientBuilder().buildWithLocalClient(self.repository, self.repository_directory)
+
 		if self.commit != "":
-			self.commits[""] = self.client.commit(self.commit)
+			self.commits[""] = repo_client.commit(self.commit)
 			return True
 
-		self.branches = self.client.branches()
+		self.branches = repo_client.branches()
 
 		self.commits = {}
 
@@ -174,11 +165,11 @@ class RepositoryDataExtractor(MetaProcessor):
 			if self.branch not in self.branches:
 				raise ValueError("Requested branch '%s' not found" % self.branch)
 
-			self.commits[self.branch] = self.client.commits(self.branch, since=self.start_date, to=self.end_date)
+			self.commits[self.branch] = repo_client.commits(self.branch, since=self.start_date, to=self.end_date)
 			return True
 
 		# all branches
 		for branch in self.branches:
-			self.commits[branch] = self.client.commits(branch, since=self.start_date, to=self.end_date)
+			self.commits[branch] = repo_client.commits(branch, since=self.start_date, to=self.end_date)
 
 		return True
