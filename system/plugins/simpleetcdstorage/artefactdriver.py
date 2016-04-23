@@ -13,23 +13,18 @@ class ArtefactDriver(MetaArtefactDriver):
 	def _generateKey(self, data):
 		generator = KeyGeneratorFactory().build(self.artefact)
 		if generator == None:
-			logging.error("Unable to store %s artefact: key generator not found" % self.artefact)
-			return []
+			raise ValueError("Unable to store %s artefact: key generator not found" % self.artefact)
 
 		key = generator.generate(data)
-		if key == "":
-			logging.error("Unable to store %s artefact: key not generated" % self.artefact)
-			return []
+		if key == []:
+			raise ValueError("Unable to store %s artefact: key not generated" % self.artefact)
 
-		return key
+		return ":".join(key)
 
 	def store(self, data):
 		"""store artefact"""
 		key = self._generateKey(data)
-		if key == []:
-			raise ValueError("Unable to generate key for '%s' artefact" % data["artefact"])
 
-		key = ":".join(key)
 		# store the data into etcd
 		if not EtcdClient().set(key, json.dumps(data)):
 			raise IOError("Unable to store %s artefact with '%s' key" % (self.artefact, key))
@@ -42,10 +37,7 @@ class ArtefactDriver(MetaArtefactDriver):
 	def retrieve(self, key_data):
 		"""retrieve artefact"""
 		key = self._generateKey(key_data)
-		if key == "":
-			raise KeyError("Unable to generate key")
 
-		key = ":".join(key)
 		# get the data from etcd
 		ok, value = EtcdClient().get(key)
 

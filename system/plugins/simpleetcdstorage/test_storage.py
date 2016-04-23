@@ -1,6 +1,7 @@
 from infra.system.artefacts import artefacts
 from .artefactdriverfactory import ArtefactDriverFactory
 from infra.system.helpers.jsoncomparator import DirectJSONComparator
+from .fakeartefactdriver import FakeArtefactDriver
 
 import unittest
 class ArtefactDriverTest(unittest.TestCase):
@@ -14,6 +15,10 @@ class ArtefactDriverTest(unittest.TestCase):
 		if driver == None:
 			raise Exception("Driver not built")
 
+		# let the factory build real artefact driver to check
+		# the factory works. Then drop it and use fake driver
+		# to carry low level store/retrieve operations.
+		driver = FakeArtefactDriver(artefact)
 		driver.store(input)
 
 		expected = input
