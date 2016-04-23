@@ -1,6 +1,11 @@
-{
+[{
 "id": "specdataextractor",
 "class": "SpecDataExtractor",
 "file": "extractor.py",
 "version": "1.0-alpha1"
-}
+},{
+"id": "fakespecdataextractor",
+"class": "FakeSpecDataExtractor",
+"file": "fakeextractor.py",
+"version": "1.0-alpha1"
+}]

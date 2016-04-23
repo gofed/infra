@@ -1,6 +1,11 @@
-{
+[{
 "id": "gosymbolsextractor",
 "class": "GoSymbolsExtractor",
 "file": "extractor.py",
 "version": "1.0-alpha1"
-}
+},{
+"id": "fakegosymbolsextractor",
+"class": "FakeGoSymbolsExtractor",
+"file": "fakeextractor.py",
+"version": "1.0-alpha1"
+}]

@@ -3,10 +3,9 @@
 "class": "StorageReader",
 "file": "storagereader.py",
 "version": "1.0-alpha1"
-},
-{
-"id": "etcdstoragewriter",
-"class": "StorageWriter",
-"file": "storagewriter.py",
+},{
+"id": "fakeetcdstoragewriter",
+"class": "FakeStorageWriter",
+"file": "fakestoragewriter.py",
 "version": "1.0-alpha1"
 }]

@@ -1,6 +1,11 @@
-{
+[{
   "id": "repositorydataextractor",
   "class": "RepositoryDataExtractor",
   "file": "extractor.py",
   "version": "1.0-alpha1"
-}
+},{
+  "id": "fakerepositorydataextractor",
+  "class": "FakeRepositoryDataExtractor",
+  "file": "fakeextractor.py",
+  "version": "1.0-alpha1"
+}]

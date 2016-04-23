@@ -12,5 +12,8 @@ class FakeArtefactDriver(ArtefactDriver):
 
 	def retrieve(self, data):
 		key = self._generateKey(data)
+		if key not in self.data:
+			raise KeyError("FakeArtefactDriver: key '%s' not found" % key)
+
 		return self.data[key]
 

@@ -3,10 +3,19 @@
 "class": "StorageReader",
 "file": "storagereader.py",
 "version": "1.0-alpha1"
-},
-{
+},{
 "id": "filestoragewriter",
 "class": "StorageWriter",
 "file": "storagewriter.py",
+"version": "1.0-alpha1"
+},{
+"id": "fakefilestoragereader",
+"class": "FakeStorageReader",
+"file": "fakestoragereader.py",
+"version": "1.0-alpha1"
+},{
+"id": "fakefilestoragewriter",
+"class": "FakeStorageWriter",
+"file": "fakestoragewriter.py",
 "version": "1.0-alpha1"
 }]
