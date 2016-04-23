@@ -45,10 +45,10 @@ class ResourceHandler(object):
 
 		return dirpath
 
-	def handleUpstreamSourceCode(self, project, commit):
-		provider = self.provider.buildGithubSourceCodeProvider()
+	def handleUpstreamSourceCode(self, repository, commit):
+		provider = self.provider.buildSourceCodeProvider(repository)
 		# TODO(jchaloup): catch exceptions from provide(...)
-		resource_location =  provider.provide(project, commit)
+		resource_location =  provider.provide(repository, commit)
 		# if the provider runs locally, provider is responsible for deleting resource_location
 		# if the provider runs remotelly, client is responsible for deleting resource_location
 		# resource_location is expected as a tarball
@@ -169,7 +169,7 @@ class ResourceClient:
 				#elif self.descriptor["resource-type"] == RESOURCE_TYPE_TARBALL:
 			raise ValueError("Location protocol not supported. Only file:// currently supported.")
 		elif resource_type == RESOURCE_UPSTREAM_SOURCE_CODES:
-			self._subresource = self._resource_handler.handleUpstreamSourceCode(descriptor["project"], descriptor["commit"])
+			self._subresource = self._resource_handler.handleUpstreamSourceCode(descriptor["repository"], descriptor["commit"])
 			return self
 
 		elif resource_type == RESOURCE_RPM:

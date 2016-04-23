@@ -28,7 +28,7 @@ class GoCodeInspectionAct(MetaAct):
 		# upstream source code
 		if data["type"] == INPUT_TYPE_UPSTREAM_SOURCE_CODE:
 			self.data["resource"] = ResourceSpecifier().generateUpstreamSourceCode(
-				data["project"],
+				data["repository"],
 				data["commit"]
 			)
 			return True
@@ -36,7 +36,7 @@ class GoCodeInspectionAct(MetaAct):
 		# user directory
 		if data["type"] == INPUT_TYPE_USER_DIRECTORY:
 			# any project is valid project for user directory
-			self.data["project"] = "."
+			self.data["repository"] = {}
 			self.data["resource"] = ResourceSpecifier().generateUserDirectory(
 				data["resource"],
 				# tarball is implicit, change it to directory

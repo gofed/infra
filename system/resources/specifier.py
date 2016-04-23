@@ -51,7 +51,7 @@ class ResourceSpecifier:
 			"location": location
 		}
 
-	def generateUpstreamSourceCode(self, project, commit, subresource = SUBRESOURCE_DIRECTORY_TREE):
+	def generateUpstreamSourceCode(self, repository, commit, subresource = SUBRESOURCE_DIRECTORY_TREE):
 		"""Generate resource specifier for source codes for given upstream project
 
 		:param project: unique project name
@@ -62,7 +62,7 @@ class ResourceSpecifier:
 		:type  subresource: str	
 		"""
 		return {
-			"project": project,
+			"repository": repository,
 			"commit": commit,
 			"resource": RESOURCE_UPSTREAM_SOURCE_CODES,
 			"subresource": subresource

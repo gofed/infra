@@ -7,7 +7,6 @@ from gofed_lib.types import ExtractionError
 import logging
 
 CONFIG_SOURCE_CODE_DIRECTORY = "resource"
-DATA_PROJECT = "project"
 DATA_COMMIT = "commit"
 DATA_IPPREFIX = "ipprefix"
 
@@ -24,8 +23,8 @@ class GoSymbolsExtractor(MetaProcessor):
 		self.skip_errors = True
 
 		"""set implicit output"""
-		# project
-		self.project = ""
+		# repository
+		self.repository = ""
 		# commit
 		self.commit = ""
 		# ipprefix
@@ -47,16 +46,15 @@ class GoSymbolsExtractor(MetaProcessor):
 
 	def setData(self, data):
 		self.data = data
-
 		if not self._validateInput(data):
 			return False
 
 		# set directory with source codes to parse
 		self.directory = data[CONFIG_SOURCE_CODE_DIRECTORY]
 
-		# optional, project, commit, ipprefix
-		if DATA_PROJECT in data:
-			self.project = data[DATA_PROJECT]
+		# optional, repository, commit, ipprefix
+		if "repository" in data:
+			self.repository = data["repository"]
 
 		if DATA_COMMIT in data:
 			self.commit = data[DATA_COMMIT]
@@ -97,9 +95,9 @@ class GoSymbolsExtractor(MetaProcessor):
 		# set artefact
 		artefact["artefact"] = ARTEFACT_GOLANG_PROJECT_PACKAGES
 
-		# project credentials
-		if self.project != "":
-			artefact["project"] = self.project
+		# repository credentials
+		if self.repository != "":
+			artefact["repository"] = self.repository
 
 		if self.commit != "":
 			artefact["commit"] = self.commit
@@ -117,8 +115,8 @@ class GoSymbolsExtractor(MetaProcessor):
 		# set artefact
 		data["artefact"] = ARTEFACT_GOLANG_PROJECT_EXPORTED_API
 
-		# project credentials
-		data["project"] = self.project
+		# repository credentials
+		data["repository"] = self.repository
 		data["commit"] = self.commit
 
 		data["packages"] = self._exported_api
