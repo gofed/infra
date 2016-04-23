@@ -56,6 +56,6 @@ if __name__ == "__main__":
 	#
 
 	checker = DistributionSnapshotChecker(koji_client, pkgdb_client)
-	checker.check(distributions, custom_packages, full_check=False)
+	checker.check(distributions, custom_packages, full_check=True)
 
 
