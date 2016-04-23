@@ -1,9 +1,9 @@
 from infra.system.core.meta.metaprocessor import MetaProcessor
 from infra.system.artefacts.artefacts import ARTEFACT_GOLANG_PROJECT_CONTENT_METADATA
-from gofed_lib.contentmetadataextractor import ContentMetadataExtractor
-from infra.system.helpers.utils import getScriptDir
+from gofed_lib.go.contentmetadataextractor import ContentMetadataExtractor
+from gofed_lib.utils import getScriptDir
 
-class GoProjectContentMetadaExtractor(MetaProcessor):
+class GoProjectContentMetadataExtractor(MetaProcessor):
 
 	def __init__(self, input_schema = "%s/input_schema.json" % getScriptDir(__file__)):
 		MetaProcessor.__init__(
@@ -15,6 +15,8 @@ class GoProjectContentMetadaExtractor(MetaProcessor):
 		self.resource = ""
 		self.project = ""
 		self.commit = ""
+
+		self._metadata = {}
 
 	def setData(self, data):
 
@@ -34,17 +36,17 @@ class GoProjectContentMetadaExtractor(MetaProcessor):
 
 	def execute(self):
 		self.contentmetadataextractor.extract()
+		data = self.contentmetadataextractor.projectContentMetadata()
+		self._metadata = data["metadata"]
 		return True
 
 	def getData(self):
-		data = self.contentmetadataextractor.getProjectContentMetadata()
+		return self._generateGolangProjectContentMetadataArtefact(self._metadata)
 
-		return self._generateGolangProjectContentMetadataArtefact(data)
-
-	def _generateGolangProjectContentMetadataArtefact(self, data):
+	def _generateGolangProjectContentMetadataArtefact(self, metadata):
 		return {
 			"artefact": ARTEFACT_GOLANG_PROJECT_CONTENT_METADATA,
 			"project": self.project,
 			"commit": self.commit,
-			"metadata": data["metadata"]
+			"metadata": metadata
 		}

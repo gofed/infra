@@ -1,6 +1,6 @@
 {
 "id": "goprojectcontentmetadataextractor",
-"class": "GoProjectContentMetadaExtractor",
+"class": "GoProjectContentMetadataExtractor",
 "file": "extractor.py",
 "version": "1.0-alpha1"
 }
