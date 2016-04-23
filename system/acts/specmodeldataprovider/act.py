@@ -6,7 +6,7 @@ from infra.system.artefacts.artefacts import ARTEFACT_GOLANG_PROJECT_PACKAGES, A
 from infra.system.core.functions.types import FunctionNotFoundError, FunctionFailedError
 from infra.system.helpers.schema_validator import SchemaValidator
 from infra.system.helpers.utils import getScriptDir
-from gofed_lib.data2specmodeldata import Data2SpecModelData
+from gofed_lib.go.data2specmodeldata import Data2SpecModelData
 
 import json
 
@@ -59,10 +59,10 @@ class SpecModelDataProviderAct(MetaAct):
 
 	def getData(self):
 		"""Validation and data post-processing"""
-		return [
-			self.golang_project_packages,
-			self.golang_project_content_metadata
-		]
+		return {
+			ARTEFACT_GOLANG_PROJECT_PACKAGES: self.golang_project_packages,
+			ARTEFACT_GOLANG_PROJECT_CONTENT_METADATA: self.golang_project_content_metadata
+		}
 
 	def _readPackagesData(self, project, commit):
 		return self.ff.bake(self.read_storage_plugin).call({
