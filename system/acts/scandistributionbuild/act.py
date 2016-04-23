@@ -1,7 +1,7 @@
 from infra.system.core.meta.metaact import MetaAct
 from infra.system.resources.specifier import ResourceSpecifier
 from infra.system.resources import types
-from infra.system.helpers.utils import getScriptDir
+from gofed_lib.utils import getScriptDir
 from infra.system.artefacts.artefacts import (
 	ARTEFACT_GOLANG_PROJECT_INFO_FEDORA,
 	ARTEFACT_GOLANG_IPPREFIX_TO_PACKAGE_NAME,
@@ -9,7 +9,7 @@ from infra.system.artefacts.artefacts import (
 	ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_EXPORTED_API,
 	ARTEFACT_GOLANG_IPPREFIX_TO_RPM
 )
-from gofed_lib.helpers import Build, Rpm
+from gofed_lib.distribution.helpers import Build, Rpm
 import logging
 
 class ScanDistributionBuildAct(MetaAct):
@@ -20,9 +20,9 @@ class ScanDistributionBuildAct(MetaAct):
 			"%s/input_schema.json" % getScriptDir(__file__)
 		)
 
-		self.exported_api = {}
-		self.packages = {}
-		self.mappings = {}
+		self._exported_api = {}
+		self._packages = {}
+		self._mappings = {}
 
 	def setData(self, data):
 		"""Validation and data pre-processing"""
@@ -39,9 +39,9 @@ class ScanDistributionBuildAct(MetaAct):
 	def getData(self):
 		"""Validation and data post-processing"""
 		return {
-			"exported_api": self.exported_api,
-			"packages": self.packages,
-			"mappings": self.mappings
+			ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_EXPORTED_API: self._exported_api,
+			ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_PACKAGES: self._packages,
+			ARTEFACT_GOLANG_IPPREFIX_TO_RPM: self._mappings
 		}
 
 	def _getIpprefix2RpmArtefact(self, build, product, info_artefact, packages_artefacts):
@@ -84,8 +84,8 @@ class ScanDistributionBuildAct(MetaAct):
 		# to get artefact from a storage. Without the project I can not
 		# get artefact from a storage.
 
-		self.exported_api = {}
-		self.packages = {}
+		self._exported_api = {}
+		self._packages = {}
 
 		missing_rpms = []
 		for rpm in self.rpms:
@@ -108,7 +108,7 @@ class ScanDistributionBuildAct(MetaAct):
 				continue
 
 			try:
-				self.packages[rpm_name] = self.ff.bake(self.read_storage_plugin).call(data)
+				self._packages[rpm_name] = self.ff.bake(self.read_storage_plugin).call(data)
 			except KeyError as e:
 				logging.error(e)
 				missing_rpms.append(rpm)
@@ -116,7 +116,7 @@ class ScanDistributionBuildAct(MetaAct):
 
 			data["artefact"] = ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_EXPORTED_API
 			try:
-				self.exported_api[rpm_name] = self.ff.bake(self.read_storage_plugin).call(data)
+				self._exported_api[rpm_name] = self.ff.bake(self.read_storage_plugin).call(data)
 			except KeyError as e:
 				logging.error(e)
 				missing_rpms.append(rpm)
@@ -176,15 +176,15 @@ class ScanDistributionBuildAct(MetaAct):
 			}
 
 			data = self.ff.bake("distributiongosymbolsextractor").call(data)
-			self.packages[rpm["name"]] = self._getArtefactFromData(ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_PACKAGES, data)
-			self.exported_api[rpm["name"]] = self._getArtefactFromData(ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_EXPORTED_API, data)
+			self._packages[rpm["name"]] = self._getArtefactFromData(ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_PACKAGES, data)
+			self._exported_api[rpm["name"]] = self._getArtefactFromData(ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_EXPORTED_API, data)
 
 			self._storeData(data)
 
-		mapping_artefacts = self._getIpprefix2RpmArtefact(self.build, self.product, info_artefact, self.packages)
+		mapping_artefacts = self._getIpprefix2RpmArtefact(self.build, self.product, info_artefact, self._packages)
 
 		for artefact in mapping_artefacts:
-			self.mappings[artefact["ipprefix"]] = artefact
+			self._mappings[artefact["ipprefix"]] = artefact
 
 		# Everytime there is at least one rpm missing (or srpm), new mapping artefacts can get (re)generated
 		self._storeData(mapping_artefacts)
