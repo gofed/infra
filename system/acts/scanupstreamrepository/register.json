@@ -1,6 +1,11 @@
-{
+[{
 "id": "scan-upstream-repository",
 "class": "ScanUpstreamRepositoryAct",
 "file": "act.py",
 "version": "1.0-alpha1"
-}
+},{
+"id": "fake-scan-upstream-repository",
+"class": "FakeScanUpstreamRepositoryAct",
+"file": "fakeact.py",
+"version": "1.0-alpha1"
+}]

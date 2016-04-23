@@ -1,6 +1,11 @@
-{
+[{
 "id": "go-exported-api-diff",
-"class": "GoExportedApiDiff",
+"class": "GoExportedApiDiffAct",
 "file": "act.py",
 "version": "1.0-alpha1"
-}
+},{
+"id": "fake-go-exported-api-diff",
+"class": "FakeGoExportedApiDiffAct",
+"file": "fakeact.py",
+"version": "1.0-alpha1"
+}]

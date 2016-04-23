@@ -1,6 +1,11 @@
-{
+[{
 "id": "scan-distribution-package",
 "class": "ScanDistributionPackageAct",
 "file": "act.py",
 "version": "1.0-alpha1"
-}
+},{
+"id": "fake-scan-distribution-package",
+"class": "FakeScanDistributionPackageAct",
+"file": "fakeact.py",
+"version": "1.0-alpha1"
+}]

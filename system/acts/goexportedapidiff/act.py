@@ -18,7 +18,7 @@ class GoExportedApiDiffAct(MetaAct):
 		self.reference = {}
 		self.compared_with = {}
 
-		self.api_diff = {}
+		self._api_diff = {}
 
 	def _setResource(self, data):
 		# upstream source code
@@ -64,7 +64,7 @@ class GoExportedApiDiffAct(MetaAct):
 	def getData(self):
 		"""Validation and data post-processing"""
 		return {
-			ARTEFACT_GOLANG_PROJECTS_API_DIFF: self.api_diff
+			ARTEFACT_GOLANG_PROJECTS_API_DIFF: self._api_diff
 		}
 
 	def _getExportedApiArtefact(self, data):
@@ -100,7 +100,6 @@ class GoExportedApiDiffAct(MetaAct):
 			self.ff.bake("gosymbolsextractor").call(data)
 		)
 
-
 	def execute(self):
 		"""Implementation of concrete data processor"""
 		reference_artefact = self._getExportedApiArtefact(self.reference)
@@ -116,6 +115,6 @@ class GoExportedApiDiffAct(MetaAct):
 			"exported_api_2": reference_artefact
 		}
 
-		self.api_diff = self.ff.bake("goapidiff").call(data)
+		self._api_diff = self.ff.bake("goapidiff").call(data)
 
 		return True

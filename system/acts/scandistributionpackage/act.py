@@ -29,8 +29,8 @@ class ScanDistributionPackageAct(MetaAct):
 			"%s/input_schema.json" % getScriptDir(__file__)
 		)
 
-		self.itemset_info = {}
-		self.items = {}
+		self._itemset_info = {}
+		self._items = {}
 
 		self.product = ""
 		self.distribution = ""
@@ -68,8 +68,8 @@ class ScanDistributionPackageAct(MetaAct):
 	def getData(self):
 		"""Validation and data post-processing"""
 		return {
-			ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_PACKAGE_BUILDS: self.itemset_info,
-			ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_BUILD: self.items
+			ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_PACKAGE_BUILDS: self._itemset_info,
+			ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_BUILD: self._items
 		}
 
 	def _extractItemSetInfo(self):
@@ -102,7 +102,7 @@ class ScanDistributionPackageAct(MetaAct):
 		not_stored_items = []
 		for item in items:
 			# even if a commit does not get stored, index it
-			self.items[item["name"]] = item
+			self._items[item["name"]] = item
 
 			if not self.store_artefacts:
 				continue
@@ -228,8 +228,8 @@ class ScanDistributionPackageAct(MetaAct):
 	def execute(self):
 		"""Impementation of concrete data processor"""
 
-		self.itemset_info = {}
-		self.items = {}
+		self._itemset_info = {}
+		self._items = {}
 
 		# check storage
 		# read the current list of builds stored in storage
@@ -291,8 +291,8 @@ class ScanDistributionPackageAct(MetaAct):
 				info_found, itemset_info = self.ff.bake(self.read_storage_plugin).call(data)
 				if info_found:
 					# retrieve commits (if any of them not found, continue)
-					self.items = self._retrieveItemsFromCache(cache, itemset_info, start, end)
-					self.itemset_info = itemset_info
+					self._items = self._retrieveItemsFromCache(cache, itemset_info, start, end)
+					self._itemset_info = itemset_info
 
 					return True
 
@@ -310,7 +310,7 @@ class ScanDistributionPackageAct(MetaAct):
 		extracted_itemset_cache = ItemSetCache().addItems(stored_items, not_stored_items)
 
 		# return unchanged repository that was extracted
-		self.itemset_info = extracted_itemset_info
+		self._itemset_info = extracted_itemset_info
 		# update the coverage intervals with the list of stored items
 		extracted_itemset_info["coverage"] = extracted_itemset_cache.intervals()
 		# TODO(jchaloup): check for empty list of commits => we end here
