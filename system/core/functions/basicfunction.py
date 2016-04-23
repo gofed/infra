@@ -19,6 +19,10 @@ class BasicFunction:
 		"""
 		self.obj = obj
 
+		# TODO(jchaloup): get client from client builder
+		# TODO(jchaloup): move the working directory to config file
+		self._resource_client = ResourceClient(ProviderBuilder(), "/var/lib/gofed/resource_client")
+
 	def call(self, data):
 		"""Forward data to correct methods of obj instance
 
@@ -27,14 +31,12 @@ class BasicFunction:
 		m_data = copy.deepcopy(data)
 		# retrieve resource from resource client
 		if RESOURCE_FIELD in data:
-			# TODO(jchaloup): get client from client builder
-			client = ResourceClient(ProviderBuilder(), "/var/lib/gofed/resource_client")
 			try:
-				client.retrieve(data[RESOURCE_FIELD])
+				self._resource_client.retrieve(data[RESOURCE_FIELD])
 			except ValueError as e:
 				raise ResourceNotFoundError("Unable to retrieve resource '%s': %s" % (data[RESOURCE_FIELD], e))
 
-			m_data[RESOURCE_FIELD] = client.getSubresource()
+			m_data[RESOURCE_FIELD] = self._resource_client.subresource()
 
 		if not self.obj.setData(m_data):
 			raise FunctionFailedError("Unable to set data")
