@@ -13,11 +13,11 @@ class ArtefactDriver(MetaArtefactDriver):
 	def _generateKey(self, data):
 		generator = KeyGeneratorFactory().build(self.artefact)
 		if generator == None:
-			raise ValueError("Unable to store %s artefact: key generator not found" % self.artefact)
+			raise KeyError("Unable to process %s artefact: key generator not found" % self.artefact)
 
 		key = generator.generate(data)
 		if key == []:
-			raise ValueError("Unable to store %s artefact: key not generated" % self.artefact)
+			raise KeyError("Unable to process %s artefact: key not generated" % self.artefact)
 
 		return ":".join(key)
 

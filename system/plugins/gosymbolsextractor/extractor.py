@@ -12,28 +12,6 @@ DATA_COMMIT = "commit"
 DATA_IPPREFIX = "ipprefix"
 
 class GoSymbolsExtractor(MetaProcessor):
-	"""
-	Input:
-	 - directory to parse
-	 - directories to skip
-	Input(json):
-	 {
-	 "source_code_directory": "...",
-	 "skipped_directories": "...,...,..."
-	 }
-	Output:
-	 - exported API
-	 - imported packages
-	 - occurence of imported packages
-	 - test directories
-	 - main packages
-	 - is Godeps directory present (an others)?
-	Configuration:
-	 - verbose mode
-	 - log directory
-	 To make the class config indepenent, all flags
-	 are passed via class methods.
-	"""
 
 	def __init__(self, input_schema = "%s/input_schema.json" % getScriptDir(__file__)):
 		MetaProcessor.__init__(
