@@ -13,15 +13,16 @@ class ResourceHandler(object):
 		self.provider = resource_provider
 		self.working_directory = working_directory
 
-	def handleUpstreamSourceCode(self, project, commit):
-		provider = self.provider.buildGithubSourceCodeProvider()
-		# TODO(jchaloup): catch exceptions from provide(...)
-		resource_location =  provider.provide(project, commit)
-		# if the provider runs locally, provider is responsible for deleting resource_location
-		# if the provider runs remotelly, client is responsible for deleting resource_location
-		# resource_location is expected as a tarball
-		# resource_location is read only, don't delete it!!!
-		# extract the tarball
+	def mkdtemp(self):
+		return tempfile.mkdtemp()
+
+	def move(self, src, dest):
+		move(src, dest)
+
+	def uuid(self):
+		return uuid.uuid4().hex
+
+	def extractTarball(self, resource_location):
 		# TODO(jchaloup): catch exceptions for tarfile
 		tar = tarfile.open(resource_location)
 		dirpath = tempfile.mkdtemp()
@@ -32,15 +33,40 @@ class ResourceHandler(object):
 			break
 		tar.close()
 
+		return os.path.join(dirpath, rootdir)
+
+	def extractRpm(self, resource_location):
+		# TODO(jchaloup): use python module (e.g. github.com/srossross/rpmfile)
+		dirpath = self.mkdtemp()
+		cwd = os.getcwd()
+		os.chdir(dirpath)
+		runCommand("rpm2cpio %s | cpio -idmv" % resource_location)
+		os.chdir(cwd)
+
+		return dirpath
+
+	def handleUpstreamSourceCode(self, project, commit):
+		provider = self.provider.buildGithubSourceCodeProvider()
+		# TODO(jchaloup): catch exceptions from provide(...)
+		resource_location =  provider.provide(project, commit)
+		# if the provider runs locally, provider is responsible for deleting resource_location
+		# if the provider runs remotelly, client is responsible for deleting resource_location
+		# resource_location is expected as a tarball
+		# resource_location is read only, don't delete it!!!
+		# extract the tarball
+		dest = self.extractTarball(resource_location)
+		dirpath = os.path.dirname(dest)
+		rootdir = os.path.basename(dest)
+
 		# move the temp directory under working directory
 		resource_dest = "%s/%s_%s%s" % (
 			self.working_directory,
 			self.__class__.__name__.lower(),
-			uuid.uuid4().hex,
-			uuid.uuid4().hex
+			self.uuid(),
+			self.uuid()
 		)
 		# TODO(jchaloup): catch exception and raise better one with more info
-		move(dirpath, resource_dest)
+		self.move(dirpath, resource_dest)
 		return "%s/%s" % (resource_dest, rootdir)
 
 	def handleRpm(self, product, distribution, build, rpm, subresource):
@@ -49,22 +75,17 @@ class ResourceHandler(object):
 			# product, distribution, build, rpm
 			resource_location =  provider.provide(product, distribution, build, rpm)
 
-			# TODO(jchaloup): use python module (e.g. github.com/srossross/rpmfile)
-			dirpath = tempfile.mkdtemp()
-			cwd = os.getcwd()
-			os.chdir(dirpath)
-			runCommand("rpm2cpio %s | cpio -idmv" % resource_location)
-			os.chdir(cwd)
+			dirpath = self.extractRpm(resource_location)
 
 			# move the temp directory under working directory
 			resource_dest = "%s/%s_%s%s" % (
 				self.working_directory,
 				self.__class__.__name__.lower(),
-				uuid.uuid4().hex,
-				uuid.uuid4().hex
+				self.uuid(),
+				self.uuid()
 			)
 			# TODO(jchaloup): catch exception and raise better one with more info
-			move(dirpath, resource_dest)
+			self.move(dirpath, resource_dest)
 
 			if subresource == SUBRESOURCE_SPECFILE:
 				return "%s/%s.spec" % (resource_dest, Build(build).name())
@@ -88,25 +109,19 @@ class ResourceHandler(object):
 		# product, distribution, build, rpm
 		resource_location =  provider.provide(repository)
 
-		# TODO(jchaloup): catch exceptions for tarfile
-		tar = tarfile.open(resource_location)
-		dirpath = tempfile.mkdtemp()
-		tar.extractall(dirpath)
-		rootdir = ""
-		for member in tar.getmembers():
-			rootdir = member.name.split("/")[0]
-			break
-		tar.close()
+		dest = self.extractTarball(resource_location)
+		dirpath = os.path.dirname(dest)
+		rootdir = os.path.basename(dest)
 
 		# move the temp directory under working directory
 		resource_dest = "%s/%s_%s%s" % (
 			self.working_directory,
 			self.__class__.__name__.lower(),
-			uuid.uuid4().hex,
-			uuid.uuid4().hex
+			self.uuid(),
+			self.uuid()
 		)
 		# TODO(jchaloup): catch exception and raise better one with more info
-		move(dirpath, resource_dest)
+		self.move(dirpath, resource_dest)
 
 		# TODO(jchaloup): call git pull/ hg pull on the repository
 

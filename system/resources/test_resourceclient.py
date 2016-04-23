@@ -38,6 +38,13 @@ class ResourceClientTest(unittest.TestCase):
 			RESOURCE_REPOSITORY: "upstream_repository_schema.json"
 		}
 
+		expected = {
+			RESOURCE_RPM: "/fakeresourcehandler_ac811547d12c4b95b51633a24aea1950ac811547d12c4b95b51633a24aea1950",
+			RESOURCE_USER_DIRECTORY: "fake/sub/resource/directory",
+			RESOURCE_UPSTREAM_SOURCE_CODES: "/fakeresourcehandler_ac811547d12c4b95b51633a24aea1950ac811547d12c4b95b51633a24aea1950/rootdir",
+			RESOURCE_REPOSITORY: "/fakeresourcehandler_ac811547d12c4b95b51633a24aea1950ac811547d12c4b95b51633a24aea1950/rootdir"
+		}
+
 		curr_dir = getScriptDir(__file__)
 		validator = SchemaValidator()
 
@@ -47,8 +54,5 @@ class ResourceClientTest(unittest.TestCase):
 			self.assertTrue(validator.validateFromFile(schema, s))
 
 			# retrieve subresource location
-			self.assertEqual(
-				c.retrieve(s).subresource(),
-				"fake/sub/resource/directory"
-			)
+			self.assertEqual(c.retrieve(s).subresource(), expected[s["resource"]])
 

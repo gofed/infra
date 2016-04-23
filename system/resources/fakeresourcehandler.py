@@ -1,17 +1,27 @@
 from .client import ResourceHandler
+import os
+from gofed_resources.proposal.fake.providerbuilder import FakeProviderBuilder
 
 class FakeResourceHandler(ResourceHandler):
 
 	def __init__(self, resource_provider, working_directory):
-		self.provider = resource_provider
-		self.working_directory = working_directory
+		ResourceHandler.__init__(self, FakeProviderBuilder(), working_directory)
 
-	def handleUpstreamSourceCode(self, project, commit):
-		return "fake/sub/resource/directory"
+	def mkdtemp(self):
+		return "tempfile/mkdtemp"
 
-	def handleRpm(self, product, distribution, build, rpm, subresource):
-		return "fake/sub/resource/directory"
+	def move(self, src, dest):
+		pass
 
-	def handleRepository(self, repository):
-		return "fake/sub/resource/directory"
+	def uuid(self):
+		return "ac811547d12c4b95b51633a24aea1950"
+
+	def extractTarball(self, tarball_location):
+		dirpath = self.mkdtemp()
+		rootdir = "rootdir"
+		return os.path.join(dirpath, rootdir)
+
+	def extractRpm(self, resource_location):
+		dirpath = self.mkdtemp()
+		return dirpath
 
