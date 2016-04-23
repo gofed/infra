@@ -110,7 +110,6 @@ class ScanDistributionBuildAct(MetaAct):
 			try:
 				self._packages[rpm_name] = self.ff.bake(self.read_storage_plugin).call(data)
 			except KeyError as e:
-				logging.error(e)
 				missing_rpms.append(rpm)
 				continue
 
@@ -118,7 +117,6 @@ class ScanDistributionBuildAct(MetaAct):
 			try:
 				self._exported_api[rpm_name] = self.ff.bake(self.read_storage_plugin).call(data)
 			except KeyError as e:
-				logging.error(e)
 				missing_rpms.append(rpm)
 				continue
 

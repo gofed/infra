@@ -2,12 +2,12 @@ from infra.system.core.meta.metaact import MetaAct
 from infra.system.resources.specifier import ResourceSpecifier
 from infra.system.resources import types
 from infra.system.helpers.utils import getScriptDir
-from infra.system.artefacts.artefacts import ARTEFACT_GOLANG_PROJECT_EXPORTED_API
+from infra.system.artefacts.artefacts import ARTEFACT_GOLANG_PROJECT_EXPORTED_API, ARTEFACT_GOLANG_PROJECTS_API_DIFF
 
 INPUT_TYPE_UPSTREAM_SOURCE_CODE = "upstream_source_code"
 INPUT_TYPE_USER_DIRECTORY = "user_directory"
 
-class GoExportedApiDiff(MetaAct):
+class GoExportedApiDiffAct(MetaAct):
 
 	def __init__(self):
 		MetaAct.__init__(
@@ -63,7 +63,9 @@ class GoExportedApiDiff(MetaAct):
 
 	def getData(self):
 		"""Validation and data post-processing"""
-		return self.api_diff
+		return {
+			ARTEFACT_GOLANG_PROJECTS_API_DIFF: self.api_diff
+		}
 
 	def _getExportedApiArtefact(self, data):
 		# if the input is upstream source code, check the storage

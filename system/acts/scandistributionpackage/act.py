@@ -68,8 +68,8 @@ class ScanDistributionPackageAct(MetaAct):
 	def getData(self):
 		"""Validation and data post-processing"""
 		return {
-			"package_builds": self.itemset_info,
-			"builds": self.items
+			ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_PACKAGE_BUILDS: self.itemset_info,
+			ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_BUILD: self.items
 		}
 
 	def _extractItemSetInfo(self):

@@ -1,23 +1,22 @@
 import unittest
 from infra.system.core.factory.fakefunctionfactory import FakeFunctionFactory
-from .act import GoCodeInspectionAct
+from .act import ArtefactWriterAct
 from infra.system.artefacts.artefacts import ARTEFACT_GOLANG_PROJECT_PACKAGES
 
-class GoCodeInspectionActTest(unittest.TestCase):
+class ArtefactWriterActTest(unittest.TestCase):
 
 	def test(self):
 
 		data = {
-			"type": "upstream_source_code",
-			"project": "github.com/bradfitz/http2",
-			"commit": "f8202bc903bda493ebba4aa54922d78430c2c42f",
-			"ipprefix": "github.com/bradfitz/http1"
+			"artefact": "golang-project-exported-api",
+			"project": "github.com/coreos/etcd",
+			"commit": "b4bddf685b26b4aa70e939445044bdeac822d042"
 		}
 
-		a = GoCodeInspectionAct()
+		a = ArtefactWriterAct()
 		a.setData(data)
 		# Don't execute the act, just return empty data
-		self.assertEqual(a.getData(), {ARTEFACT_GOLANG_PROJECT_PACKAGES: {}})
+		self.assertEqual(a.getData(), {})
 
 		# Execute the act with fake plugins
 		a.ff = FakeFunctionFactory()
