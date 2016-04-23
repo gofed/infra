@@ -15,7 +15,7 @@ class GoCodeInspectionAct(MetaAct):
 			"%s/input_schema.json" % getScriptDir(__file__)
 		)
 
-		self.packages = {}
+		self._golang_project_packages = {}
 
 	def setData(self, data):
 		"""Validation and data pre-processing"""
@@ -47,11 +47,13 @@ class GoCodeInspectionAct(MetaAct):
 
 	def getData(self):
 		"""Validation and data post-processing"""
-		return self.golang_project_packages
+		return {
+			ARTEFACT_GOLANG_PROJECT_PACKAGES: self._golang_project_packages
+		}
 
 	def _extractData(self, store = False):
 		artefacts = self.ff.bake("gosymbolsextractor").call(self.data)
-		self.golang_project_packages = self._getArtefactFromData(
+		self._golang_project_packages = self._getArtefactFromData(
 			ARTEFACT_GOLANG_PROJECT_PACKAGES,
 			artefacts
 		)
@@ -80,7 +82,7 @@ class GoCodeInspectionAct(MetaAct):
 		"""Impementation of concrete data processor"""
 		if self.retrieve_artefacts and self.data["type"] == INPUT_TYPE_UPSTREAM_SOURCE_CODE:
 			try:
-				self.golang_project_packages = self._readData(
+				self._golang_project_packages = self._readData(
 					self.data["project"],
 					self.data["commit"]
 				)
@@ -89,7 +91,7 @@ class GoCodeInspectionAct(MetaAct):
 		else:
 				self._extractData(False)
 
-		if self.golang_project_packages == {}:
+		if self._golang_project_packages == {}:
 			return False
 
 		return True
