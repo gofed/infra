@@ -16,24 +16,19 @@ class ArtefactDriver(object):
 	def _generateKey(self, data):
 		generator = KeyGeneratorFactory().build(self.artefact)
 		if generator == None:
-			logging.error("Unable to store %s artefact: key generator not found" % self.artefact)
-			return []
+			raise KeyError("Unable to process %s artefact: key generator not found" % self.artefact)
 
 		key = generator.generate(data)
 		if key == []:
-			logging.error("Unable to store %s artefact: key not generated" % self.artefact)
-			return []
+			raise KeyError("Unable to process %s artefact: key not generated" % self.artefact)
 
-		return key
+		return reduce(lambda a,b: os.path.join(a, b), key)
 
 	def retrieve(self, key_data):
 		"""retrieve artefact"""
 		key = self._generateKey(key_data)
-		if key == []:
-			raise KeyError("Unable to generate key")
 
 		# file exists?
-		key = reduce(lambda a,b: os.path.join(a, b), key)
 		data_path = os.path.join(self.working_directory, key)
 		data_file = os.path.join(data_path, "data.json")
 
@@ -50,10 +45,7 @@ class ArtefactDriver(object):
 	def store(self, data):
 		"""store artefact"""
 		key = self._generateKey(data)
-		if key == []:
-			raise ValueError("Unable to generate key for '%s' artefact" % data["artefact"])
 
-		key = reduce(lambda a,b: os.path.join(a, b), key)
 		data_path = os.path.join(self.working_directory, key)
 
 		# mkdir -p data_path
