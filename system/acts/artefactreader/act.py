@@ -17,7 +17,7 @@ class ArtefactReaderAct(MetaAct):
 		)
 
 		# TODO(jchaloup): extend the input schema to support query for multiple artefacts
-		self.artefact = {}
+		self._artefact = {}
 
 	def setData(self, data):
 		"""Validation and data pre-processing"""
@@ -42,7 +42,7 @@ class ArtefactReaderAct(MetaAct):
 
 	def getData(self):
 		"""Validation and data post-processing"""
-		return self.artefact
+		return self._artefact
 
 	def execute(self):
 		"""Impementation of concrete data processor"""
@@ -51,7 +51,7 @@ class ArtefactReaderAct(MetaAct):
 
 		# TODO(jchaloup): raise exception when artefact not found
 		try:
-			self.artefact = self.ff.bake(self.read_storage_plugin).call(self.data)
+			self._artefact = self.ff.bake(self.read_storage_plugin).call(self.data)
 		except KeyError:
 			return False
 

@@ -1,6 +1,11 @@
-{
+[{
 "id": "artefact-reader",
 "class": "ArtefactReaderAct",
 "file": "act.py",
 "version": "1.0-alpha1"
-}
+},{
+"id": "fake-artefact-reader",
+"class": "FakeArtefactReaderAct",
+"file": "fakeact.py",
+"version": "1.0-alpha1"
+}]

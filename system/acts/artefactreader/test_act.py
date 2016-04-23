@@ -1,6 +1,7 @@
 import unittest
 from infra.system.core.factory.fakefunctionfactory import FakeFunctionFactory
 from .act import ArtefactReaderAct
+from .fakeact import FakeArtefactReaderAct
 from infra.system.artefacts.artefacts import ARTEFACT_GOLANG_PROJECT_PACKAGES
 
 class ArtefactReaderActTest(unittest.TestCase):
@@ -8,9 +9,11 @@ class ArtefactReaderActTest(unittest.TestCase):
 	def test(self):
 
 		data = {
-			"artefact": "golang-project-exported-api",
-			"project": "github.com/coreos/etcd",
-			"commit": "b4bddf685b26b4aa70e939445044bdeac822d042"
+			"distribution": {
+				"product": "Fedora",
+				"version": "rawhide"
+			},
+			"artefact": "golang-distribution-snapshot"
 		}
 
 		a = ArtefactReaderAct()
@@ -23,3 +26,7 @@ class ArtefactReaderActTest(unittest.TestCase):
 		a.execute()
 		a.getData()
 
+		fa = FakeArtefactReaderAct()
+		a.setData(data)
+		a.execute()
+		a.getData()
