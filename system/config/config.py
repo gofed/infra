@@ -6,7 +6,6 @@ class Config(object):
 		self.config_file = "/home/jchaloup/Projects/gofed/infra/system/config/infra.conf"
 		self._parse(self.config_file)
 
-
 	def _parse(self, config_file):
 		self.config = ConfigParser.ConfigParser()
 		self.config.read(config_file)

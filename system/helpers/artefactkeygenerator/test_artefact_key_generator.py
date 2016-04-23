@@ -9,7 +9,7 @@ from .keygenerator import KeyGeneratorFactory
 class GolangProjectInfoFedoraTest(unittest.TestCase):
 	def test(self):
 		input = {"artefact": ARTEFACT_GOLANG_PROJECT_INFO_FEDORA, "distribution": "f23", "project": "github.com/coreos/etcd", "commit": "729b530c489a73532843e664ae9c6db5c686d314", "last-updated": "2015-12-12"}
-		expected = "%s:%s:%s" % (ARTEFACT_GOLANG_PROJECT_INFO_FEDORA, input["project"], input["distribution"])
+		expected = [ARTEFACT_GOLANG_PROJECT_INFO_FEDORA, "github-com-coreos-etcd", input["distribution"]]
 
 		generator = KeyGeneratorFactory().build(ARTEFACT_GOLANG_PROJECT_INFO_FEDORA)
 		current = generator.generate(input)
@@ -19,7 +19,7 @@ class GolangProjectInfoFedoraTest(unittest.TestCase):
 class GolangProjectToPackageNameTest(unittest.TestCase):
 	def test(self):
 		input = {"artefact": ARTEFACT_GOLANG_PROJECT_TO_PACKAGE_NAME, "product": "Fedora", "distribution": "f22", "project": "github.com/coreos/etcd", "name": "etcd"}
-		expected = "%s:%s:%s:%s" % (ARTEFACT_GOLANG_PROJECT_TO_PACKAGE_NAME, input["product"], input["distribution"], input["project"])
+		expected = [ARTEFACT_GOLANG_PROJECT_TO_PACKAGE_NAME, input["product"], input["distribution"], "github-com-coreos-etcd"]
 
 		generator = KeyGeneratorFactory().build(ARTEFACT_GOLANG_PROJECT_TO_PACKAGE_NAME)
 		current = generator.generate(input)
@@ -29,7 +29,7 @@ class GolangProjectToPackageNameTest(unittest.TestCase):
 class GolangIPPrefixToPackageNameTest(unittest.TestCase):
 	def test(self):
 		input = {"artefact": ARTEFACT_GOLANG_IPPREFIX_TO_PACKAGE_NAME, "product": "Fedora", "distribution": "f22", "ipprefix": "github.com/coreos/etcd", "name": "etcd"}
-		expected = "%s:%s:%s:%s" % (ARTEFACT_GOLANG_IPPREFIX_TO_PACKAGE_NAME, input["product"], input["distribution"], input["ipprefix"])
+		expected = [ARTEFACT_GOLANG_IPPREFIX_TO_PACKAGE_NAME, input["product"], input["distribution"], "github-com-coreos-etcd"]
 
 		generator = KeyGeneratorFactory().build(ARTEFACT_GOLANG_IPPREFIX_TO_PACKAGE_NAME)
 		current = generator.generate(input)
@@ -39,7 +39,7 @@ class GolangIPPrefixToPackageNameTest(unittest.TestCase):
 class GolangProjectExportedAPITest(unittest.TestCase):
 	def test(self):
 		input = {"artefact": ARTEFACT_GOLANG_PROJECT_EXPORTED_API, "project": "github.com/coreos/etcd", "commit": "729b530c489a73532843e664ae9c6db5c686d314"}
-		expected = "%s:%s:%s" % (ARTEFACT_GOLANG_PROJECT_EXPORTED_API, input["project"], input["commit"])
+		expected = [ARTEFACT_GOLANG_PROJECT_EXPORTED_API, "github-com-coreos-etcd", input["commit"]]
 
 		generator = KeyGeneratorFactory().build(ARTEFACT_GOLANG_PROJECT_EXPORTED_API)
 		current = generator.generate(input)

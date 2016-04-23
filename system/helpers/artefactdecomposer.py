@@ -35,7 +35,7 @@ class ArtefactDecomposer:
 				raise ValueError("Package %s does not start with %s" % (pkg, DISTRO_PREFIX))
 
 			path = pkg[DISTRO_PREFIX_LEN:]
-			key = self.ipparser.parse(path).getPrefix()
+			key = self.ipparser.parse(path).prefix()
 			package["package"] = path
 
 			try:
@@ -62,7 +62,7 @@ class ArtefactDecomposer:
 		}
 
 		if "project" in artefact:
-			new_artefact["project"] = artefact["project"],
+			new_artefact["project"] = artefact["project"]
 
 		return new_artefact
 
@@ -71,6 +71,10 @@ class ArtefactDecomposer:
 		TODO(jchaloup):
 			[  ] - extend spec file with more commit macros for each ipprefix
 		"""
+		# empty data => nothing to decompose
+		if artefact["data"] == {}:
+			return artefact
+
 		# decompose list of packages
 		pkg_classes = {}
 		for package in artefact["data"]["packages"]:
@@ -84,7 +88,7 @@ class ArtefactDecomposer:
 				raise ValueError("Package %s does not start with %s" % (package, DISTRO_PREFIX))
 
 			path = package[DISTRO_PREFIX_LEN:]
-			key = self.ipparser.parse(path).getPrefix()
+			key = self.ipparser.parse(path).prefix()
 
 			try:
 				pkg_classes[key].append(path)
@@ -105,7 +109,7 @@ class ArtefactDecomposer:
 				raise ValueError("Package %s does not start with %s" % (package, DISTRO_PREFIX))
 
 			path = package[DISTRO_PREFIX_LEN:]
-			key = self.ipparser.parse(path).getPrefix()
+			key = self.ipparser.parse(path).prefix()
 			dep["package"] = path
 
 			try:
@@ -127,7 +131,7 @@ class ArtefactDecomposer:
 				raise ValueError("Main %s does not start with %s" % (filename, DISTRO_PREFIX))
 
 			path = filename[DISTRO_PREFIX_LEN:]
-			key = self.ipparser.parse(path).getPrefix()
+			key = self.ipparser.parse(path).prefix()
 
 			main["filename"] = path
 			try:
@@ -149,7 +153,7 @@ class ArtefactDecomposer:
 				raise ValueError("Package %s does not start with %s" % (package, DISTRO_PREFIX))
 
 			path = package[DISTRO_PREFIX_LEN:]
-			key = self.ipparser.parse(path).getPrefix()
+			key = self.ipparser.parse(path).prefix()
 
 			test["test"] = path
 			try:
