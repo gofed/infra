@@ -7,7 +7,7 @@ from infra.system.artefacts.artefacts import (
 	ARTEFACT_GOLANG_IPPREFIX_TO_PACKAGE_NAME
 )
 from infra.system.helpers.artefact_schema_validator import ArtefactSchemaValidator
-from infra.system.helpers.utils import getScriptDir
+from gofed_lib.utils import getScriptDir
 from .SpecParser import SpecParser
 import re
 
@@ -51,24 +51,24 @@ class SpecDataExtractor(MetaProcessor):
 
 		data.append(self._generateGolangProjectInfoFedora())
 		# TODO(jchaloup): move validation to unit-tests
-		validator = ArtefactSchemaValidator(ARTEFACT_GOLANG_PROJECT_INFO_FEDORA)
-		if not validator.validate(data[0]):
-			logging.error("%s is not valid" % ARTEFACT_GOLANG_PROJECT_INFO_FEDORA)
-			return {}
+		#validator = ArtefactSchemaValidator(ARTEFACT_GOLANG_PROJECT_INFO_FEDORA)
+		#if not validator.validate(data[0]):
+		#	logging.error("%s is not valid" % ARTEFACT_GOLANG_PROJECT_INFO_FEDORA)
+		#	return {}
 
 		data.append(self._generateGolangProjectToPackageName())
 		# TODO(jchaloup): move validation to unit-tests
-		validator = ArtefactSchemaValidator(ARTEFACT_GOLANG_PROJECT_TO_PACKAGE_NAME)
-		if not validator.validate(data[1]):
-			logging.error("%s is not valid" % ARTEFACT_GOLANG_PROJECT_TO_PACKAGE_NAME)
-			return {}
+		#validator = ArtefactSchemaValidator(ARTEFACT_GOLANG_PROJECT_TO_PACKAGE_NAME)
+		#if not validator.validate(data[1]):
+		#	logging.error("%s is not valid" % ARTEFACT_GOLANG_PROJECT_TO_PACKAGE_NAME)
+		#	return {}
 
 		data.append(self._generateGolangIPPrefixToPackageName())
 		# TODO(jchaloup): move validation to unit-tests
-		validator = ArtefactSchemaValidator(ARTEFACT_GOLANG_IPPREFIX_TO_PACKAGE_NAME)
-		if not validator.validate(data[2]):
-			logging.error("%s is not valid" % ARTEFACT_GOLANG_IPPREFIX_TO_PACKAGE_NAME)
-			return {}
+		#validator = ArtefactSchemaValidator(ARTEFACT_GOLANG_IPPREFIX_TO_PACKAGE_NAME)
+		#if not validator.validate(data[2]):
+		#	logging.error("%s is not valid" % ARTEFACT_GOLANG_IPPREFIX_TO_PACKAGE_NAME)
+		#	return {}
 
 		return data
 
