@@ -9,6 +9,7 @@ from infra.system.helpers.utils import getScriptDir
 from gofed_lib.go.data2specmodeldata import Data2SpecModelData
 
 import json
+import copy
 
 INPUT_TYPE_UPSTREAM_SOURCE_CODE = "upstream_source_code"
 INPUT_TYPE_USER_DIRECTORY = "user_directory"
@@ -36,7 +37,7 @@ class SpecModelDataProviderAct(MetaAct):
 		if not self._validateInput(data):
 			return False
 
-		self.data = data
+		self.data = copy.deepcopy(data)
 
 		# upstream source code
 		if data["type"] == INPUT_TYPE_UPSTREAM_SOURCE_CODE:

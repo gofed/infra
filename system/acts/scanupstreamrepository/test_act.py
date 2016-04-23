@@ -1,6 +1,7 @@
 import unittest
 from infra.system.core.factory.fakefunctionfactory import FakeFunctionFactory
 from .act import ScanUpstreamRepositoryAct
+from .fakeact import FakeScanUpstreamRepositoryAct
 from infra.system.artefacts.artefacts import (
 	ARTEFACT_GOLANG_PROJECT_REPOSITORY_INFO,
 	ARTEFACT_GOLANG_PROJECT_REPOSITORY_COMMIT
@@ -33,6 +34,11 @@ class ScanUpstreamRepositoryActTest(unittest.TestCase):
 
 		# Execute the act with fake plugins
 		a.ff = FakeFunctionFactory()
+		a.execute()
+		a.getData()
+
+		fa = FakeScanUpstreamRepositoryAct()
+		a.setData(data)
 		a.execute()
 		a.getData()
 

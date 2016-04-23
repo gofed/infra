@@ -1,6 +1,7 @@
 import unittest
 from infra.system.core.factory.fakefunctionfactory import FakeFunctionFactory
 from .act import ScanDistributionBuildAct
+from .fakeact import FakeScanDistributionBuildAct
 from infra.system.artefacts.artefacts import (
 	ARTEFACT_GOLANG_PROJECT_INFO_FEDORA,
 	ARTEFACT_GOLANG_IPPREFIX_TO_PACKAGE_NAME,
@@ -39,6 +40,11 @@ class ScanDistributionBuildActTest(unittest.TestCase):
 
 		# Execute the act with fake plugins
 		a.ff = FakeFunctionFactory()
+		a.execute()
+		a.getData()
+
+		fa = FakeScanDistributionBuildAct()
+		a.setData(data)
 		a.execute()
 		a.getData()
 

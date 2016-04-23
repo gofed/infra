@@ -3,6 +3,7 @@ from infra.system.resources.specifier import ResourceSpecifier
 from infra.system.resources import types
 from infra.system.helpers.utils import getScriptDir
 from infra.system.artefacts.artefacts import ARTEFACT_GOLANG_PROJECT_PACKAGES
+import copy
 
 INPUT_TYPE_UPSTREAM_SOURCE_CODE = "upstream_source_code"
 INPUT_TYPE_USER_DIRECTORY = "user_directory"
@@ -22,7 +23,7 @@ class GoCodeInspectionAct(MetaAct):
 		if not self._validateInput(data):
 			return False
 
-		self.data = data
+		self.data = copy.deepcopy(data)
 
 		# upstream source code
 		if data["type"] == INPUT_TYPE_UPSTREAM_SOURCE_CODE:

@@ -6,6 +6,7 @@ from infra.system.artefacts.artefacts import ARTEFACT_GOLANG_PROJECT_EXPORTED_AP
 
 INPUT_TYPE_UPSTREAM_SOURCE_CODE = "upstream_source_code"
 INPUT_TYPE_USER_DIRECTORY = "user_directory"
+import copy
 
 class GoExportedApiDiffAct(MetaAct):
 
@@ -43,8 +44,8 @@ class GoExportedApiDiffAct(MetaAct):
 		if not self._validateInput(data):
 			return False
 
-		self.reference = data["reference"]
-		self.compared_with = data["compared_with"]
+		self.reference = copy.deepcopy(data["reference"])
+		self.compared_with = copy.deepcopy(data["compared_with"])
 
 		self.reference["resource"] = self._setResource(self.reference)
 		self.compared_with["resource"] = self._setResource(self.compared_with)

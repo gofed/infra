@@ -1,6 +1,7 @@
 import unittest
 from infra.system.core.factory.fakefunctionfactory import FakeFunctionFactory
 from .act import GoExportedApiDiffAct
+from .fakeact import FakeGoExportedApiDiffAct
 from infra.system.artefacts.artefacts import (
 	ARTEFACT_GOLANG_PROJECTS_API_DIFF
 )
@@ -38,3 +39,7 @@ class GoExportedApiDiffActTest(unittest.TestCase):
 		a.execute()
 		a.getData()
 
+		fa = FakeGoExportedApiDiffAct()
+		a.setData(data)
+		a.execute()
+		a.getData()

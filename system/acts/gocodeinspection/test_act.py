@@ -1,6 +1,7 @@
 import unittest
 from infra.system.core.factory.fakefunctionfactory import FakeFunctionFactory
 from .act import GoCodeInspectionAct
+from .fakeact import FakeGoCodeInspectionAct
 from infra.system.artefacts.artefacts import ARTEFACT_GOLANG_PROJECT_PACKAGES
 
 class GoCodeInspectionActTest(unittest.TestCase):
@@ -24,3 +25,7 @@ class GoCodeInspectionActTest(unittest.TestCase):
 		a.execute()
 		a.getData()
 
+		fa = FakeGoCodeInspectionAct()
+		a.setData(data)
+		a.execute()
+		a.getData()
