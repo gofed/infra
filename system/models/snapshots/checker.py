@@ -55,15 +55,18 @@
 # This macro is future feature macro and will implemented when needed.
 #
 
-from gofed_lib.importpathparserbuilder import ImportPathParserBuilder
+from gofed_lib.go.importpath.parserbuilder import ImportPathParserBuilder
+from gofed_lib.providers.providerbuilder import ProviderBuilder
 from infra.system.core.factory.actfactory import ActFactory
 from infra.system.artefacts.artefacts import (
 	ARTEFACT_GOLANG_IPPREFIX_TO_RPM,
-	ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_PACKAGES
+	ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_PACKAGES,
+	ARTEFACT_GOLANG_PROJECT_REPOSITORY_COMMIT
 )
 from infra.system.core.acts.types import ActFailedError
 import logging
 from gofed_lib.utils import RED, GREEN, BLUE, WHITE, ENDC
+
 
 class SnapshotChecker(object):
 
@@ -71,6 +74,8 @@ class SnapshotChecker(object):
 		self.ipparser = ImportPathParserBuilder().buildWithLocalMapping()
 		self.artefactreaderact = ActFactory().bake("artefact-reader")
 		self.commitreaderact = ActFactory().bake("scan-upstream-repository")
+
+		self._project_provider = ProviderBuilder().buildUpstreamWithLocalMapping()
 
 	def _getCommitDate(self, repository, commit):
 		try: 
@@ -82,7 +87,7 @@ class SnapshotChecker(object):
 			logging.error(e)
 			return {}
 
-		return artefact["commits"][commit]
+		return artefact[ARTEFACT_GOLANG_PROJECT_REPOSITORY_COMMIT][commit]
 
 	def _comparePackages(self, package, upstream_commit, distro_commit):
 		if upstream_commit["cdate"] == distro_commit["cdate"]:
@@ -130,7 +135,7 @@ class SnapshotChecker(object):
 				not_recognized.append(package)
 				continue
 
-			ipprefix = self.ipparser.getImportPathPrefix()
+			ipprefix = self.ipparser.prefix()
 			try:
 				ipprefixes[ipprefix].append(package)
 			except KeyError:
@@ -140,7 +145,7 @@ class SnapshotChecker(object):
 			upstream[ipprefix] = packages[package]
 
 			# iprefix -> provider prefix
-			providers[ipprefix] = self.ipparser.getProviderSignature()
+			providers[ipprefix] = self._project_provider.parse(ipprefix).signature()
 
 			# ipprefix -> rpm
 			data = {

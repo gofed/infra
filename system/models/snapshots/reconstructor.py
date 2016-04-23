@@ -1,15 +1,19 @@
 from infra.system.core.factory.actfactory import ActFactory
-from infra.system.artefacts.artefacts import ARTEFACT_GOLANG_PROJECT_PACKAGES
-from gofed_lib.importpathsdecomposerbuilder import ImportPathsDecomposerBuilder
-from gofed_lib.importpathnormalizer import ImportPathNormalizer
-from gofed_lib.importpathparserbuilder import ImportPathParserBuilder
-from gofed_lib.snapshot import Snapshot
+from infra.system.artefacts.artefacts import (
+	ARTEFACT_GOLANG_PROJECT_PACKAGES,
+	ARTEFACT_GOLANG_PROJECT_REPOSITORY_COMMIT
+)
+from gofed_lib.go.importpath.decomposerbuilder import ImportPathsDecomposerBuilder
+from gofed_lib.go.importpath.normalizer import ImportPathNormalizer
+from gofed_lib.go.importpath.parserbuilder import ImportPathParserBuilder
+from gofed_lib.providers.providerbuilder import ProviderBuilder
+from gofed_lib.go.snapshot import Snapshot
 import logging
 import copy
 
 from infra.system.models.graphs.datasets.projectdatasetbuilder import ProjectDatasetBuilder
 from infra.system.models.graphs.datasetdependencygraphbuilder import DatasetDependencyGraphBuilder, LEVEL_GOLANG_PACKAGES
-from gofed_lib.graphutils import GraphUtils
+from gofed_lib.graphs.graphutils import GraphUtils
 
 class ReconstructionError(Exception):
 	pass
@@ -23,6 +27,8 @@ class SnapshotReconstructor(object):
 		# acts
 		self.go_code_inspection_act = ActFactory().bake("go-code-inspection")
 		self.scan_upstream_repository_act = ActFactory().bake("scan-upstream-repository")
+
+		self._project_provider = ProviderBuilder().buildUpstreamWithLocalMapping()
 
 		# snapshot
 		self._snapshot = Snapshot()
@@ -46,7 +52,7 @@ class SnapshotReconstructor(object):
 		}
 		# TODO(jchaloup): catch exception if the commit is not found
 		commit_data = self.scan_upstream_repository_act.call(data)
-		return commit_data["commits"][commit]["cdate"]
+		return commit_data[ARTEFACT_GOLANG_PROJECT_REPOSITORY_COMMIT][commit]["cdate"]
 
 	def _findYoungestCommits(self, commits):
 		# sort commits
@@ -75,18 +81,24 @@ class SnapshotReconstructor(object):
 		# try the last day, week, last month, last year
 		for delta in [1, 7, 30, 365]:
 			data["start_timestamp"] = timestamp - delta*DAY
-			rdata = self.scan_upstream_repository_act.call(data)
-			if rdata["commits"] != {}:
-				return self._findYoungestCommits(rdata["commits"])
+			try:
+				rdata = self.scan_upstream_repository_act.call(data)
+			except KeyError:
+				continue
+
+			if rdata[ARTEFACT_GOLANG_PROJECT_REPOSITORY_COMMIT] == {}:
+				continue
+
+			return self._findYoungestCommits(rdata[ARTEFACT_GOLANG_PROJECT_REPOSITORY_COMMIT])
 
 		# unbound start_timestamp
 		del data["start_timestamp"]
-		rdata = self.scan_upstream_repository_act.call(data)
-		if rdata["commits"] != {}:
-			return self._findYoungestCommits(rdata["commits"])
+		try:
+			rdata = self.scan_upstream_repository_act.call(data)
+		except KeyError:
+			raise KeyError("Commit not found")
 
-		# no commit foud => raise exception
-		raise KeyError("Commit not found")
+		return self._findYoungestCommits(rdata[ARTEFACT_GOLANG_PROJECT_REPOSITORY_COMMIT])
 
 	def _detectNextDependencies(self, dependencies, ipprefix, commit_timestamp):
 		dependencies = list(set(dependencies))
@@ -96,7 +108,7 @@ class SnapshotReconstructor(object):
 
 		decomposer = ImportPathsDecomposerBuilder().buildLocalDecomposer()
 		decomposer.decompose(dependencies)
-		prefix_classes = decomposer.getClasses()
+		prefix_classes = decomposer.classes()
 
 		next_projects = {}
 
@@ -115,7 +127,7 @@ class SnapshotReconstructor(object):
 			try:
 				self.ipparser.parse(prefix)
 				# ipprefix already covered?
-				if self.ipparser.getImportPathPrefix() in self.detected_projects:
+				if self.ipparser.prefix() in self.detected_projects:
 					# ip covered in the prefix class?
 					not_covered = []
 					for ip in prefix_classes[prefix]:
@@ -130,13 +142,17 @@ class SnapshotReconstructor(object):
 					# scan only ips not yet covered
 					prefix_classes[prefix] = not_covered
 
-				provider = self.ipparser.getProviderSignature()
-				provider_prefix = self.ipparser.getProviderPrefix()
+				# iprefix -> provider prefix
+				project_provider = self._project_provider.parse(prefix)
+
+				provider = project_provider.signature()
+				provider_prefix = project_provider.prefix()
 			except ValueError as e:
 				raise ReconstructionError("Prefix provider error: %s" % e)
 
 			try:
 				closest_commit = self._findClosestCommit(provider, commit_timestamp)
+
 			except KeyError as e:
 				raise ReconstructionError("Closest commit to %s timestamp for %s not found" % (commit_timestamp, provider_prefix))
 
@@ -155,13 +171,12 @@ class SnapshotReconstructor(object):
 	def _detectDirectDependencies(self, repository, commit, ipprefix, commit_timestamp, mains, tests):
 		data = {
 			"type": "upstream_source_code",
-			"project": "github.com/coreos/etcd",
+			"repository": repository,
 			"commit": commit,
-			"ipprefix": ipprefix,
-			"directories_to_skip": []
+			"ipprefix": ipprefix
 		}
 
-		packages_artefact = self.go_code_inspection_act.call(data)
+		packages_artefact = self.go_code_inspection_act.call(data)[ARTEFACT_GOLANG_PROJECT_PACKAGES]
 
 		# collect dependencies
 		direct_dependencies = []
@@ -206,8 +221,9 @@ class SnapshotReconstructor(object):
 		for prefix in self.unscanned_projects:
 			# get dataset
 			dataset = ProjectDatasetBuilder(
-				self.unscanned_projects[prefix]["provider_prefix"],
-				self.unscanned_projects[prefix]["commit"]
+				self.unscanned_projects[prefix]["provider"],
+				self.unscanned_projects[prefix]["commit"],
+				self.unscanned_projects[prefix]["ipprefix"]
 			).build()
 
 			# construct dependency graph from the dataset

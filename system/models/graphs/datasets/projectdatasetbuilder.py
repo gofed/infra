@@ -5,18 +5,18 @@ from infra.system.core.functions.types import FunctionFailedError
 
 class ProjectDatasetBuilder(object):
 
-	def __init__(self, project, commit):
-		self.project = project
+	def __init__(self, repository, commit, ipprefix):
+		self.repository = repository
 		self.commit = commit
+		self.ipprefix = ipprefix
 		self.act = ActFactory().bake("go-code-inspection")
 
 	def build(self):
 		data = {
 			"type": "upstream_source_code",
-			"project": self.project,
+			"repository": self.repository,
 			"commit": self.commit,
-			"ipprefix": self.project,
-			"directories_to_skip": []
+			"ipprefix": self.ipprefix
 		}
 
 		builder = DatasetBuilder()

@@ -1,5 +1,5 @@
-from gofed_lib.graphutils import Graph
-from gofed_lib.graphutils import GraphUtils
+from gofed_lib.graphs.graphutils import Graph
+from gofed_lib.graphs.graphutils import GraphUtils
 
 # nodes = rpms
 LEVEL_RPM = 1

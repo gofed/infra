@@ -1,13 +1,13 @@
-from gofed_lib.graphutils import GraphUtils
+from gofed_lib.graphs.graphutils import GraphUtils
 
 class BasicDependencyAnalysis(object):
 
 	def __init__(self, graph):
 		self._graph = graph
 
-		self._cycles = []
-		self._roots = []
-		self._leaves = []
+		self._cycles = set([])
+		self._roots = set([])
+		self._leaves = set([])
 
 	def _getCyclicDependencies(self, graph):
 		return GraphUtils.getSCCs(graph)
@@ -18,7 +18,7 @@ class BasicDependencyAnalysis(object):
 	def _getLeafNodes(self, graph):
 		return GraphUtils.getLeafNodes(graph)
 
-	def getResults(self):
+	def results(self):
 		return {
 			"cycles": self._cycles,
 			"roots": self._roots,
