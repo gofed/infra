@@ -54,7 +54,7 @@ class DistributionBuildsFetcher(object):
 					"distribution": distribution.json()
 				})
 			except ActFailedError:
-				logger.debug("Distribution snapshot for '%s' not found" % distribution)
+				logger.error("Distribution snapshot for '%s' not found" % distribution)
 				continue
 
 			builds = DistributionSnapshot().read(data).builds()

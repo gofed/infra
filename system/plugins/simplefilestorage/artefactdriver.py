@@ -1,3 +1,6 @@
+import logging
+logger = logging.getLogger("simple_file_storage")
+
 from infra.system.core.meta.metaartefactdriver import MetaArtefactDriver
 from infra.system.artefacts import artefacts
 from infra.system.helpers.artefactkeygenerator.keygenerator import KeyGeneratorFactory
@@ -5,7 +8,6 @@ import os
 import json
 from distutils.dir_util import mkpath
 from distutils.errors import DistutilsFileError
-import logging
 
 class ArtefactDriver(object):
 
@@ -37,7 +39,7 @@ class ArtefactDriver(object):
 			with open(data_file, "r") as f:
 				return json.load(f)
 		except IOError as e:
-			logging.error(e)
+			logger.info("Unable to retrieve %s artefact with '%s' key" % (self.artefact, key))
 			raise KeyError("Unable to retrieve %s artefact with '%s' key" % (self.artefact, key))
 
 		return {}
