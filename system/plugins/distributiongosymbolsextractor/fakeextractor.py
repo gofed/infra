@@ -27,4 +27,7 @@ class FakeDistributionGoSymbolsExtractor(DistributionGoSymbolsExtractor):
 		with open("%s/fakedata/exported_api.json" % getScriptDir(__file__), "r") as f:
 			self._exported_api = json.load(f)
 
+		self._packages = self._generateGolangProjectDistributionPackagesArtefact()
+		self._exported_api = self._generateGolangProjectDistributionExportedAPI()
+
 		return True

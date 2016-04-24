@@ -10,7 +10,6 @@ from infra.system.artefacts.artefacts import (
 from infra.system.helpers.artefactdecomposer import ArtefactDecomposer
 from gofed_lib.go.importpath.parserbuilder import ImportPathParserBuilder
 
-
 class DistributionGoSymbolsExtractor(GoSymbolsExtractor):
 
 	def __init__(self):
@@ -40,23 +39,23 @@ class DistributionGoSymbolsExtractor(GoSymbolsExtractor):
 		return True
 
 	def getData(self):
-		data = []
+		return [
+			self._packages,
+			self._exported_api
+		]
 
-		data.append(self._generateGolangProjectDistributionPackagesArtefact())
 		# TODO(jchaloup): move validation to unit-tests
 		#validator = ArtefactSchemaValidator(ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_PACKAGES)
 		#if not validator.validate(data[0]):
 		#	logging.error("%s is not valid" % ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_PACKAGES)
 		#	return {}
 
-		data.append(self._generateGolangProjectDistributionExportedAPI())
+
 		# TODO(jchaloup): move validation to unit-tests
 		#validator = ArtefactSchemaValidator(ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_EXPORTED_API)
 		#if not validator.validate(data[1]):
 		#	logging.error("%s is not valid" % ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_EXPORTED_API)
 		#	return {}
-
-		return data
 
 	def _generateGolangProjectDistributionPackagesArtefact(self):
 		artefact = GoSymbolsExtractor._generateGolangProjectPackagesArtefact(self)
@@ -85,4 +84,19 @@ class DistributionGoSymbolsExtractor(GoSymbolsExtractor):
 		return ad.decomposeArtefact(artefact)
 
 	def execute(self):
-		return GoSymbolsExtractor.execute(self)
+		ret = GoSymbolsExtractor.execute(self)
+		if not ret:
+			return False
+
+		try:
+			self._packages = self._generateGolangProjectDistributionPackagesArtefact()
+		except ValueError:
+			return False
+
+		try:
+			self._exported_api = self._generateGolangProjectDistributionExportedAPI()
+		except ValueError:
+			return False
+
+		return True
+

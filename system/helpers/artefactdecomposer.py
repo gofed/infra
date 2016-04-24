@@ -73,7 +73,11 @@ class ArtefactDecomposer:
 		"""
 		# empty data => nothing to decompose
 		if artefact["data"] == {}:
-			return artefact
+			raise ValueError("Empty data: %s. Nothing to decompose" % artefact["data"])
+
+		# almost empty data => nothing to decompose
+		if artefact["data"] == {'main': [], 'tests': [], 'dependencies': [], 'packages': []}:
+			raise ValueError("Empty data: %s. Nothing to decompose" % artefact["data"])
 
 		# decompose list of packages
 		pkg_classes = {}

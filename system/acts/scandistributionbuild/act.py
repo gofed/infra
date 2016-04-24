@@ -1,3 +1,6 @@
+import logging
+logger = logging.getLogger("scan_distribution_build_act")
+
 from infra.system.core.meta.metaact import MetaAct
 from infra.system.resources.specifier import ResourceSpecifier
 from infra.system.resources import types
@@ -10,7 +13,7 @@ from infra.system.artefacts.artefacts import (
 	ARTEFACT_GOLANG_IPPREFIX_TO_RPM
 )
 from gofed_lib.distribution.helpers import Build, Rpm
-import logging
+from infra.system.core.functions.types import FunctionFailedError
 
 class ScanDistributionBuildAct(MetaAct):
 
@@ -51,8 +54,14 @@ class ScanDistributionBuildAct(MetaAct):
 		artefacts = []
 		for rpm in packages_artefacts:
 			# Filter out all non-devel rpms
-			name = Rpm(build, rpm).name()
+			rpm_obj = Rpm(build, rpm)
+			if rpm_obj.arch() == "src":
+				logger.info("Skipping %s rpm" % rpm)
+				continue
+
+			name = rpm_obj.name()
 			if name.endswith("unit-test-devel") or name.endswith("unit-test"):
+				logger.info("Skipping %s rpm" % rpm)
 				continue
 
 			for prefix in packages_artefacts[rpm]["data"]:
@@ -73,7 +82,7 @@ class ScanDistributionBuildAct(MetaAct):
 			try:
 				self.ff.bake(self.write_storage_plugin).call(artefact)
 			except IOError as e:
-				logging.error(e)
+				logger.error(e)
 				# Just log the data could not be stored
 
 	def execute(self):
@@ -91,8 +100,16 @@ class ScanDistributionBuildAct(MetaAct):
 		for rpm in self.rpms:
 			rpm_name = rpm["name"]
 
+			rpm_obj = Rpm(self.build, rpm_name)
 			# skip srpm
-			if rpm_name.endswith(".srpm.rpm"):
+			if rpm_obj.arch() == "src":
+				logger.info("Rpm %s skipped" % rpm)		
+				continue
+
+			# skip all packages not ending with devel (or unit-test)
+			# TODO(jchaloup): make this configurable
+			if not rpm_obj.name().endswith("devel") and not rpm_obj.name().endswith("unit-test"):
+				logger.info("Rpm %s skipped" % rpm)
 				continue
 
 			data = {
@@ -165,15 +182,18 @@ class ScanDistributionBuildAct(MetaAct):
 			)
 			data = {
 				"product": self.product,
-				"directories_to_skip": rpm["skipped_directories"] if "skipped_directories" in rpm else [],
 				"distribution": self.distribution,
 				"build": self.build,
 				"rpm": rpm["name"],
 				"resource": resource,
 				"commit": commit
 			}
-
-			data = self.ff.bake("distributiongosymbolsextractor").call(data)
+			try:
+				data = self.ff.bake("distributiongosymbolsextractor").call(data)
+			except FunctionFailedError as e:
+				logger.warning("Rpm %s not parsed: %s" % (rpm["name"], e))
+				continue
+			print data
 			self._packages[rpm["name"]] = self._getArtefactFromData(ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_PACKAGES, data)
 			self._exported_api[rpm["name"]] = self._getArtefactFromData(ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_EXPORTED_API, data)
 
