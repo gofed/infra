@@ -123,9 +123,9 @@ if __name__ == "__main__":
 	#data, act = prepareSpecModelDataProviderActWithUserDirectory()
 	#data, act = prepareScanDistributionBuildAct()
 	#data, act = prepareGoCodeInspectionActWithUpstream()
-	#data, act = prepareScanUpstreamRepositoryAct()
-	data, act = prepareGoApiDiff()
+	data, act = prepareScanUpstreamRepositoryAct()
+	#data, act = prepareGoApiDiff()
 	#data, act = prepareScanDistributionPackageAct()
 
-	print json.dumps(act.call(data))
+	json.dumps(act.call(data))
 

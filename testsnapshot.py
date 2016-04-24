@@ -4,12 +4,44 @@ import logging
 logging.basicConfig(level=logging.INFO)
 import json
 
-from gofed_lib.snapshot import Snapshot
-from gofed_lib.distributionsnapshot import DistributionSnapshot
-from gofed_lib.pkgdb.client import FakePkgDBClient
-from gofed_lib.kojiclient import FakeKojiClient, KojiClient
+from gofed_lib.go.snapshot import Snapshot
+from gofed_lib.distribution.distributionsnapshot import DistributionSnapshot
+from gofed_lib.distribution.clients.pkgdb.client import FakePkgDBClient
+from gofed_lib.distribution.clients.koji.client import FakeKojiClient, KojiClient
+
+def test_reconstructor():
+	#repository = {
+	#	"provider": "github",
+	#	"username": "coreos",
+	#	"project": "etcd"
+	#}
+
+	#commit = "5e6eb7e19d6385adfabb1f1caea03e732f9348ad"
+	#ipprefix = "github.com/coreos/etcd"
+
+	repository = {
+		"provider": "github",
+		"username": "influxdb",
+		"project": "influxdb"
+	}
+
+	commit = "da1b59e7d7764d36786253b2db13b97f42ed4e1d"
+	ipprefix = "github.com/influxdb/influxdb"
+
+	#snapshot = SnapshotReconstructor().reconstruct(repository, commit, ipprefix, mains = ["main.go", "etcdctl/main.go"], tests=True).snapshot()
+	snapshot = SnapshotReconstructor().reconstruct(repository, commit, ipprefix, mains = [], tests=True).snapshot()
+
+
+	print ""
+	print json.dumps(snapshot.Godeps())
+	print ""
+	print snapshot.GLOGFILE()
 
 if __name__ == "__main__":
+
+	test_reconstructor()
+
+	exit(1)
 
 	s1 = DistributionSnapshot().load("/home/jchaloup/Projects/gofed/infra/snapshot1.json")
 	s2 = DistributionSnapshot().load("/home/jchaloup/Projects/gofed/infra/snapshot2.json")

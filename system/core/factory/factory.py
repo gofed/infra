@@ -32,6 +32,7 @@ class Factory:
 
 			reg_obj = {}
 			with open(register_file, "r") as f:
+				# TODO(jchaloup): log somewhere the file is read to collect statistics
 				reg_obj = json.load(f)
 
 				if type(reg_obj) != type([]):
