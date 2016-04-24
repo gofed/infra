@@ -68,7 +68,7 @@ class ResourceSpecifier:
 			"subresource": subresource
 		}
 
-	def generateUpstreamRepository(self, provider, username, project, subresource = SUBRESOURCE_DIRECTORY_TREE):
+	def generateUpstreamRepository(self, repository, subresource = SUBRESOURCE_DIRECTORY_TREE):
 		"""Generate resource specifier for upstream repository
 
 		:param provider: repository provider (e.g. github, bitbucket)
@@ -79,18 +79,14 @@ class ResourceSpecifier:
 		:type  project:  str
 		"""
 
-		if provider not in ["github", "bitbucket"]:
-			raise ValueError("Provider '%s' not supported" % provider)
+		if repository["provider"] not in ["github", "bitbucket"]:
+			raise ValueError("Provider '%s' not supported" % repository["provider"])
 
 		# In future, non-upstream repositories can be provided (e.g. dist-git).
 		# For that, create new generate***Repository just with provider different from upstream ones.
 		# In the backend, it will be processed transparently.
 		return {
-			"repository": {
-				"provider": provider,
-				"username": username,
-				"project": project
-			},
+			"repository": repository,
 			"resource": RESOURCE_REPOSITORY,
 			"subresource": subresource
 		}

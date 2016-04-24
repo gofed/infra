@@ -19,6 +19,11 @@ class ResourceClientTest(unittest.TestCase):
 		build = "gofed-0.0.10-3.fc24"
 		rpm = "gofed-build-0.0.10-3.fc24.noarch.rpm"
 		project = "fake-project"
+		repository = {
+			"provider": "github",
+			"username": "fake",
+			"project": "fake-project"
+		}
 		commit = "0000"
 		provider = "github"
 		username = "user"
@@ -27,8 +32,8 @@ class ResourceClientTest(unittest.TestCase):
 		specifications = [
 			ResourceSpecifier().generateRpm(product, distribution, build, rpm),
 			ResourceSpecifier().generateUserDirectory(location, type = RESOURCE_TYPE_DIRECTORY),
-			ResourceSpecifier().generateUpstreamSourceCode(project, commit),
-			ResourceSpecifier().generateUpstreamRepository(provider, username, project)
+			ResourceSpecifier().generateUpstreamSourceCode(repository, commit),
+			ResourceSpecifier().generateUpstreamRepository(repository)
 		]
 
 		schemas = {
