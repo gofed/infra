@@ -225,11 +225,18 @@ class ScanUpstreamRepositoryAct(MetaAct):
 		for branch in list((b2_set - b1_set)):
 			branches[branch] = branches2[branch]
 
+		mbranches = []
+		for branch in branches:
+			mbranches.append({
+				"branch": branch,
+				"commits": branches[branch]
+			})
+
 		# merged info artefact
 		return {
 			"artefact": ARTEFACT_GOLANG_PROJECT_REPOSITORY_INFO,
 			"repository": info2["repository"],
-			"branches": branches,
+			"branches": mbranches,
 			"coverage": coverage
 		}
 
@@ -267,7 +274,6 @@ class ScanUpstreamRepositoryAct(MetaAct):
 			return []
 
 		items = []
-		print itemset_info
 		for branch in itemset_info["branches"]:
 			for item in branch["commits"]:
 				# construct a storage request for each item
