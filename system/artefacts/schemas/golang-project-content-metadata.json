@@ -11,9 +11,11 @@
 				{"enum": ["golang-project-content-metadata"]}
 			]
 		},
-		"project": {
-			"description": "Repository project name",
-			"type": "string"
+		"repository": {
+			"anyOf": [
+				{ "$ref": "#/definitions/github" },
+				{ "$ref": "#/definitions/bitbucket" }
+			]
 		},
 		"commit": {
 			"description": "Repository project commit",
@@ -74,5 +76,55 @@
 			"required": ["license", "docs", "deps_directories", "non_go_directories"]
 		}
 	},
-	"required": ["artefact", "project", "commit", "metadata"]
+	"required": ["artefact", "repository", "commit", "metadata"],
+	"definitions": {
+		"github": {
+			"description": "Github repository",
+			"type": "object",
+			"properties": {
+				"provider": {
+					"description": "Provider",
+					"type": "string",
+					"oneOf": [
+						{"enum": ["github"]}
+					]
+				},
+				"username": {
+					"description": "Github username",
+					"type": "string",
+					"minLength": 1
+				},
+				"project": {
+					"description": "Github project",
+					"type": "string",
+					"minLength": 1
+				}
+			},
+			"required": ["provider", "username", "project"]
+		},
+		"bitbucket": {
+			"description": "Bitbucket repository",
+			"type": "object",
+			"properties": {
+				"provider": {
+					"description": "Provider",
+					"type": "string",
+					"oneOf": [
+						{"enum": ["bitbucket"]}
+					]
+				},
+				"username": {
+					"description": "Bitbucket username",
+					"type": "string",
+					"minLength": 1
+				},
+				"project": {
+					"description": "Bitbucket project",
+					"type": "string",
+					"minLength": 1
+				}
+			},
+			"required": ["provider", "username", "project"]
+		}
+	}
 }

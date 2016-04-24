@@ -18,10 +18,11 @@
 						{"enum": ["upstream_source_code"]}
 					]
 				},
-				"project": {
-					"type": "string",
-					"description": "Project name",
-					"minLength": 1
+				"repository": {
+					"anyOf": [
+						{ "$ref": "#/definitions/github" },
+						{ "$ref": "#/definitions/bitbucket" }
+					]
 				},
 				"commit": {
 					"type": "string",
@@ -34,7 +35,7 @@
 					"minLength": 1
 				}
 			},
-			"required": ["type", "project", "commit", "ipprefix"],
+			"required": ["type", "repository", "commit", "ipprefix"],
 			"additionalProperties": false
 		},
 		"user_directory": {
@@ -61,6 +62,54 @@
 			},
 			"required": ["type", "ipprefix", "resource"],
 			"additionalProperties": false
+		},
+		"github": {
+			"description": "Github repository",
+			"type": "object",
+			"properties": {
+				"provider": {
+					"description": "Provider",
+					"type": "string",
+					"oneOf": [
+						{"enum": ["github"]}
+					]
+				},
+				"username": {
+					"description": "Github username",
+					"type": "string",
+					"minLength": 1
+				},
+				"project": {
+					"description": "Github project",
+					"type": "string",
+					"minLength": 1
+				}
+			},
+			"required": ["provider", "username", "project"]
+		},
+		"bitbucket": {
+			"description": "Bitbucket repository",
+			"type": "object",
+			"properties": {
+				"provider": {
+					"description": "Provider",
+					"type": "string",
+					"oneOf": [
+						{"enum": ["bitbucket"]}
+					]
+				},
+				"username": {
+					"description": "Bitbucket username",
+					"type": "string",
+					"minLength": 1
+				},
+				"project": {
+					"description": "Bitbucket project",
+					"type": "string",
+					"minLength": 1
+				}
+			},
+			"required": ["provider", "username", "project"]
 		}
 	}
 }

@@ -141,9 +141,7 @@ class ScanUpstreamRepositoryAct(MetaAct):
 	def _extractItemSetInfo(self):
 		# no cache => extract the data
 		resource = ResourceSpecifier().generateUpstreamRepository(
-			self.repository["provider"],
-			self.repository["username"],
-			self.repository["project"]
+			self.repository
 		)
 
 		data = {
@@ -354,9 +352,7 @@ class ScanUpstreamRepositoryAct(MetaAct):
 
 		# commit not found, extract it
 		resource = ResourceSpecifier().generateUpstreamRepository(
-			repository["provider"],
-			repository["username"],
-			repository["project"]
+			repository
 		)
 
 		data = {

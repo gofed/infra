@@ -38,8 +38,8 @@ class GolangIPPrefixToPackageNameTest(unittest.TestCase):
 
 class GolangProjectExportedAPITest(unittest.TestCase):
 	def test(self):
-		input = {"artefact": ARTEFACT_GOLANG_PROJECT_EXPORTED_API, "project": "github.com/coreos/etcd", "commit": "729b530c489a73532843e664ae9c6db5c686d314"}
-		expected = [ARTEFACT_GOLANG_PROJECT_EXPORTED_API, "github-com-coreos-etcd", input["commit"]]
+		input = {"artefact": ARTEFACT_GOLANG_PROJECT_EXPORTED_API, "repository": {"provider": "github", "username": "coreos", "project": "etcd"}, "commit": "729b530c489a73532843e664ae9c6db5c686d314"}
+		expected = [ARTEFACT_GOLANG_PROJECT_EXPORTED_API, "github", "coreos", "etcd", input["commit"]]
 
 		generator = KeyGeneratorFactory().build(ARTEFACT_GOLANG_PROJECT_EXPORTED_API)
 		current = generator.generate(input)

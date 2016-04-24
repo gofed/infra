@@ -10,7 +10,11 @@ class SpecModelDataProviderActTest(unittest.TestCase):
 
 		data = {
 			"type": "upstream_source_code",
-			"project": "github.com/bradfitz/http2",
+			"repository": {
+				"provider": "github",
+				"username": "bradfitz",
+				"project": "bradfitz"
+			},
 			"commit": "f8202bc903bda493ebba4aa54922d78430c2c42f",
 			"ipprefix": "github.com/bradfitz/http2"
 		}

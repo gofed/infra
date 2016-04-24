@@ -7,12 +7,20 @@ class GoProjectContentMetadataExtractorTest(unittest.TestCase):
 
 		data = {
 			"resource": "fake/re/source",
-			"project": "test.project",
+			"repository": {
+				"provider": "github",
+				"username": "test",
+				"project": "test.project"
+			},
 			"commit": "0000"
 		}
 
 		expected = {
-			'project': 'test.project',
+			"repository": {
+				"provider": "github",
+				"username": "test",
+				"project": "test.project"
+			},
 			'commit': '0000',
 			'artefact': 'golang-project-content-metadata',
 			'metadata': {}

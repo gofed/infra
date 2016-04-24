@@ -390,17 +390,12 @@
         "golang-project-content-metadata": {
             "required": [
                 "artefact", 
-                "project", 
+                "repository", 
                 "commit"
             ], 
             "type": "object", 
             "description": "artefact key", 
             "properties": {
-                "project": {
-                    "minlength": 1, 
-                    "type": "string", 
-                    "description": "key part"
-                }, 
                 "commit": {
                     "minlength": 1, 
                     "type": "string", 
@@ -416,6 +411,32 @@
                     ], 
                     "type": "string", 
                     "description": "key part"
+                }, 
+                "repository": {
+                    "required": [
+                        "provider", 
+                        "username", 
+                        "project"
+                    ], 
+                    "type": "object", 
+                    "description": "key part", 
+                    "properties": {
+                        "username": {
+                            "minLength": 1, 
+                            "type": "string", 
+                            "description": "subkey part"
+                        }, 
+                        "project": {
+                            "minLength": 1, 
+                            "type": "string", 
+                            "description": "subkey part"
+                        }, 
+                        "provider": {
+                            "minLength": 1, 
+                            "type": "string", 
+                            "description": "subkey part"
+                        }
+                    }
                 }
             }
         }, 

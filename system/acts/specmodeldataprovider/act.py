@@ -42,7 +42,7 @@ class SpecModelDataProviderAct(MetaAct):
 		# upstream source code
 		if data["type"] == INPUT_TYPE_UPSTREAM_SOURCE_CODE:
 			self.data["resource"] = ResourceSpecifier().generateUpstreamSourceCode(
-				data["project"],
+				data["repository"],
 				data["commit"]
 			)
 			return True
@@ -65,17 +65,17 @@ class SpecModelDataProviderAct(MetaAct):
 			ARTEFACT_GOLANG_PROJECT_CONTENT_METADATA: self.golang_project_content_metadata
 		}
 
-	def _readPackagesData(self, project, commit):
+	def _readPackagesData(self, repository, commit):
 		return self.ff.bake(self.read_storage_plugin).call({
 			"artefact": ARTEFACT_GOLANG_PROJECT_PACKAGES,
-			"project": project,
+			"repository": repository,
 			"commit": commit
 		})
 
-	def _readContentData(self, project, commit):
+	def _readContentData(self, repository, commit):
 		return self.ff.bake(self.read_storage_plugin).call({
 			"artefact": ARTEFACT_GOLANG_PROJECT_CONTENT_METADATA,
-			"project": project,
+			"repository": repository,
 			"commit": commit
 		})
 
@@ -119,7 +119,7 @@ class SpecModelDataProviderAct(MetaAct):
 			# Get golang-project-packages artefact
 			try:
 				self.golang_project_packages = self._readPackagesData(
-					self.data["project"],
+					self.data["repository"],
 					self.data["commit"]
 				)
 			except KeyError as e:
@@ -128,13 +128,13 @@ class SpecModelDataProviderAct(MetaAct):
 			# Get golang-project-content-metadata
 			try:
 				self.golang_project_content_metadata = self._readContentData(
-					self.data["project"],
+					self.data["repository"],
 					self.data["commit"]
 				)
 			except KeyError as e:
 				data = {
 					"resource": self.data["resource"],
-					"project": self.data["project"],
+					"repository": self.data["repository"],
 					"commit": self.data["commit"]
 				}
 				self._extractContentData(data, True)

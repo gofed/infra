@@ -6,10 +6,10 @@ class GolangProjectContentMetadataKeyGenerator(MetaArtefactKeyGenerator):
 	def generate(self, data, delimiter = ":"):
 		# return a list of fields
 		keys = []
-		for key in ["artefact", "project", "commit"]:
+		for key in ["artefact", "repository", "commit"]:
 			if key not in data:
 				raise ValueError("golang-project-content-metadata: %s key missing" % key)
 
-			keys.append(self.truncateKey(data[key]))
+			keys = keys + self.value2key(data[key], delimiter, key, {"repository": ["provider", "username", "project"]})
 
 		return keys

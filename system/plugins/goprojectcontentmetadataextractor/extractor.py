@@ -13,7 +13,7 @@ class GoProjectContentMetadataExtractor(MetaProcessor):
 
 		self.contentmetadataextractor = None
 		self.resource = ""
-		self.project = ""
+		self.repository = {}
 		self.commit = ""
 
 		self._metadata = {}
@@ -24,8 +24,8 @@ class GoProjectContentMetadataExtractor(MetaProcessor):
 			return False
 
 		self.resource = data["resource"]
-		if "project" in data:
-			self.project = data["project"]
+		if "repository" in data:
+			self.repository = data["repository"]
 
 		if "commit" in data:
 			self.commit = data["commit"]
@@ -46,7 +46,7 @@ class GoProjectContentMetadataExtractor(MetaProcessor):
 	def _generateGolangProjectContentMetadataArtefact(self, metadata):
 		return {
 			"artefact": ARTEFACT_GOLANG_PROJECT_CONTENT_METADATA,
-			"project": self.project,
+			"repository": self.repository,
 			"commit": self.commit,
 			"metadata": metadata
 		}
