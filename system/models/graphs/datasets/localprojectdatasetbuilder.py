@@ -2,6 +2,7 @@ from .datasetbuilder import DatasetBuilder
 from infra.system.core.factory.actfactory import ActFactory
 from .types import DatasetError
 from infra.system.core.functions.types import FunctionFailedError
+from infra.system.artefacts.artefacts import ARTEFACT_GOLANG_PROJECT_PACKAGES
 
 class LocalProjectDatasetBuilder(object):
 
@@ -24,6 +25,6 @@ class LocalProjectDatasetBuilder(object):
 		except FunctionFailedError as e:
 			raise DatasetError("Unable to create dataset: %s" % e)
 
-		builder.addArtefact(artefact)
+		builder.addArtefact(artefact[ARTEFACT_GOLANG_PROJECT_PACKAGES])
 
 		return builder.build().dataset()
