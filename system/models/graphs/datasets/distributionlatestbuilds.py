@@ -18,8 +18,8 @@
 # - build a graph over the artefacts
 # - return the graph
 
-from gofed_lib.kojiclient import FakeKojiClient, KojiClient
-from gofed_lib.helpers import Rpm
+from gofed_lib.distribution.clients.koji.client import FakeKojiClient, KojiClient
+from gofed_lib.distribution.helpers import Rpm
 from infra.system.core.factory.actfactory import ActFactory
 import json
 import logging

@@ -1,9 +1,12 @@
+import logging
+logger = logging.getLogger("distribution_packages_fetcher")
+
 import time
 from infra.system.artefacts.artefacts import ARTEFACT_GOLANG_DISTRIBUTION_SNAPSHOT
 from infra.system.core.acts.types import ActFailedError
 from infra.system.core.functions.types import FunctionFailedError
 from infra.system.core.factory.actfactory import ActFactory
-from gofed_lib.distributionsnapshot import DistributionSnapshot
+from gofed_lib.distribution.distributionsnapshot import DistributionSnapshot
 from gofed_lib.utils import BLUE, YELLOW, ENDC, WHITE
 
 from infra.system.artefacts.artefacts import ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_PACKAGE_BUILDS
@@ -31,35 +34,38 @@ class DistributionBuildsFetcher(object):
 
 		collections = self.pkgdb_client.getCollections()
 		for distribution in distributions:
-			if distribution["product"] not in collections:
-				logging.error("Product '%s' unknown" % distribution["product"])
-				return
-			if distribution["version"] not in collections[ distribution["product"] ]:
-				logging.error("Version '%s' unknown" % distribution["version"])
-				return
+			product = distribution.product()
+			version = distribution.version()
+			if product not in collections:
+				raise ValueError("Product '%s' unknown" % product)
+			if version not in collections[ product ]:
+				raise ValueError("Version '%s' unknown" % version)
 
 		# get list of packages to scan
 		for distribution in distributions:
-			dist_tag = collections[distribution["product"]][distribution["version"]]["dist_tag"]
+			product = distribution.product()
+			version = distribution.version()
+			dist_tag = collections[product][version]["dist_tag"]
 
-			print "%sScanning %s %s ...%s" % (BLUE, distribution["product"], distribution["version"], ENDC)
+			logger.info("%sScanning %s %s ...%s" % (YELLOW, product, version, ENDC))
 			try:
 				data = self.artefactreaderact.call({
 					"artefact": ARTEFACT_GOLANG_DISTRIBUTION_SNAPSHOT,
-					"distribution": distribution
+					"distribution": distribution.json()
 				})
 			except ActFailedError:
+				logger.debug("Distribution snapshot for '%s' not found" % distribution)
 				continue
 
 			builds = DistributionSnapshot().read(data).builds()
 			for build in builds:
 				if builds[build]["build_ts"] >= since:
-					print "%s  Scanning %s ...%s" % (BLUE, build, ENDC)
+					logger.info("%sScanning %s ...%s" % (BLUE, build, ENDC))
 					# get package's items info artefact
 					try:
 						items_info = self.artefactreaderact.call({
 							"artefact": ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_PACKAGE_BUILDS,
-							"product": distribution["product"],
+							"product": distribution.product(),
 							"distribution": dist_tag,
 							"package": build
 						})
@@ -80,11 +86,13 @@ class DistributionBuildsFetcher(object):
 					try:
 						self.scan_act.call({
 							"package": build,
-							"product": distribution["product"],
+							"product": distribution.product(),
 							"distribution": dist_tag,
 							"start_timestamp": start_ts,
 							"end_timestamp": to
 						})
 					except ActFailedError as e:
-						logging.error("%s: %s" (build, e))
+						logger.error("%s: %s" (build, e))
 						continue
+
+		return self

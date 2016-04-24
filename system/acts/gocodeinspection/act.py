@@ -36,7 +36,6 @@ class GoCodeInspectionAct(MetaAct):
 		# user directory
 		if data["type"] == INPUT_TYPE_USER_DIRECTORY:
 			# any project is valid project for user directory
-			self.data["repository"] = {}
 			self.data["resource"] = ResourceSpecifier().generateUserDirectory(
 				data["resource"],
 				# tarball is implicit, change it to directory

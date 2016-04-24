@@ -14,7 +14,6 @@ class LocalProjectDatasetBuilder(object):
 		data = {
 			"type": "user_directory",
 			"ipprefix": self.ipprefix,
-			"directories_to_skip": [],
 			"resource": self.directory
 		}
 

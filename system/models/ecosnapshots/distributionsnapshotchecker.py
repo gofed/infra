@@ -1,18 +1,15 @@
+import logging
+logger = logging.getLogger("distribution_snapshot_capturer")
+
 from infra.system.core.factory.actfactory import ActFactory
 from infra.system.artefacts.artefacts import ARTEFACT_GOLANG_DISTRIBUTION_SNAPSHOT
-from gofed_lib.eco.capturer import EcoCapturer
+from gofed_lib.distribution.eco.capturer import EcoCapturer
 from infra.system.core.acts.types import ActFailedError
 from infra.system.core.functions.types import FunctionFailedError
-from gofed_lib.helpers import GolangRpm
+from gofed_lib.distribution.helpers import GolangRpm
 from gofed_lib.utils import BLUE, YELLOW, ENDC, WHITE
-from gofed_lib.distributionsnapshot import DistributionSnapshot
+from gofed_lib.distribution.distributionsnapshot import DistributionSnapshot
 import json
-import logging
-
-#
-# TODO(jchaloup):
-# - introduce event logger for logging all progress messages instead of printing them
-#
 
 class DistributionSnapshotChecker(object):
 	"""Checkout the ecosystem for new builds
@@ -47,11 +44,13 @@ class DistributionSnapshotChecker(object):
 		:type  snapshot: DistributionSnapshot
 		"""
 		distribution = snapshot.distribution()
-		key = "%s:%s" % (distribution["product"], distribution["version"])
+		product = distribution.product()
+		version = distribution.version()
+		key = "%s:%s" % (product, version)
 		self._failed[key] = []
 		self._scanned[key] = 0
 
-		print "%sScanning %s %s ...%s" % (BLUE, distribution["product"], distribution["version"], ENDC)
+		logger.info("%sScanning %s ...%s" % (BLUE, distribution, ENDC))
 		total = len(snapshot.json()["builds"])
 		index = 1
 		for package in snapshot.json()["builds"]:
@@ -62,31 +61,30 @@ class DistributionSnapshotChecker(object):
 				continue
 
 			data = {
-				"product": distribution["product"],
-				"distribution": distribution["version"],
+				"product": product,
+				"distribution": version,
 				"build": {
 					"name": package["build"],
 					"rpms": map(lambda l: {"name": l}, rpms)
 				}
 			}
 
-			print "%sScanning %s ... [%s/%s]%s" % (WHITE, package["build"], index, total, ENDC)
+			logger.info("%s%s/%s scanning %s ... %s" % (WHITE, index, total, package["build"], ENDC))
 			index = index + 1
 			try:
 				self.scanbuildact.call(data)
 			except ActFailedError as e:
-				logging.error(e)
+				logger.error(e)
 				self._failed[key].append(package)
 				continue
 			except FunctionFailedError as e:
-				logging.error(e)
+				logger.error(e)
 				self._failed[key].append(package)
 				continue
 
 			self._scanned[key] = self._scanned[key] + 1
 
-		print "%sscanned %s, failed %s%s" % (YELLOW, self._scanned[key], len(self._failed[key]), ENDC)
-		print ""
+		logger.info("%sscanned %s, failed %s%s" % (YELLOW, self._scanned[key], len(self._failed[key]), ENDC))
 
 	def _distroKey(self, distribution):
 		return "%s:%s" % (distribution["product"], distribution["version"])
@@ -106,12 +104,10 @@ class DistributionSnapshotChecker(object):
 		# read all latest snapshots and get a list of all packages across them
 		distro_packages = []
 		for distribution in distributions:
-			print distribution
-
 			try:
 				data = self.artefactreaderact.call({
 					"artefact": ARTEFACT_GOLANG_DISTRIBUTION_SNAPSHOT,
-					"distribution": distribution
+					"distribution": distribution.json()
 				})
 			except ActFailedError:
 				continue
@@ -165,5 +161,5 @@ class DistributionSnapshotChecker(object):
 				try:
 					self.artefactwriteract.call(data)
 				except ActFactory:
-					logging.error("Unable to store snapshot for %s:%s" % (distribution["product"], distribution["version"]))
+					logger.error("Unable to store snapshot for %s:%s" % (distribution["product"], distribution["version"]))
 
