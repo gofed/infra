@@ -34,7 +34,7 @@ class BasicDependencyAnalysis(object):
 		cycles = self._getCyclicDependencies(self._graph)
 		for cycle in cycles:
 			if len(cycle) > 1:
-				self._cycles.append(cycle)
+				self._cycles.add(cycle)
 
 		self._roots = self._getRootNodes(self._graph)
 

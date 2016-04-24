@@ -38,7 +38,6 @@ class DatasetDependencyGraphBuilder(object):
 		# get nodes
 		nodes = dataset.alphabet()
 		# get edges from labels
-
 		labels = dataset.labels()
 
 		missing = []

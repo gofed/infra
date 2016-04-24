@@ -17,19 +17,24 @@
 # - get artefacts from core layer
 # - build a graph over the artefacts
 # - return the graph
+import logging
+logger = logging.getLogger("distribution_latest_builds_dataset_builder")
 
 from gofed_lib.distribution.clients.koji.client import FakeKojiClient, KojiClient
 from gofed_lib.distribution.helpers import Rpm
 from infra.system.core.factory.actfactory import ActFactory
 import json
-import logging
 
 from infra.system.core.functions.types import FunctionFailedError
+from infra.system.core.acts.types import ActFailedError
 from .datasetbuilder import DatasetBuilder
+from infra.system.artefacts.artefacts import ARTEFACT_GOLANG_DISTRIBUTION_SNAPSHOT
+from gofed_lib.distribution.distributionsnapshot import DistributionSnapshot
+from infra.system.artefacts.artefacts import ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_PACKAGES
 
 class DistributionLatestBuildGraphDataset:
 
-	def __init__(self, distribution, packages):
+	def __init__(self):
 		"""The graph can be built from all packages or from selected.
 		The decision is up to user of the class.
 
@@ -40,64 +45,55 @@ class DistributionLatestBuildGraphDataset:
 		"""
 		# TODO(jchaloup):
 		# - inject the product together with buildsystem client
-		self.product = "Fedora"
-		self.distribution = distribution
-		self.packages = packages
 		# TODO(jchaloup):
 		# - inject the client so the class can be used with Brew and CentOS as well
 		self.client = FakeKojiClient()
 		# TODO(jchaloup):
 		# - inject the act and replace it with datasource instead
 		#   so the artefact/data can be picked from more sources
-		self.act = ActFactory().bake("scan-distribution-build")
+		self.scan_distribution_build_act = ActFactory().bake("scan-distribution-build")
+		self.artefactreaderact = ActFactory().bake("artefact-reader")
 
-	def build(self):
+	def build(self, distribution):
 		"""Build dataset for a given list of buildes
 		"""
-		# TODO(jchaloup): specify json schema for a dataset
-		# get a list of latest rpms for selected packages
+		# get latets rpms from the latest distribution snapshot
+		try:
+			data = self.artefactreaderact.call({
+				"artefact": ARTEFACT_GOLANG_DISTRIBUTION_SNAPSHOT,
+				"distribution": distribution.json()
+			})
+		except ActFailedError:
+			raise KeyError("Distribution snapshot for '%s' not found" % distribution)
+
 		counter = 0
-
 		builder = DatasetBuilder()
-		for pkg in self.packages:
-			if pkg in ["golang-github-aws-aws-sdk-go", "golang-googlecode-google-api-go-client", "golang-googlecode-google-api-client"]:
-				continue
 
-			try:
-				data = self.client.getLatestRPMS("rawhide", pkg)
-			except ValueError as e:
-				logging.error("ValueError: %s" % e)
-				continue
-			except KeyError as e:
-				logging.error("KeyError: %s" % e)
-				continue
-
-			rpms = []
-			for rpm in data["rpms"]:
-				rpm_name = Rpm(data["name"], rpm["name"]).name()
-				#if not rpm_name.endswith("devel"): # and not rpm["name"].endswith("unit-test"):
-				#	continue
-
-				rpms.append({"name": rpm["name"]})
+		builds = DistributionSnapshot().read(data).builds()
+		builds_total = len(builds)
+		builds_counter = 0
+		for pkg in builds:
+			builds_counter = builds_counter + 1
+			logger.info("%s/%s Processing %s" % (builds_counter, builds_total, builds[pkg]["build"]))
 
 			# get artefact
 			data = {
-				"product": self.product,
-				"distribution": self.distribution,
+				"product": distribution.product(),
+				"distribution": distribution.version(),
 				"build": {
-					"name": data["name"],
-					"rpms": rpms
+					"name": builds[pkg]["build"],
+					"rpms": map(lambda l: {"name": l}, builds[pkg]["rpms"])
 				}
 			}
 
 			try:
-				artefacts = self.act.call(data)
+				artefacts = self.scan_distribution_build_act.call(data)
 			except FunctionFailedError as e:
-				logging.error(e)
+				logger.error(e)
 				continue
 
-			for rpm in artefacts["packages"]:
-				builder.addArtefact(artefacts["packages"][rpm], rpm)
+			for rpm in artefacts[ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_PACKAGES]:
+				builder.addArtefact(artefacts[ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_PACKAGES][rpm], rpm)
 			
 			#if counter == 40:
 			#	break

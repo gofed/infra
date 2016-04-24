@@ -26,10 +26,10 @@ class DatasetBuilder(object):
 		return self
 
 	def _extractRequirements(self, artefact, node_name):
-		if "golang-project-distribution-packages" in artefact:
-			return self._extractProjectDistributionPackagesRequirements(artefact["golang-project-distribution-packages"], node_name)
-		if "golang-project-packages" in artefact:
-			return self._extractProjectPackagesRequirements(artefact["golang-project-packages"], node_name)
+		if "golang-project-distribution-packages" == artefact["artefact"]:
+			return self._extractProjectDistributionPackagesRequirements(artefact, node_name)
+		if "golang-project-packages" == artefact["artefact"]:
+			return self._extractProjectPackagesRequirements(artefact, node_name)
 
 		raise ValueError("Artefact is not valid packages artefact: %s" % artefact)
 
