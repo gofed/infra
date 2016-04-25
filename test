@@ -1,0 +1,1 @@
+PYTHONPATH=$(pwd)/third_party py.test -vs -k "system"

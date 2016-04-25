@@ -193,7 +193,7 @@ class ScanDistributionBuildAct(MetaAct):
 			except FunctionFailedError as e:
 				logger.warning("Rpm %s not parsed: %s" % (rpm["name"], e))
 				continue
-			print data
+
 			self._packages[rpm["name"]] = self._getArtefactFromData(ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_PACKAGES, data)
 			self._exported_api[rpm["name"]] = self._getArtefactFromData(ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_EXPORTED_API, data)
 
