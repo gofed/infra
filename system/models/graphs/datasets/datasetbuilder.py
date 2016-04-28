@@ -181,12 +181,6 @@ class DatasetBuilder(object):
 						except KeyError:
 							labels[category][(rpm,target_rpm)] = [(a,b)]
 
-		category = "devel"
-		for label in labels[category]:
-			if len(labels[category][label]) != len(list(set(labels[category][label]))):
-				print (label, len(labels[category][label]), len(list(set(labels[category][label]))))
-				print labels[category][label]
-
 		# make the list of edges unique
 		edges = list(set(edges))
 		# make alphabet unique

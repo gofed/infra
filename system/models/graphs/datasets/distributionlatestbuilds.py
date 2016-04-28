@@ -20,9 +20,9 @@
 import logging
 logger = logging.getLogger("distribution_latest_builds_dataset_builder")
 
-from gofed_lib.distribution.clients.koji.client import FakeKojiClient, KojiClient
 from gofed_lib.distribution.helpers import Rpm
 from infra.system.core.factory.actfactory import ActFactory
+from infra.system.core.factory.fakeactfactory import FakeActFactory
 import json
 
 from infra.system.core.functions.types import FunctionFailedError
@@ -34,7 +34,7 @@ from infra.system.artefacts.artefacts import ARTEFACT_GOLANG_PROJECT_DISTRIBUTIO
 
 class DistributionLatestBuildGraphDataset:
 
-	def __init__(self):
+	def __init__(self, dry_run=False):
 		"""The graph can be built from all packages or from selected.
 		The decision is up to user of the class.
 
@@ -46,13 +46,15 @@ class DistributionLatestBuildGraphDataset:
 		# TODO(jchaloup):
 		# - inject the product together with buildsystem client
 		# TODO(jchaloup):
-		# - inject the client so the class can be used with Brew and CentOS as well
-		self.client = FakeKojiClient()
-		# TODO(jchaloup):
 		# - inject the act and replace it with datasource instead
 		#   so the artefact/data can be picked from more sources
-		self.scan_distribution_build_act = ActFactory().bake("scan-distribution-build")
-		self.artefactreaderact = ActFactory().bake("artefact-reader")
+		if dry_run:
+			act_factory = FakeActFactory()
+		else:
+			act_factory = ActFactory()
+
+		self.scan_distribution_build_act = act_factory.bake("scan-distribution-build")
+		self.artefactreaderact = act_factory.bake("artefact-reader")
 
 	def build(self, distribution):
 		"""Build dataset for a given list of buildes
@@ -94,11 +96,6 @@ class DistributionLatestBuildGraphDataset:
 
 			for rpm in artefacts[ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_PACKAGES]:
 				builder.addArtefact(artefacts[ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_PACKAGES][rpm], rpm)
-			
-			#if counter == 40:
-			#	break
-
-			#counter = counter + 1
 
 		return builder.build().dataset()
 
