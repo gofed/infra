@@ -11,10 +11,11 @@
 				"enum": ["golang-projects-api-diff"]
 			}]
 		},
-		"project": {
-			"description": "Project name",
-			"type": "string",
-			"minLength": 1
+		"repository": {
+			"anyOf": [
+				{ "$ref": "#/definitions/github" },
+				{ "$ref": "#/definitions/bitbucket" }
+			]
 		},
 		"commit1": {
 			"description": "Project's commit",
@@ -86,7 +87,7 @@
 			}
 		}
 	},
-	"required": ["artefact", "project", "commit1", "commit2", "data"],
+	"required": ["artefact", "repository", "commit1", "commit2", "data"],
 	"definitions": {
 		"diffs": {
 			"type": "object",
@@ -130,6 +131,54 @@
 				{"required": ["removed"]},
 				{"required": ["updated"]}
 			]
+		},
+		"github": {
+			"description": "Github repository",
+			"type": "object",
+			"properties": {
+				"provider": {
+					"description": "Provider",
+					"type": "string",
+					"oneOf": [
+						{"enum": ["github"]}
+					]
+				},
+				"username": {
+					"description": "Github username",
+					"type": "string",
+					"minLength": 1
+				},
+				"project": {
+					"description": "Github project",
+					"type": "string",
+					"minLength": 1
+				}
+			},
+			"required": ["provider", "username", "project"]
+		},
+		"bitbucket": {
+			"description": "Bitbucket repository",
+			"type": "object",
+			"properties": {
+				"provider": {
+					"description": "Provider",
+					"type": "string",
+					"oneOf": [
+						{"enum": ["bitbucket"]}
+					]
+				},
+				"username": {
+					"description": "Bitbucket username",
+					"type": "string",
+					"minLength": 1
+				},
+				"project": {
+					"description": "Bitbucket project",
+					"type": "string",
+					"minLength": 1
+				}
+			},
+			"required": ["provider", "username", "project"]
 		}
 	}
 }

@@ -152,7 +152,7 @@
 			"uniqueItems": true
 		}
 	},
-	"required": ["artefact", "project", "commit", "packages"],
+	"required": ["artefact", "repository", "commit", "packages"],
 	"definitions": {
 		"identifier": {
 			"type": "object",
