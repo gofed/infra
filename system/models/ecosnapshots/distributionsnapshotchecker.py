@@ -2,6 +2,7 @@ import logging
 logger = logging.getLogger("distribution_snapshot_capturer")
 
 from infra.system.core.factory.actfactory import ActFactory
+from infra.system.core.factory.fakeactfactory import FakeActFactory
 from infra.system.artefacts.artefacts import ARTEFACT_GOLANG_DISTRIBUTION_SNAPSHOT
 from gofed_lib.distribution.eco.capturer import EcoCapturer
 from infra.system.core.acts.types import ActFailedError
@@ -19,7 +20,7 @@ class DistributionSnapshotChecker(object):
 	4. scan new rpms
 	"""
 
-	def __init__(self, koji_client, pkgdb_client):
+	def __init__(self, koji_client, pkgdb_client, dry_run=False):
 		"""
 
 		:param koji_client: Koji client
@@ -27,12 +28,16 @@ class DistributionSnapshotChecker(object):
 		:param pkgdb_client: PkgDB client
 		:type  pkgdb_client: PkgDBClient or FakePkgDBClient
 		"""
-		self.koji_client = koji_client
-		self.pkgdb_client = pkgdb_client
+		self._koji_client = koji_client
+		self._pkgdb_client = pkgdb_client
+		if dry_run:
+			act_factory = FakeActFactory()
+		else:
+			act_factory = ActFactory()
 
-		self.artefactreaderact = ActFactory().bake("artefact-reader")
-		self.artefactwriteract = ActFactory().bake("artefact-writer")
-		self.scanbuildact = ActFactory().bake("scan-distribution-build")
+		self._artefactreaderact = act_factory.bake("artefact-reader")
+		self._artefactwriteract = act_factory.bake("artefact-writer")
+		self._scanbuildact = act_factory.bake("scan-distribution-build")
 
 		self._failed = {}
 		self._scanned = {}
@@ -72,7 +77,7 @@ class DistributionSnapshotChecker(object):
 			logger.info("%s%s/%s scanning %s ... %s" % (WHITE, index, total, package["build"], ENDC))
 			index = index + 1
 			try:
-				self.scanbuildact.call(data)
+				self._scanbuildact.call(data)
 			except ActFailedError as e:
 				logger.error(e)
 				self._failed[key].append(package)
@@ -105,7 +110,7 @@ class DistributionSnapshotChecker(object):
 		distro_packages = []
 		for distribution in distributions:
 			try:
-				data = self.artefactreaderact.call({
+				data = self._artefactreaderact.call({
 					"artefact": ARTEFACT_GOLANG_DISTRIBUTION_SNAPSHOT,
 					"distribution": distribution.json()
 				})
@@ -117,7 +122,7 @@ class DistributionSnapshotChecker(object):
 		known_packages = list(set(distro_packages + custom_packages))
 
 		# capture the current distribution snapshot
-		capturer = EcoCapturer(self.koji_client, self.pkgdb_client)
+		capturer = EcoCapturer(self._koji_client, self._pkgdb_client)
 
 		snapshots = capturer.captureLatest(distributions, known_packages, blacklist).snapshots()
 
@@ -129,9 +134,9 @@ class DistributionSnapshotChecker(object):
 
 			if not full_check:
 				try:
-					data = self.artefactreaderact.call({
+					data = self._artefactreaderact.call({
 						"artefact": ARTEFACT_GOLANG_DISTRIBUTION_SNAPSHOT,
-						"distribution": snapshots[snapshot]["distribution"]
+						"distribution": snapshots[snapshot]["distribution"].json()
 					})
 					latest_snapshot = DistributionSnapshot().read(data)
 				except ActFailedError:
@@ -151,15 +156,16 @@ class DistributionSnapshotChecker(object):
 			write = True
 			if not skip_failed:
 				distribution = snapshots[snapshot]["distribution"]
-				key = "%s:%s" % (distribution["product"], distribution["version"])
-				if self._failed[key] > 0:
+				key = "%s:%s" % (distribution.product(), distribution.version())
+				if len(self._failed[key]) > 0:
 					write = False
 
 			if write:
 				data = new_snapshot.json()
 				data["artefact"] = ARTEFACT_GOLANG_DISTRIBUTION_SNAPSHOT
+
 				try:
-					self.artefactwriteract.call(data)
+					self._artefactwriteract.call(data)
 				except ActFactory:
-					logger.error("Unable to store snapshot for %s:%s" % (distribution["product"], distribution["version"]))
+					logger.error("Unable to store snapshot for %s:%s" % (distribution.product(), distribution.version()))
 
