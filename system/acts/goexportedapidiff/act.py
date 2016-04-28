@@ -25,7 +25,7 @@ class GoExportedApiDiffAct(MetaAct):
 		# upstream source code
 		if data["type"] == INPUT_TYPE_UPSTREAM_SOURCE_CODE:
 			return ResourceSpecifier().generateUpstreamSourceCode(
-				data["project"],
+				data["repository"],
 				data["commit"]
 			)
 
@@ -50,16 +50,6 @@ class GoExportedApiDiffAct(MetaAct):
 		self.reference["resource"] = self._setResource(self.reference)
 		self.compared_with["resource"] = self._setResource(self.compared_with)
 
-		if self.reference["type"] == INPUT_TYPE_USER_DIRECTORY:
-			# TODO(jchaloup): update extractor plugin to work without project
-			# any project is valid project for user directory
-			self.reference["project"] = "."
-
-		if self.compared_with["type"] == INPUT_TYPE_USER_DIRECTORY:
-			# TODO(jchaloup): update extractor plugin to work without project
-			# any project is valid project for user directory
-			self.compared_with["project"] = "."
-
 		return True
 
 	def getData(self):
@@ -75,7 +65,7 @@ class GoExportedApiDiffAct(MetaAct):
 				try:
 					return self.ff.bake(self.read_storage_plugin).call({
 						"artefact": ARTEFACT_GOLANG_PROJECT_EXPORTED_API,
-						"project": data["project"],
+						"repository": data["repository"],
 						"commit": data["commit"]
 					})
 				except:
@@ -103,6 +93,8 @@ class GoExportedApiDiffAct(MetaAct):
 
 	def execute(self):
 		"""Implementation of concrete data processor"""
+		# TODO(jchaloup): check if the diff already exists in db
+
 		reference_artefact = self._getExportedApiArtefact(self.reference)
 		compared_with_artefact = self._getExportedApiArtefact(self.compared_with)
 

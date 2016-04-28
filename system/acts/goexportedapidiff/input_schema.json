@@ -1,7 +1,7 @@
 {
 	"$schema": "http://json-schema.org/draft-04/schema#",
-	"title": "Go code inspection act",
-	"description": "Definition of act providing data from inspected code",
+	"title": "Go exported api diff act",
+	"description": "Definition of act providing difference in API of two Go projects instances",
 	"type": "object",
 	"properties": {
 		"reference": {
@@ -30,23 +30,19 @@
 						{"enum": ["upstream_source_code"]}
 					]
 				},
-				"project": {
-					"type": "string",
-					"description": "Project name",
-					"minLength": 1
+				"repository": {
+					"anyOf": [
+						{ "$ref": "#/definitions/github" },
+						{ "$ref": "#/definitions/bitbucket" }
+					]
 				},
 				"commit": {
 					"type": "string",
 					"description": "Repository commit",
 					"minLength": 1
-				},
-				"ipprefix": {
-					"type": "string",
-					"description": "Import path prefix",
-					"minLength": 1
 				}
 			},
-			"required": ["type", "project", "commit", "ipprefix"],
+			"required": ["type", "repository", "commit"],
 			"additionalProperties": false
 		},
 		"user_directory": {
@@ -64,15 +60,58 @@
 					"type": "string",
 					"description": "User directory location",
 					"minLength": 1
-				},
-				"ipprefix": {
+				}
+			},
+			"required": ["type", "resource"],
+			"additionalProperties": false
+		},
+		"github": {
+			"description": "Github repository",
+			"type": "object",
+			"properties": {
+				"provider": {
+					"description": "Provider",
 					"type": "string",
-					"description": "Import path prefix",
+					"oneOf": [
+						{"enum": ["github"]}
+					]
+				},
+				"username": {
+					"description": "Github username",
+					"type": "string",
+					"minLength": 1
+				},
+				"project": {
+					"description": "Github project",
+					"type": "string",
 					"minLength": 1
 				}
 			},
-			"required": ["type", "resource", "ipprefix"],
-			"additionalProperties": false
+			"required": ["provider", "username", "project"]
+		},
+		"bitbucket": {
+			"description": "Bitbucket repository",
+			"type": "object",
+			"properties": {
+				"provider": {
+					"description": "Provider",
+					"type": "string",
+					"oneOf": [
+						{"enum": ["bitbucket"]}
+					]
+				},
+				"username": {
+					"description": "Bitbucket username",
+					"type": "string",
+					"minLength": 1
+				},
+				"project": {
+					"description": "Bitbucket project",
+					"type": "string",
+					"minLength": 1
+				}
+			},
+			"required": ["provider", "username", "project"]
 		}
 	}
 }

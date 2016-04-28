@@ -8,13 +8,21 @@ class GoApiDiffTest(unittest.TestCase):
 
 		data = {
 			"exported_api_1": {
-				"project": "example",
+				"repository": {
+					"provider": "github",
+					"username": "user",
+					"project": "fake"
+				},
 				"commit": "0000",
 				"artefact": "golang-project-exported-api",
 				"packages": []
 			},
 			"exported_api_2": {
-				"project": "example",
+				"repository": {
+					"provider": "github",
+					"username": "user",
+					"project": "fake"
+				},
 				"commit": "0000",
 				"artefact": "golang-project-exported-api",
 				"packages": []
@@ -22,7 +30,11 @@ class GoApiDiffTest(unittest.TestCase):
 		}
 
 		expected = {
-			'project': 'example',
+			"repository": {
+				"provider": "github",
+				"username": "user",
+				"project": "fake"
+			},
 			'commit2': '0000',
 			'artefact': 'golang-projects-api-diff',
 			'commit1': '0000',

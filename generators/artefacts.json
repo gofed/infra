@@ -37,7 +37,10 @@
 {
 	"id": "golang-project-api-diff",
 	"artefact": "ARTEFACT_GOLANG_PROJECTS_API_DIFF",
-	"keys": ["artefact", "project", "commit1", "commit2"]
+	"keys": ["artefact", "repository", "commit1", "commit2"],
+	"key_order": {
+		"repository": ["provider", "username", "project"]
+	}
 },
 {
 	"id": "golang-project-to-package-name",
