@@ -6,6 +6,7 @@ from infra.system.artefacts.artefacts import ARTEFACT_GOLANG_DISTRIBUTION_SNAPSH
 from infra.system.core.acts.types import ActFailedError
 from infra.system.core.functions.types import FunctionFailedError
 from infra.system.core.factory.actfactory import ActFactory
+from infra.system.core.factory.fakeactfactory import FakeActFactory
 from gofed_lib.distribution.distributionsnapshot import DistributionSnapshot
 from gofed_lib.utils import BLUE, YELLOW, ENDC, WHITE
 
@@ -13,12 +14,16 @@ from infra.system.artefacts.artefacts import ARTEFACT_GOLANG_PROJECT_DISTRIBUTIO
 
 class DistributionBuildsFetcher(object):
 
-	def __init__(self, pkgdb_client):
-		self.pkgdb_client = pkgdb_client
+	def __init__(self, pkgdb_client, dry_run=False):
+		self._pkgdb_client = pkgdb_client
 
-		self.artefactreaderact = ActFactory().bake("artefact-reader")
-		self.artefactwriteract = ActFactory().bake("artefact-writer")
-		self.scan_act = ActFactory().bake("scan-distribution-package")
+		if dry_run:
+			act_factory = FakeActFactory()
+		else:
+			act_factory = ActFactory()
+
+		self._artefactreaderact = act_factory.bake("artefact-reader")
+		self._scan_act = act_factory.bake("scan-distribution-package")
 
 	def fetch(self, distributions, since = 0, to = int(time.time() + 86400)):
 		"""Collect list of builds since a given date for each package
@@ -32,7 +37,7 @@ class DistributionBuildsFetcher(object):
 		:type  to: int
 		"""
 
-		collections = self.pkgdb_client.getCollections()
+		collections = self._pkgdb_client.getCollections()
 		for distribution in distributions:
 			product = distribution.product()
 			version = distribution.version()
@@ -49,7 +54,7 @@ class DistributionBuildsFetcher(object):
 
 			logger.info("%sScanning %s %s ...%s" % (YELLOW, product, version, ENDC))
 			try:
-				data = self.artefactreaderact.call({
+				data = self._artefactreaderact.call({
 					"artefact": ARTEFACT_GOLANG_DISTRIBUTION_SNAPSHOT,
 					"distribution": distribution.json()
 				})
@@ -63,7 +68,7 @@ class DistributionBuildsFetcher(object):
 					logger.info("%sScanning %s ...%s" % (BLUE, build, ENDC))
 					# get package's items info artefact
 					try:
-						items_info = self.artefactreaderact.call({
+						items_info = self._artefactreaderact.call({
 							"artefact": ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_PACKAGE_BUILDS,
 							"product": distribution.product(),
 							"distribution": dist_tag,
@@ -84,7 +89,7 @@ class DistributionBuildsFetcher(object):
 						start_ts = start_ts - 1
 
 					try:
-						self.scan_act.call({
+						self._scan_act.call({
 							"package": build,
 							"product": distribution.product(),
 							"distribution": dist_tag,
