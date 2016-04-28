@@ -1,0 +1,1 @@
+{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/coreos/gexpect", "build": "golang-github-coreos-gexpect-0-0.1.git5173270.fc25", "commit": "5173270e159f5aa8fbc999dc7e3dcb50f4098a69", "distribution": "rawhide", "rpm": "golang-github-coreos-gexpect-devel-0-0.1.git5173270.fc25.noarch.rpm"}

@@ -1,0 +1,1 @@
+{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/jmhodges/levigo", "build": "golang-github-jmhodges-levigo-0-0.7.git253793d.fc24", "commit": "253793d7b92ea4d3a5e2e4368691c52e70f2c6fc", "distribution": "rawhide", "rpm": "golang-github-jmhodges-levigo-devel-0-0.7.git253793d.fc24.noarch.rpm"}

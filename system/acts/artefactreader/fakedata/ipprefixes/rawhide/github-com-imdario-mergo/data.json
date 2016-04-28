@@ -1,0 +1,1 @@
+{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/imdario/mergo", "build": "golang-github-imdario-mergo-0-0.6.git6ce7536.fc24", "commit": "6ce7536fed6623eff47b95768f858a0f8d1ac57b", "distribution": "rawhide", "rpm": "golang-github-imdario-mergo-devel-0-0.6.git6ce7536.fc24.noarch.rpm"}

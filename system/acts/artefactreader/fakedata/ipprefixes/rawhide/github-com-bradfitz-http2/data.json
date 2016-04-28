@@ -1,0 +1,1 @@
+{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/bradfitz/http2", "build": "golang-github-bradfitz-http2-0-0.4.gitf8202bc.fc24", "commit": "f8202bc903bda493ebba4aa54922d78430c2c42f", "distribution": "rawhide", "rpm": "golang-github-bradfitz-http2-devel-0-0.4.gitf8202bc.fc24.noarch.rpm"}

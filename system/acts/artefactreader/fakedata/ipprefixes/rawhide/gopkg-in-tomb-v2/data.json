@@ -1,0 +1,1 @@
+{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "gopkg.in/tomb.v2", "build": "golang-github-go-tomb-tomb-0-0.6.git14b3d72.fc25", "commit": "14b3d72120e8d10ea6e6b7f87f7175734b1faab8", "distribution": "rawhide", "rpm": "golang-github-go-tomb-tomb-devel-0-0.6.git14b3d72.fc25.noarch.rpm"}

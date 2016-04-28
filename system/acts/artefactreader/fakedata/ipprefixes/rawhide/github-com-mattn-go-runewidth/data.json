@@ -1,0 +1,1 @@
+{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/mattn/go-runewidth", "build": "golang-github-mattn-go-runewidth-0-0.1.gitd6bea18.fc25", "commit": "d6bea18f789704b5f83375793155289da36a3c7f", "distribution": "rawhide", "rpm": "golang-github-mattn-go-runewidth-devel-0-0.1.gitd6bea18.fc25.noarch.rpm"}

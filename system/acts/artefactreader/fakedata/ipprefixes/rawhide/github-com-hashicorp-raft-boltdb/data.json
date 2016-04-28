@@ -1,0 +1,1 @@
+{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/hashicorp/raft-boltdb", "build": "golang-github-hashicorp-raft-boltdb-0-0.5.gitd1e82c1.fc24", "commit": "d1e82c1ec3f15ee991f7cc7ffd5b67ff6f5bbaee", "distribution": "rawhide", "rpm": "golang-github-hashicorp-raft-boltdb-devel-0-0.5.gitd1e82c1.fc24.noarch.rpm"}

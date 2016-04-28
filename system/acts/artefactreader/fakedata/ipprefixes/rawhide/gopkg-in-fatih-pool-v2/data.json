@@ -1,0 +1,1 @@
+{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "gopkg.in/fatih/pool.v2", "build": "golang-github-fatih-pool-0-0.3.gitcba550e.fc24", "commit": "cba550ebf9bce999a02e963296d4bc7a486cb715", "distribution": "rawhide", "rpm": "golang-github-fatih-pool-devel-0-0.3.gitcba550e.fc24.noarch.rpm"}

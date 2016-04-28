@@ -1,0 +1,1 @@
+{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/jessevdk/go-flags", "build": "golang-github-jessevdk-go-flags-0-0.5.git5e11878.fc24", "commit": "5e118789801496c93ba210d34ef1f2ce5a9173bd", "distribution": "rawhide", "rpm": "golang-github-jessevdk-go-flags-devel-0-0.5.git5e11878.fc24.noarch.rpm"}

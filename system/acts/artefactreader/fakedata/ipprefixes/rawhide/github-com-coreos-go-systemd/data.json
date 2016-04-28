@@ -1,0 +1,1 @@
+{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/coreos/go-systemd", "build": "golang-github-coreos-go-systemd-4-3.fc24", "commit": "b4a58d95188dd092ae20072bac14cece0e67c388", "distribution": "rawhide", "rpm": "golang-github-coreos-go-systemd-devel-4-3.fc24.noarch.rpm"}

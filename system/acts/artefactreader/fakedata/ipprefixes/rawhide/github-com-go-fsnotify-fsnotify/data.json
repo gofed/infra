@@ -1,0 +1,1 @@
+{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/go-fsnotify/fsnotify", "build": "golang-github-go-fsnotify-fsnotify-1.2.0-0.4.git96c060f.fc25", "commit": "96c060f6a6b7e0d6f75fddd10efeaca3e5d1bcb0", "distribution": "rawhide", "rpm": "golang-github-go-fsnotify-fsnotify-devel-1.2.0-0.4.git96c060f.fc25.noarch.rpm"}

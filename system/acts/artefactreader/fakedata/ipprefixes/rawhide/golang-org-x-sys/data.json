@@ -1,0 +1,1 @@
+{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "golang.org/x/sys", "build": "golang-github-golang-sys-0-0.3.git9c60d1c.fc24", "commit": "9c60d1c508f5134d1ca726b4641db998f2523357", "distribution": "rawhide", "rpm": "golang-github-golang-sys-devel-0-0.3.git9c60d1c.fc24.noarch.rpm"}

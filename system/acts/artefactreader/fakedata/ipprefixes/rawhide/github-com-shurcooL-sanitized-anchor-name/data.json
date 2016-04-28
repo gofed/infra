@@ -1,0 +1,1 @@
+{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/shurcooL/sanitized_anchor_name", "build": "golang-github-shurcooL-sanitized_anchor_name-0-0.10.git10ef21a.fc25", "commit": "10ef21a441db47d8b13ebcc5fd2310f636973c77", "distribution": "rawhide", "rpm": "golang-github-shurcooL-sanitized_anchor_name-devel-0-0.10.git10ef21a.fc25.noarch.rpm"}

@@ -1,0 +1,1 @@
+{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/MakeNowJust/heredoc", "build": "golang-github-MakeNowJust-heredoc-0-0.3.git1d91351.fc24", "commit": "1d91351acdc1cb2f2c995864674b754134b86ca7", "distribution": "rawhide", "rpm": "golang-github-MakeNowJust-heredoc-devel-0-0.3.git1d91351.fc24.noarch.rpm"}

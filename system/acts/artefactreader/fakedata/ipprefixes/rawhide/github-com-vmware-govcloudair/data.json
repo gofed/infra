@@ -1,0 +1,1 @@
+{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/vmware/govcloudair", "build": "golang-github-vmware-govcloudair-0-0.4.git0d7be90.fc24", "commit": "0d7be903f950c035d6e95eabfd9b011a507f4488", "distribution": "rawhide", "rpm": "golang-github-vmware-govcloudair-devel-0-0.4.git0d7be90.fc24.noarch.rpm"}

@@ -1,0 +1,1 @@
+{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/jfrazelle/go", "build": "golang-github-jfrazelle-go-0-0.3.git6e461eb.fc24", "commit": "6e461eb70cb4187b41a84e9a567d7137bdbe0f16", "distribution": "rawhide", "rpm": "golang-github-jfrazelle-go-devel-0-0.3.git6e461eb.fc24.noarch.rpm"}

@@ -1,0 +1,1 @@
+{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/hashicorp/raft", "build": "golang-github-hashicorp-raft-0-0.6.gitd136cd1.fc24", "commit": "d136cd15dfb7876fd7c89cad1995bc4f19ceb294", "distribution": "rawhide", "rpm": "golang-github-hashicorp-raft-devel-0-0.6.gitd136cd1.fc24.noarch.rpm"}

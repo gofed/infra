@@ -1,0 +1,1 @@
+{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/onsi/gomega", "build": "golang-github-onsi-gomega-0-0.7.git8adf9e1.fc24", "commit": "8adf9e1730c55cdc590de7d49766cb2acc88d8f2", "distribution": "rawhide", "rpm": "golang-github-onsi-gomega-devel-0-0.7.git8adf9e1.fc24.noarch.rpm"}

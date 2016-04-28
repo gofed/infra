@@ -1,0 +1,1 @@
+{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/endophage/gotuf", "build": "golang-github-endophage-gotuf-0-0.3.git9bcdad0.fc24", "commit": "9bcdad0308e34a49f38448b8ad436ad8860825ce", "distribution": "rawhide", "rpm": "golang-github-endophage-gotuf-devel-0-0.3.git9bcdad0.fc24.noarch.rpm"}

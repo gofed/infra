@@ -1,0 +1,1 @@
+{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/google/go-querystring", "build": "golang-github-google-go-querystring-0-0.5.git547ef5a.fc24", "commit": "547ef5ac979778feb2f760cdb5f4eae1a2207b86", "distribution": "rawhide", "rpm": "golang-github-google-go-querystring-devel-0-0.5.git547ef5a.fc24.noarch.rpm"}

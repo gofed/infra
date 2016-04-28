@@ -1,0 +1,1 @@
+{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/russross/blackfriday", "build": "golang-github-russross-blackfriday-1.2-14.fc25", "commit": "300106c228d52c8941d4b3de6054a6062a86dda3", "distribution": "rawhide", "rpm": "golang-github-russross-blackfriday-devel-1.2-14.fc25.noarch.rpm"}

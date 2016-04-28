@@ -1,0 +1,1 @@
+{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/openshift/go-systemd", "build": "golang-github-openshift-go-systemd-0-0.8.git3e62c31.fc24", "commit": "3e62c31315198df83edded90b68a33509c9f5b56", "distribution": "rawhide", "rpm": "golang-github-openshift-go-systemd-devel-0-0.8.git3e62c31.fc24.noarch.rpm"}

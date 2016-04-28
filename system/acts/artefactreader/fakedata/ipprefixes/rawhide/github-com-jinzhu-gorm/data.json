@@ -1,0 +1,1 @@
+{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/jinzhu/gorm", "build": "golang-github-jinzhu-gorm-0-0.3.git82d726b.fc24", "commit": "82d726bbfd8cefbe2dcdc7f7f0484551c0d40433", "distribution": "rawhide", "rpm": "golang-github-jinzhu-gorm-devel-0-0.3.git82d726b.fc24.noarch.rpm"}

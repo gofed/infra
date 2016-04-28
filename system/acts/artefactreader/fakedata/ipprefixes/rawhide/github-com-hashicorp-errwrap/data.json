@@ -1,0 +1,1 @@
+{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/hashicorp/errwrap", "build": "golang-github-hashicorp-errwrap-0-0.3.git7554cd9.fc24", "commit": "7554cd9344cec97297fa6649b055a8c98c2a1e55", "distribution": "rawhide", "rpm": "golang-github-hashicorp-errwrap-devel-0-0.3.git7554cd9.fc24.noarch.rpm"}

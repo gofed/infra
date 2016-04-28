@@ -1,0 +1,1 @@
+{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/noahdesu/go-ceph", "build": "golang-github-noahdesu-go-ceph-0.3.0-0.3.gitb15639c.fc24", "commit": "b15639c44c05368348355229070361395d9152ee", "distribution": "rawhide", "rpm": "golang-github-noahdesu-go-ceph-devel-0.3.0-0.3.gitb15639c.fc24.noarch.rpm"}

@@ -1,0 +1,1 @@
+{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/bugsnag/panicwrap", "build": "golang-github-bugsnag-panicwrap-1.1.0-0.1.gitaceac81.fc25", "commit": "aceac81c6e2f55f23844821679a0553b545e91df", "distribution": "rawhide", "rpm": "golang-github-bugsnag-panicwrap-devel-1.1.0-0.1.gitaceac81.fc25.noarch.rpm"}

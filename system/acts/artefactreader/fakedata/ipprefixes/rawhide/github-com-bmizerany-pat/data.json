@@ -1,0 +1,1 @@
+{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/bmizerany/pat", "build": "golang-github-bmizerany-pat-0-0.6.gitb8a3500.fc24", "commit": "b8a35001b773c267eb260a691f4e5499a3531600", "distribution": "rawhide", "rpm": "golang-github-bmizerany-pat-devel-0-0.6.gitb8a3500.fc24.noarch.rpm"}

@@ -1,0 +1,1 @@
+{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/hashicorp/consul-migrate", "build": "golang-github-hashicorp-consul-migrate-0-0.5.git4977886.fc24", "commit": "4977886fc950a0db1a6f0bbadca56dfabf170f9c", "distribution": "rawhide", "rpm": "golang-github-hashicorp-consul-migrate-devel-0-0.5.git4977886.fc24.noarch.rpm"}

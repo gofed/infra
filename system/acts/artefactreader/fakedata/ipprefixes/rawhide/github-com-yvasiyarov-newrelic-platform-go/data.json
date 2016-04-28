@@ -1,0 +1,1 @@
+{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/yvasiyarov/newrelic_platform_go", "build": "golang-github-yvasiyarov-newrelic_platform_go-0-0.1.gitb21fdbd.fc25", "commit": "b21fdbd4370f3717f3bbd2bf41c223bc273068e6", "distribution": "rawhide", "rpm": "golang-github-yvasiyarov-newrelic_platform_go-devel-0-0.1.gitb21fdbd.fc25.noarch.rpm"}

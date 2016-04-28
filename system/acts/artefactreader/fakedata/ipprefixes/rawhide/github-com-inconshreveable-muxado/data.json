@@ -1,0 +1,1 @@
+{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/inconshreveable/muxado", "build": "golang-github-inconshreveable-muxado-0-0.5.gitf693c7e.fc24", "commit": "f693c7e88ba316d1a0ae3e205e22a01aa3ec2848", "distribution": "rawhide", "rpm": "golang-github-inconshreveable-muxado-devel-0-0.5.gitf693c7e.fc24.noarch.rpm"}

@@ -1,0 +1,1 @@
+{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/vbatts/tar-split", "build": "golang-github-vbatts-tar-split-0.9.13-2.fc24", "commit": "24fe0a94fe8e2f2c42cb1d49277379e8f2dbb06e", "distribution": "rawhide", "rpm": "golang-github-vbatts-tar-split-devel-0.9.13-2.fc24.noarch.rpm"}

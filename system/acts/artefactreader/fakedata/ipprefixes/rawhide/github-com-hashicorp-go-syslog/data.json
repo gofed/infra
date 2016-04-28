@@ -1,0 +1,1 @@
+{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/hashicorp/go-syslog", "build": "golang-github-hashicorp-go-syslog-0-0.5.git42a2b57.fc24", "commit": "42a2b573b664dbf281bd48c3cc12c086b17a39ba", "distribution": "rawhide", "rpm": "golang-github-hashicorp-go-syslog-devel-0-0.5.git42a2b57.fc24.noarch.rpm"}

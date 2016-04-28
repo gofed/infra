@@ -1,0 +1,1 @@
+{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/ghodss/yaml", "build": "golang-github-ghodss-yaml-0-0.9.git588cb43.fc24", "commit": "588cb435e59ee8b6c2795482887755841ad67207", "distribution": "rawhide", "rpm": "golang-github-ghodss-yaml-devel-0-0.9.git588cb43.fc24.noarch.rpm"}

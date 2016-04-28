@@ -1,0 +1,1 @@
+{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/kballard/go-shellquote", "build": "golang-github-kballard-go-shellquote-0-0.1.gitd8ec1a6.fc25", "commit": "d8ec1a69a250a17bb0e419c386eac1f3711dc142", "distribution": "rawhide", "rpm": "golang-github-kballard-go-shellquote-devel-0-0.1.gitd8ec1a6.fc25.noarch.rpm"}

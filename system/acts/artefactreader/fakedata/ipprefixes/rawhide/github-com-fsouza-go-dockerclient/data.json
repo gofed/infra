@@ -1,0 +1,1 @@
+{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/fsouza/go-dockerclient", "build": "golang-github-fsouza-go-dockerclient-0.2.1-16.git2350d7b.fc24", "commit": "2350d7bc12bb04f2d7d6824c7718012b1397b760", "distribution": "rawhide", "rpm": "golang-github-fsouza-go-dockerclient-devel-0.2.1-16.git2350d7b.fc24.noarch.rpm"}

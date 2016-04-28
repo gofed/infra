@@ -1,0 +1,1 @@
+{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/gorilla/context", "build": "golang-github-gorilla-context-0-0.33.git215affd.fc24", "commit": "215affda49addc4c8ef7e2534915df2c8c35c6cd", "distribution": "rawhide", "rpm": "golang-github-gorilla-context-devel-0-0.33.git215affd.fc24.noarch.rpm"}

@@ -1,0 +1,1 @@
+{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/denverdino/aliyungo", "build": "golang-github-denverdino-aliyungo-0-0.4.git6ffb587.fc25", "commit": "6ffb587da9da6d029d0ce517b85fecc82172d502", "distribution": "rawhide", "rpm": "golang-github-denverdino-aliyungo-devel-0-0.4.git6ffb587.fc25.noarch.rpm"}

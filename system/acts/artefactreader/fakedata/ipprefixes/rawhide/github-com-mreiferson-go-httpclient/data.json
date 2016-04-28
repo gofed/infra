@@ -1,0 +1,1 @@
+{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/mreiferson/go-httpclient", "build": "golang-github-mreiferson-go-httpclient-0-0.5.gitc121dfe.fc24", "commit": "c121dfe45d66997e43e25a6823fbe7466c8403fe", "distribution": "rawhide", "rpm": "golang-github-mreiferson-go-httpclient-devel-0-0.5.gitc121dfe.fc24.noarch.rpm"}

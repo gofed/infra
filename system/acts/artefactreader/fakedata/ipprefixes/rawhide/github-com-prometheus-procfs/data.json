@@ -1,0 +1,1 @@
+{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/prometheus/procfs", "build": "golang-github-prometheus-procfs-0-0.14.git406e5b7.fc25", "commit": "406e5b7bfd8201a36e2bb5f7bdae0b03380c2ce8", "distribution": "rawhide", "rpm": "golang-github-prometheus-procfs-devel-0-0.14.git406e5b7.fc25.noarch.rpm"}

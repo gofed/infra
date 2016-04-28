@@ -1,0 +1,1 @@
+{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/getsentry/raven-go", "build": "golang-github-getsentry-raven-go-0-0.3.git86cd406.fc24", "commit": "86cd4063c535cbbcbf43d84424dbd5911ab1b818", "distribution": "rawhide", "rpm": "golang-github-getsentry-raven-go-devel-0-0.3.git86cd406.fc24.noarch.rpm"}

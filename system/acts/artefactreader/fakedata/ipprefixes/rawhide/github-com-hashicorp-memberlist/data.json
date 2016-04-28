@@ -1,0 +1,1 @@
+{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/hashicorp/memberlist", "build": "golang-github-hashicorp-memberlist-0-0.6.git28424fb.fc24", "commit": "28424fb38c7c3e30f366b72b1a55f690d318d8f3", "distribution": "rawhide", "rpm": "golang-github-hashicorp-memberlist-devel-0-0.6.git28424fb.fc24.noarch.rpm"}

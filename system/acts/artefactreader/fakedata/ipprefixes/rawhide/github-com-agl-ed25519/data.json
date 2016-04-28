@@ -1,0 +1,1 @@
+{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/agl/ed25519", "build": "golang-github-agl-ed25519-0-0.3.gitd2b94fd.fc24", "commit": "d2b94fd789ea21d12fac1a4443dd3a3f79cda72c", "distribution": "rawhide", "rpm": "golang-github-agl-ed25519-devel-0-0.3.gitd2b94fd.fc24.noarch.rpm"}

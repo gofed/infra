@@ -1,0 +1,1 @@
+{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/evanphx/json-patch", "build": "golang-github-evanphx-json-patch-0-0.6.gita1ba76c.fc24", "commit": "a1ba76c74289b81e1c19281fc0ff0d2b2dd11482", "distribution": "rawhide", "rpm": "golang-github-evanphx-json-patch-devel-0-0.6.gita1ba76c.fc24.noarch.rpm"}

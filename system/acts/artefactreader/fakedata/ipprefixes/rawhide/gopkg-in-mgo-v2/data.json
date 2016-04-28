@@ -1,0 +1,1 @@
+{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "gopkg.in/mgo.v2", "build": "golang-github-go-mgo-mgo-0-0.5.gite30de8a.fc24", "commit": "e30de8ac9ae3b30df7065f766c71f88bba7d4e49", "distribution": "rawhide", "rpm": "golang-github-go-mgo-mgo-devel-0-0.5.gite30de8a.fc24.noarch.rpm"}

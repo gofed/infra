@@ -1,0 +1,1 @@
+{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/stretchr/testify", "build": "golang-github-stretchr-testify-1.0-0.5.git089c718.fc24", "commit": "089c7181b8c728499929ff09b62d3fdd8df8adff", "distribution": "rawhide", "rpm": "golang-github-stretchr-testify-devel-1.0-0.5.git089c718.fc24.noarch.rpm"}

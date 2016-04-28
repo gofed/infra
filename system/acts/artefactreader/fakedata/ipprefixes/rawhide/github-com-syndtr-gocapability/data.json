@@ -1,0 +1,1 @@
+{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/syndtr/gocapability", "build": "golang-github-syndtr-gocapability-0-0.14.git2c00dae.fc24", "commit": "2c00daeb6c3b45114c80ac44119e7b8801fdd852", "distribution": "rawhide", "rpm": "golang-github-syndtr-gocapability-devel-0-0.14.git2c00dae.fc24.noarch.rpm"}

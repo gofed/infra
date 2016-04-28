@@ -1,0 +1,1 @@
+{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/lpabon/godbc", "build": "golang-github-lpabon-godbc-1.0.1-3.git9577782.fc24", "commit": "9577782540c1398b710ddae1b86268ba03a19b0c", "distribution": "rawhide", "rpm": "golang-github-lpabon-godbc-devel-1.0.1-3.git9577782.fc24.noarch.rpm"}

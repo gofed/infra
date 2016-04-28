@@ -1,0 +1,1 @@
+{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/abbot/go-http-auth", "build": "golang-github-abbot-go-http-auth-0-0.7.gitc0ef453.fc24", "commit": "c0ef4539dfab4d21c8ef20ba2924f9fc6f186d35", "distribution": "rawhide", "rpm": "golang-github-abbot-go-http-auth-devel-0-0.7.gitc0ef453.fc24.noarch.rpm"}

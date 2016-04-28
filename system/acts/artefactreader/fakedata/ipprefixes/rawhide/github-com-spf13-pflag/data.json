@@ -1,0 +1,1 @@
+{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/spf13/pflag", "build": "golang-github-spf13-pflag-0-0.13.git08b1a58.fc25", "commit": "08b1a584251b5b62f458943640fc8ebd4d50aaa5", "distribution": "rawhide", "rpm": "golang-github-spf13-pflag-devel-0-0.13.git08b1a58.fc25.noarch.rpm"}

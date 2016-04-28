@@ -1,0 +1,1 @@
+{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/klauspost/crc32", "build": "golang-github-klauspost-crc32-0-0.1.gita3b15ae.fc25", "commit": "a3b15ae34567abb20a22992b989cd76f48d09c47", "distribution": "rawhide", "rpm": "golang-github-klauspost-crc32-devel-0-0.1.gita3b15ae.fc25.noarch.rpm"}

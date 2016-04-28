@@ -58,6 +58,7 @@
 from gofed_lib.go.importpath.parserbuilder import ImportPathParserBuilder
 from gofed_lib.providers.providerbuilder import ProviderBuilder
 from infra.system.core.factory.actfactory import ActFactory
+from infra.system.core.factory.fakeactfactory import FakeActFactory
 from infra.system.artefacts.artefacts import (
 	ARTEFACT_GOLANG_IPPREFIX_TO_RPM,
 	ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_PACKAGES,
@@ -67,13 +68,18 @@ from infra.system.core.acts.types import ActFailedError
 import logging
 from gofed_lib.utils import RED, GREEN, BLUE, WHITE, ENDC
 
-
 class SnapshotChecker(object):
 
-	def __init__(self):
+	def __init__(self, dryrun=False):
 		self.ipparser = ImportPathParserBuilder().buildWithLocalMapping()
-		self.artefactreaderact = ActFactory().bake("artefact-reader")
-		self.commitreaderact = ActFactory().bake("scan-upstream-repository")
+
+		if dryrun:
+			act_factory = FakeActFactory()
+		else:
+			act_factory = ActFactory()
+
+		self.artefactreaderact = act_factory.bake("artefact-reader")
+		self.commitreaderact = act_factory.bake("scan-upstream-repository")
 
 		self._project_provider = ProviderBuilder().buildUpstreamWithLocalMapping()
 
@@ -187,7 +193,12 @@ class SnapshotChecker(object):
 			comparison = self._comparePackages(ipprefix, upstream_commit, distro_commit)
 
 			# check if packages in ipprefix class are covered in distribution
-			not_covered = self._checkPackageCoverage(product, distribution, rpms[ipprefix]["build"], rpms[ipprefix]["rpm"], ipprefix, ipprefixes[ipprefix])
+			try:
+				not_covered = self._checkPackageCoverage(product, distribution, rpms[ipprefix]["build"], rpms[ipprefix]["rpm"], ipprefix, ipprefixes[ipprefix])
+			except ActFailedError:
+				logging.error("golang-project-packages artefact for '%s' not retrieved" % ipprefix)
+				print "%s: %scoverage unknown%s" % (comparison, RED, ENDC)
+				continue
 
 			if not_covered != []:
 				print "%s: %snot covered: %s%s" % (comparison, RED, not_covered, ENDC)

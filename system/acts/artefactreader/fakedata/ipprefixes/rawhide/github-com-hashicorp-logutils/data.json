@@ -1,0 +1,1 @@
+{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/hashicorp/logutils", "build": "golang-github-hashicorp-logutils-0-0.6.git0dc08b1.fc24", "commit": "0dc08b1671f34c4250ce212759ebd880f743d883", "distribution": "rawhide", "rpm": "golang-github-hashicorp-logutils-devel-0-0.6.git0dc08b1.fc24.noarch.rpm"}

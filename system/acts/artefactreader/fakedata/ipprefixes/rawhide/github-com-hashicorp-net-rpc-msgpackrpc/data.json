@@ -1,0 +1,1 @@
+{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/hashicorp/net-rpc-msgpackrpc", "build": "golang-github-hashicorp-net-rpc-msgpackrpc-0-0.7.gita14192a.fc24", "commit": "a14192a58a694c123d8fe5481d4a4727d6ae82f3", "distribution": "rawhide", "rpm": "golang-github-hashicorp-net-rpc-msgpackrpc-devel-0-0.7.gita14192a.fc24.noarch.rpm"}

@@ -1,0 +1,1 @@
+{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/armon/go-radix", "build": "golang-github-armon-go-radix-0-0.6.gitfbd82e8.fc24", "commit": "fbd82e84e2b13651f3abc5ffd26b65ba71bc8f93", "distribution": "rawhide", "rpm": "golang-github-armon-go-radix-devel-0-0.6.gitfbd82e8.fc24.noarch.rpm"}

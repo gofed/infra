@@ -1,0 +1,1 @@
+{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/inconshreveable/mousetrap", "build": "golang-github-inconshreveable-mousetrap-0-0.3.git76626ae.fc24", "commit": "76626ae9c91c4f2a10f34cad8ce83ea42c93bb75", "distribution": "rawhide", "rpm": "golang-github-inconshreveable-mousetrap-devel-0-0.3.git76626ae.fc24.noarch.rpm"}

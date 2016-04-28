@@ -1,0 +1,1 @@
+{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/docker/libtrust", "build": "golang-github-docker-libtrust-0-0.8.gitfa56704.fc25", "commit": "fa567046d9b14f6aa788882a950d69651d230b21", "distribution": "rawhide", "rpm": "golang-github-docker-libtrust-devel-0-0.8.gitfa56704.fc25.noarch.rpm"}

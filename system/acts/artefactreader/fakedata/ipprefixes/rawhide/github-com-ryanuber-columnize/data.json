@@ -1,0 +1,1 @@
+{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/ryanuber/columnize", "build": "golang-github-ryanuber-columnize-0-0.4.git983d3a5.fc24", "commit": "983d3a5fab1bf04d1b412465d2d9f8430e2e917e", "distribution": "rawhide", "rpm": "golang-github-ryanuber-columnize-devel-0-0.4.git983d3a5.fc24.noarch.rpm"}

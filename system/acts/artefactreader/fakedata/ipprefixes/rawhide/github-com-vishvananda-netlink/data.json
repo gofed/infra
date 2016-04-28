@@ -1,0 +1,1 @@
+{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/vishvananda/netlink", "build": "golang-github-vishvananda-netlink-0-0.7.git1e2e08e.fc24", "commit": "1e2e08e8a2dcdacaae3f14ac44c5cfa31361f270", "distribution": "rawhide", "rpm": "golang-github-vishvananda-netlink-devel-0-0.7.git1e2e08e.fc24.noarch.rpm"}

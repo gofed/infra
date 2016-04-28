@@ -1,0 +1,1 @@
+{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/spacemonkeygo/spacelog", "build": "golang-github-spacemonkeygo-spacelog-0-0.4.gitae95ccc.fc25", "commit": "ae95ccc1eb0c8ce2496c43177430efd61930f7e4", "distribution": "rawhide", "rpm": "golang-github-spacemonkeygo-spacelog-devel-0-0.4.gitae95ccc.fc25.noarch.rpm"}

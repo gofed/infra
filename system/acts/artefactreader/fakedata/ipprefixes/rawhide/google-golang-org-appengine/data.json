@@ -1,0 +1,1 @@
+{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "google.golang.org/appengine", "build": "golang-github-golang-appengine-0-0.6.git1c3fdc5.fc24", "commit": "1c3fdc51e1021e4822cf8475c97d3a14a2a6648e", "distribution": "rawhide", "rpm": "golang-github-golang-appengine-devel-0-0.6.git1c3fdc5.fc24.noarch.rpm"}

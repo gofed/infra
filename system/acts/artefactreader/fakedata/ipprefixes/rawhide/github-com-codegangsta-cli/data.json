@@ -1,0 +1,1 @@
+{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/codegangsta/cli", "build": "golang-github-codegangsta-cli-1.2.0-9.fc25", "commit": "c31a7975863e7810c92e2e288a9ab074f9a88f29", "distribution": "rawhide", "rpm": "golang-github-codegangsta-cli-devel-1.2.0-9.fc25.noarch.rpm"}

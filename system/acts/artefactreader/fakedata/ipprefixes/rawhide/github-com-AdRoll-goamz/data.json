@@ -1,0 +1,1 @@
+{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/AdRoll/goamz", "build": "golang-github-AdRoll-goamz-0-0.5.gitaa6e716.fc25", "commit": "aa6e716d710a0c7941cb2075cfbb9661f16d21f1", "distribution": "rawhide", "rpm": "golang-github-AdRoll-goamz-devel-0-0.5.gitaa6e716.fc25.noarch.rpm"}

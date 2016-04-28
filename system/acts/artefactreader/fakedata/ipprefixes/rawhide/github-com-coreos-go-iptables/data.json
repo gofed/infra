@@ -1,0 +1,1 @@
+{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/coreos/go-iptables", "build": "golang-github-coreos-go-iptables-0-0.4.git74b0926.fc24", "commit": "74b0926558061d3a23824e9c18c9cf9c1b9c11f4", "distribution": "rawhide", "rpm": "golang-github-coreos-go-iptables-devel-0-0.4.git74b0926.fc24.noarch.rpm"}

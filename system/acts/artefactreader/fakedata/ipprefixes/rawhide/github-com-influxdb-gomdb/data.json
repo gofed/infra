@@ -1,0 +1,1 @@
+{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/influxdb/gomdb", "build": "golang-github-influxdb-gomdb-0-0.2.git29fe330.fc23", "commit": "29fe330c5ab33c4e48470bd4b980bf522471190a", "distribution": "rawhide", "rpm": "golang-github-influxdb-gomdb-devel-0-0.2.git29fe330.fc23.noarch.rpm"}

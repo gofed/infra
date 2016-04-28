@@ -1,0 +1,1 @@
+{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/davecgh/go-spew", "build": "golang-github-davecgh-go-spew-0-0.5.git3e6e67c.fc24", "commit": "3e6e67c4dcea3ac2f25fd4731abc0e1deaf36216", "distribution": "rawhide", "rpm": "golang-github-davecgh-go-spew-devel-0-0.5.git3e6e67c.fc24.noarch.rpm"}

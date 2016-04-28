@@ -1,0 +1,1 @@
+{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/docker/libcontainer", "build": "golang-github-docker-libcontainer-2.1.1-0.7.gitc964368.fc25", "commit": "c9643688cb73c2588a9c9b14357bda6c3a9df67f", "distribution": "rawhide", "rpm": "golang-github-docker-libcontainer-devel-2.1.1-0.7.gitc964368.fc25.noarch.rpm"}

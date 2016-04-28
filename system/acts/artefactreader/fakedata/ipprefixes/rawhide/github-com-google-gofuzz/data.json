@@ -1,0 +1,1 @@
+{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/google/gofuzz", "build": "golang-github-google-gofuzz-0-0.11.gitbbcb9da.fc24", "commit": "bbcb9da2d746f8bdbd6a936686a0a6067ada0ec5", "distribution": "rawhide", "rpm": "golang-github-google-gofuzz-devel-0-0.11.gitbbcb9da.fc24.noarch.rpm"}

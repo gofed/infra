@@ -1,0 +1,1 @@
+{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/RangelReale/osin", "build": "golang-github-RangelReale-osin-0-0.3.gitc07b3bd.fc24", "commit": "c07b3bd1ee57089f63e6325c0ea035ceed2e905c", "distribution": "rawhide", "rpm": "golang-github-RangelReale-osin-devel-0-0.3.gitc07b3bd.fc24.noarch.rpm"}

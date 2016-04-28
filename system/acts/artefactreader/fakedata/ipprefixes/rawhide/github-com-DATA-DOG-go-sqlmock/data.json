@@ -1,0 +1,1 @@
+{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/DATA-DOG/go-sqlmock", "build": "golang-github-DATA-DOG-go-sqlmock-0.1.0-3.fc24", "commit": "ed4836e31d3e9e77420e442ed9b864df55370ee0", "distribution": "rawhide", "rpm": "golang-github-DATA-DOG-go-sqlmock-devel-0.1.0-3.fc24.noarch.rpm"}

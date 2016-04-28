@@ -1,0 +1,1 @@
+{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/gonum/lapack", "build": "golang-github-gonum-lapack-0-0.1.git88ec467.fc24", "commit": "88ec467285859a6cd23900147d250a8af1f38b10", "distribution": "rawhide", "rpm": "golang-github-gonum-lapack-devel-0-0.1.git88ec467.fc24.noarch.rpm"}

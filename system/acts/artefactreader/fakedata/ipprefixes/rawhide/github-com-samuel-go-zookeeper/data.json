@@ -1,0 +1,1 @@
+{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/samuel/go-zookeeper", "build": "golang-github-samuel-go-zookeeper-0-0.5.gitd0e0d8e.fc24", "commit": "d0e0d8e11f318e000a8cc434616d69e329edc374", "distribution": "rawhide", "rpm": "golang-github-samuel-go-zookeeper-devel-0-0.5.gitd0e0d8e.fc24.noarch.rpm"}

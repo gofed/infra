@@ -1,0 +1,1 @@
+{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/bugsnag/bugsnag-go", "build": "golang-github-bugsnag-bugsnag-go-1.0.4-3.fc24", "commit": "13fd6b8acda029830ef9904df6b63be0a83369d0", "distribution": "rawhide", "rpm": "golang-github-bugsnag-bugsnag-go-devel-1.0.4-3.fc24.noarch.rpm"}

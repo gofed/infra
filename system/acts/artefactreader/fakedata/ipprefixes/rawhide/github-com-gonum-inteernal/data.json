@@ -1,0 +1,1 @@
+{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/gonum/inteernal", "build": "golang-github-gonum-internal-0-0.3.git5b84ddf.fc24", "commit": "5b84ddfb9d3e72d73b8de858c97650be140935c0", "distribution": "rawhide", "rpm": "golang-github-gonum-internal-devel-0-0.3.git5b84ddf.fc24.noarch.rpm"}

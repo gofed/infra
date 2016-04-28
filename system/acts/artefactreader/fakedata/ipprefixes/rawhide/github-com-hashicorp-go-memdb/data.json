@@ -1,0 +1,1 @@
+{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/hashicorp/go-memdb", "build": "golang-github-hashicorp-go-memdb-0-0.3.git9ea975b.fc24", "commit": "9ea975be0e31ada034a5760340d4892f3f543d20", "distribution": "rawhide", "rpm": "golang-github-hashicorp-go-memdb-devel-0-0.3.git9ea975b.fc24.noarch.rpm"}

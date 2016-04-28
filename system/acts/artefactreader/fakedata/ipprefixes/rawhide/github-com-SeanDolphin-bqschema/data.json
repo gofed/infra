@@ -1,0 +1,1 @@
+{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/SeanDolphin/bqschema", "build": "golang-github-SeanDolphin-bqschema-0-0.9.git41d07ee.fc24", "commit": "41d07ee00eeaf8282a8bde17cbddab98635b7a4a", "distribution": "rawhide", "rpm": "golang-github-SeanDolphin-bqschema-devel-0-0.9.git41d07ee.fc24.noarch.rpm"}

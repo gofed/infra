@@ -1,0 +1,1 @@
+{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/pborman/uuid", "build": "golang-googlecode-uuid-0-0.8.gitca53cad.fc25", "commit": "ca53cad383cad2479bbba7f7a1a05797ec1386e4", "distribution": "rawhide", "rpm": "golang-github-pborman-uuid-devel-0-0.8.gitca53cad.fc25.noarch.rpm"}

@@ -1,0 +1,1 @@
+{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "google.golang.org/cloud", "build": "golang-google-golangorg-cloud-0-0.7.git2400193.fc25", "commit": "2400193c85c3561d13880d34e0e10c4315bb02af", "distribution": "rawhide", "rpm": "golang-google-golangorg-cloud-devel-0-0.7.git2400193.fc25.noarch.rpm"}

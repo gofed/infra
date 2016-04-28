@@ -1,0 +1,1 @@
+{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/kdar/factorlog", "build": "golang-github-kdar-factorlog-0-0.7.git814d8f7.fc24", "commit": "814d8f7ea0cba0a35203db9181a3269699eca59e", "distribution": "rawhide", "rpm": "golang-github-kdar-factorlog-devel-0-0.7.git814d8f7.fc24.noarch.rpm"}

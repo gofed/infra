@@ -1,0 +1,1 @@
+{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/smartystreets/go-aws-auth", "build": "golang-github-smartystreets-go-aws-auth-0-0.4.git1f0db8c.fc24", "commit": "1f0db8c0ee6362470abe06a94e3385927ed72a4b", "distribution": "rawhide", "rpm": "golang-github-smartystreets-go-aws-auth-devel-0-0.4.git1f0db8c.fc24.noarch.rpm"}

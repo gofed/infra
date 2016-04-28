@@ -1,0 +1,1 @@
+{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/pmezard/go-difflib", "build": "golang-github-pmezard-go-difflib-0-0.3.gitf78a839.fc24", "commit": "f78a839676152fd9f4863704f5d516195c18fc14", "distribution": "rawhide", "rpm": "golang-github-pmezard-go-difflib-devel-0-0.3.gitf78a839.fc24.noarch.rpm"}

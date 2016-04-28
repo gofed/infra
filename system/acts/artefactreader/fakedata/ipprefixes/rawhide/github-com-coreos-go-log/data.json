@@ -1,0 +1,1 @@
+{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/coreos/go-log", "build": "golang-github-coreos-go-log-0-0.12.git840af6b.fc24", "commit": "840af6b63e623201384b2f20a8e7d3f2dcfef063", "distribution": "rawhide", "rpm": "golang-github-coreos-go-log-devel-0-0.12.git840af6b.fc24.noarch.rpm"}

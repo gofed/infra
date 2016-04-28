@@ -1,0 +1,1 @@
+{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/smartystreets/assertions", "build": "golang-github-smartystreets-assertions-1.6.0-0.1.git287b434.fc25", "commit": "287b4346dc4e71a038c346375a9d572453bc469b", "distribution": "rawhide", "rpm": "golang-github-smartystreets-assertions-devel-1.6.0-0.1.git287b434.fc25.noarch.rpm"}

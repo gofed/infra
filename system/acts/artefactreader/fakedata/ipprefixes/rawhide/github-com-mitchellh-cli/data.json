@@ -1,0 +1,1 @@
+{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/mitchellh/cli", "build": "golang-github-mitchellh-mapstructure-0-0.10.git281073e.fc24", "commit": "281073eb9eb092240d33ef253c404f1cca550309", "distribution": "rawhide", "rpm": "golang-github-mitchellh-cli-devel-temporary-0-0.10.git281073e.fc24.noarch.rpm"}

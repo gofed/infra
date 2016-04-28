@@ -1,0 +1,1 @@
+{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "golang.org/x/crypto", "build": "golang-googlecode-go-crypto-0-0.10.gitc10c31b.fc25", "commit": "c10c31b5e94b6f7a0283272dc2bb27163dcea24b", "distribution": "rawhide", "rpm": "golang-golangorg-crypto-devel-0-0.10.gitc10c31b.fc25.noarch.rpm"}

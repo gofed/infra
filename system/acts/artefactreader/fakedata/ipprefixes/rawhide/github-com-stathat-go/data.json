@@ -1,0 +1,1 @@
+{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/stathat/go", "build": "golang-github-stathat-go-0-0.5.git01d012b.fc24", "commit": "01d012b9ee2ecc107cb28b6dd32d9019ed5c1d77", "distribution": "rawhide", "rpm": "golang-github-stathat-go-devel-0-0.5.git01d012b.fc24.noarch.rpm"}

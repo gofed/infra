@@ -1,0 +1,1 @@
+{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/mxk/go-flowrate", "build": "golang-github-mxk-go-flowrate-0-0.3.gitcca7078.fc24", "commit": "cca7078d478f8520f85629ad7c68962d31ed7682", "distribution": "rawhide", "rpm": "golang-github-mxk-go-flowrate-devel-0-0.3.gitcca7078.fc24.noarch.rpm"}

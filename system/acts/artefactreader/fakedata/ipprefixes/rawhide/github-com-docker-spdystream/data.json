@@ -1,0 +1,1 @@
+{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/docker/spdystream", "build": "golang-github-docker-spdystream-0-0.10.gitb2c3287.fc24", "commit": "b2c3287865f3ad6aa22821ddb7b4692b896ac207", "distribution": "rawhide", "rpm": "golang-github-docker-spdystream-devel-0-0.10.gitb2c3287.fc24.noarch.rpm"}

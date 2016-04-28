@@ -1,0 +1,1 @@
+{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/hashicorp/yamux", "build": "golang-github-hashicorp-yamux-0-0.6.gitdf94978.fc24", "commit": "df949784da9ed028ee76df44652e42d37a09d7e4", "distribution": "rawhide", "rpm": "golang-github-hashicorp-yamux-devel-0-0.6.gitdf94978.fc24.noarch.rpm"}
