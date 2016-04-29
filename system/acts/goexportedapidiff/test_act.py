@@ -18,8 +18,7 @@ class GoExportedApiDiffActTest(unittest.TestCase):
 					"username": "bradfitz",
 					"project": "http2"
 				},
-				"commit": "f8202bc903bda493ebba4aa54922d78430c2c42f",
-				"ipprefix": "github.com/bradfitz/http2"
+				"commit": "f8202bc903bda493ebba4aa54922d78430c2c42f"
 			},
 			"compared_with": {
 				"type": "upstream_source_code",
@@ -28,8 +27,7 @@ class GoExportedApiDiffActTest(unittest.TestCase):
 					"username": "bradfitz",
 					"project": "http2"
 				},
-				"commit": "953b51136f12cb27503bec0f659432fd1fa97770",
-				"ipprefix": "github.com/bradfitz/http2"
+				"commit": "953b51136f12cb27503bec0f659432fd1fa97770"
 			}
 		}
 

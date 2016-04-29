@@ -1,5 +1,5 @@
 from infra.system.plugins.distributionpackagebuildsextractor.extractor import DistributionPackageBuildsExtractor
-from gofed_lib.distribution.clients.koji.client import FakeKojiClient
+from gofed_lib.distribution.clients.koji.fakeclient import FakeKojiClient
 
 class FakeDistributionPackageBuildsExtractor(DistributionPackageBuildsExtractor):
 
