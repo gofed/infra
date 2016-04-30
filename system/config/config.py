@@ -21,3 +21,5 @@ class InfraConfig(Config):
 	def retrieveArtefacts(self):
 		return self._config.get("storage", "read") == "true"
 
+	def resourceClientDirectory(self):
+		return self._config.get("resources", "client_dir")

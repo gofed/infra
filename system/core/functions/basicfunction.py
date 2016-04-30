@@ -3,6 +3,7 @@ from infra.system.resources.types import RESOURCE_FIELD, ResourceNotFoundError
 from .types import FunctionFailedError
 from gofed_resources.proposal.providerbuilder import ProviderBuilder
 import copy
+from infra.system.config.config import InfraConfig
 
 class BasicFunction:
 	"""
@@ -20,8 +21,7 @@ class BasicFunction:
 		self.obj = obj
 
 		# TODO(jchaloup): get client from client builder
-		# TODO(jchaloup): move the working directory to config file
-		self._resource_client = ResourceClient(ProviderBuilder(), "/var/lib/gofed/resource_client")
+		self._resource_client = ResourceClient(ProviderBuilder(), InfraConfig().resourceClientDirectory())
 
 	def call(self, data):
 		"""Forward data to correct methods of obj instance
