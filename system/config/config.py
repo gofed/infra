@@ -1,30 +1,23 @@
-import ConfigParser
-import os
+from gofed_lib.config.config import Config
 from gofed_lib.utils import getScriptDir
 
-class Config(object):
+class InfraConfig(Config):
 
 	def __init__(self):
-		if "GOFED_DEVEL" in os.environ:
-			self.config_file = "%s/infra.conf" % getScriptDir(__file__)
-		else:
-			self.config_file = "/etc/gofed/infra.conf"
+		Config.__init__(self, "infra.conf")
 
-		self._parse(self.config_file)
-
-	def _parse(self, config_file):
-		self.config = ConfigParser.ConfigParser()
-		self.config.read(config_file)
+	def _classDir(self):
+		return getScriptDir(__file__)
 
 	def readStoragePlugin(self):
-		return self.config.get("storage", "readplugin")
+		return self._config.get("storage", "readplugin")
 
 	def writeStoragePlugin(self):
-		return self.config.get("storage", "writeplugin")
+		return self._config.get("storage", "writeplugin")
 
 	def storeArtefacts(self):
-		return self.config.get("storage", "write") == "true"
+		return self._config.get("storage", "write") == "true"
 
 	def retrieveArtefacts(self):
-		return self.config.get("storage", "read") == "true"
+		return self._config.get("storage", "read") == "true"
 

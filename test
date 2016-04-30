@@ -1,1 +1,6 @@
-PYTHONPATH=$(pwd)/third_party py.test -vs -k "system"
+#!/bin/sh
+
+export GOFED_DEVEL=1
+export PYTHONPATH=$(pwd)/third_party
+
+py.test -vs -k "system"
