@@ -1,9 +1,15 @@
 import ConfigParser
+import os
+from gofed_lib.utils import getScriptDir
 
 class Config(object):
 
 	def __init__(self):
-		self.config_file = "/home/jchaloup/Projects/gofed/infra/system/config/infra.conf"
+		if "GOFED_DEVEL" in os.environ:
+			self.config_file = "%s/infra.conf" % getScriptDir(__file__)
+		else:
+			self.config_file = "/etc/gofed/infra.conf"
+
 		self._parse(self.config_file)
 
 	def _parse(self, config_file):
