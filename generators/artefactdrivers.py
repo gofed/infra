@@ -24,9 +24,10 @@ def generateFileStorageArtefactFactory(key_spec):
 	lines = []
 	lines.append("from infra.system.artefacts import artefacts")
 	lines.append("from .artefactdriver import ArtefactDriver")
+	lines.append("from infra.system.config.config import InfraConfig")
 	lines.append("\nclass ArtefactDriverFactory(object):\n")
 	lines.append("\tdef __init__(self):")
-	lines.append("\t\tself.working_directory = \"/var/lib/gofed/simplefilestorage\"")
+	lines.append("\t\tself.working_directory = InfraConfig().simpleFileStorageWorkingDirectory()")
 	lines.append("\t\tself.artefacts = []\n")
 
 	for key in key_spec:

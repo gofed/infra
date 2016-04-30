@@ -1,10 +1,11 @@
 from infra.system.artefacts import artefacts
 from .artefactdriver import ArtefactDriver
+from infra.system.config.config import InfraConfig
 
 class ArtefactDriverFactory(object):
 
 	def __init__(self):
-		self.working_directory = "/var/lib/gofed/simplefilestorage"
+		self.working_directory = InfraConfig().simpleFileStorageWorkingDirectory()
 		self.artefacts = []
 
 		self.artefacts.append(artefacts.ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_EXPORTED_API)

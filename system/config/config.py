@@ -23,3 +23,6 @@ class InfraConfig(Config):
 
 	def resourceClientDirectory(self):
 		return self._config.get("resources", "client_dir")
+
+	def simpleFileStorageWorkingDirectory(self):
+		return self._config.get("simplefilestorage", "working_directory")
