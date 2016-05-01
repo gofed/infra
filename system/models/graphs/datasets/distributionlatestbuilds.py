@@ -95,7 +95,7 @@ class DistributionLatestBuildGraphDataset:
 				continue
 
 			for rpm in artefacts[ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_PACKAGES]:
-				builder.addArtefact(artefacts[ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_PACKAGES][rpm], rpm)
+				builder.addDistributionArtefact(artefacts[ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_PACKAGES][rpm])
 
 		return builder.build().dataset()
 

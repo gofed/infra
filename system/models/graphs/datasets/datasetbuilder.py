@@ -13,12 +13,21 @@ class DatasetBuilder(object):
 	def dataset(self):
 		return self._dataset
 
-	def addArtefact(self, artefact, node_name = "-"):
+	def addArtefact(self, artefact, node_name = ("-", "-")):
 		self._requirements.append(
 			self._extractRequirements(artefact, node_name)
 		)
 
 		return self
+
+	def addDistributionArtefact(self, artefact):
+		if "golang-project-distribution-packages" == artefact["artefact"]:
+			self._requirements.append(
+				self._extractProjectDistributionPackagesRequirements(artefact, (artefact["build"], artefact["rpm"]))
+			)
+			return self
+
+		raise ValueError("Artefact is not valid packages artefact: %s" % artefact)
 
 	def build(self):
 		self._dataset = self._buildGraph()
@@ -81,7 +90,8 @@ class DatasetBuilder(object):
 		return (vertices, edges)
 
 	def _extractProjectDistributionPackagesRequirements(self, artefact, node_name):
-		"""
+		"""Build edges and vertices for each iprefix of a given rpm (generate edges no matter of the destination node exists)
+
 		:param artefact: golang-project-*-packages artefact
 		:type  artefact: json
 		"""
@@ -123,6 +133,9 @@ class DatasetBuilder(object):
 		return (vertices, edges)
 
 	def _buildGraph(self):
+		"""Join or individual iprefix graphs into one graph
+
+		"""
 		# TODO(jchaloup): extend nodes on a level of files?
 		vertices = []	# [rpm]
 		edges = []	# [(rpm,rpm)]
@@ -153,23 +166,25 @@ class DatasetBuilder(object):
 			categories.append("tests")
 
 		for v, _ in self._requirements:
-			for rpm in v:
+			for key in v:
+				(build, rpm) = key
 				vertices.append(rpm)
 				# symbols
 				for category in categories:
-					alphabet = alphabet + v[rpm][category]
+					alphabet = alphabet + v[key][category]
 
 					# parents
-					for l in v[rpm][category]:
-						parents[l] = rpm
+					for l in v[key][category]:
+						parents[l] = {"build": build, "rpm": rpm}
 
 		for _, e in self._requirements:
-			for rpm in e:
+			for key in e:
+				(build, rpm) = key
 				for category in categories:
-					for (a, b) in e[rpm][category]:
+					for (a, b) in e[key][category]:
 						# edges
 						try:
-							target_rpm = parents[b]
+							target_rpm = parents[b]["rpm"]
 							edges.append((rpm, target_rpm))
 						except KeyError:
 							#print "Missing node: %s" % b
