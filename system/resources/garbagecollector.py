@@ -10,7 +10,7 @@ logging.basicConfig(level=logging.INFO)
 
 class GarbageCollector(object):
 
-	def __init__(self, working_directory, ttl = 300):
+	def __init__(self, working_directory, ttl = 300, verbose=False):
 		"""Run garbage collector on downloaded and stored files
 
 		:param working_directory: working directory
@@ -23,9 +23,11 @@ class GarbageCollector(object):
 			ttl = 0
 
 		self.ttl = ttl
+		self._verbose = verbose
 
 	def _deleteTree(self, root_directory):
-		logging.info("Removing %s" % root_directory)
+		if self._verbose:
+			logging.info("Removing %s" % root_directory)
 
 		if os.path.isfile(root_directory):
 			os.unlink(root_directory)
@@ -58,7 +60,9 @@ class GarbageCollector(object):
 
 		max_ttl_timestamp = int(time.time()) - self.ttl
 
-		logging.info("====Running GC====\n")
+		if self._verbose:
+			logging.info("====Running GC====")
+
 		direct_dirs = []
 		direct_files = []
 

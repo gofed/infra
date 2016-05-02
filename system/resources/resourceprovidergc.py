@@ -3,8 +3,9 @@ from gofed_resources.proposal.config.config import ResourcesConfig
 
 class ResourceProviderGC(GarbageCollector):
 
-	def __init__(self):
+	def __init__(self, verbose=False):
 		GarbageCollector.__init__(self,
-			ResourcesConfig().providerDirectory()
+			ResourcesConfig().providerDirectory(),
+			verbose=verbose
 		)
 
