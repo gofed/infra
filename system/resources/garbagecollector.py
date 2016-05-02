@@ -78,14 +78,12 @@ class GarbageCollector(object):
 			full_path = os.path.join(self.working_directory, file)
 			# delete all files whose last modification time is less then ttl
 			if os.path.getmtime(full_path) < max_ttl_timestamp:
-				logging.info("Deleting %s" % full_path)
 				self._deleteTree(full_path)
 
 		for dir in direct_dirs:
 			full_path = os.path.join(self.working_directory, dir)
 			# delete all files whose last modification time is less then ttl
 			if os.path.getmtime(full_path) < max_ttl_timestamp:
-				logging.info("Deleting %s" % full_path)
 				self._deleteTree(full_path)
 
 
