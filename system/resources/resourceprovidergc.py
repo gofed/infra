@@ -1,5 +1,5 @@
 from infra.system.resources.garbagecollector import GarbageCollector
-from gofed_resources.proposal.config.config import ResourcesConfig
+from gofed_resources.config.config import ResourcesConfig
 
 class ResourceProviderGC(GarbageCollector):
 

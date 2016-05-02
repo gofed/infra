@@ -1,7 +1,7 @@
 from infra.system.resources.client import ResourceClient
 from infra.system.resources.types import RESOURCE_FIELD, ResourceNotFoundError
 from .types import FunctionFailedError
-from gofed_resources.proposal.providerbuilder import ProviderBuilder
+from gofed_resources.providerbuilder import ProviderBuilder
 import copy
 from infra.system.config.config import InfraConfig
 

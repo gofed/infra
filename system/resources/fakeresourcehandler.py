@@ -1,6 +1,6 @@
 from .client import ResourceHandler
 import os
-from gofed_resources.proposal.fake.providerbuilder import FakeProviderBuilder
+from gofed_resources.fake.providerbuilder import FakeProviderBuilder
 
 class FakeResourceHandler(ResourceHandler):
 
