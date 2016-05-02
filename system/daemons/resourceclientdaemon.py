@@ -1,6 +1,5 @@
-from infra.system.resources.garbagecollector import GarbageCollector
-from infra.system.config.config import InfraConfig
+from infra.system.resources.resourceclientgc import ResourceClientGC
 
 if __name__ == "__main__":
-	GarbageCollector(InfraConfig().resourceClientDirectory()).run()
+	ResourceClientGC().run()
 

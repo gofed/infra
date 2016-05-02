@@ -48,6 +48,11 @@ class GarbageCollector(object):
 		# remove entire directory tree
 		shutil.rmtree(root_directory)
 
+	def oneRound(self):
+		"""Run only one round of GC
+		"""
+		self._runCollector()
+
 	def _runCollector(self):
 
 
@@ -85,6 +90,3 @@ class GarbageCollector(object):
 			self._runCollector()
 			time.sleep(self.ttl)
 
-if __name__ == "__main__":
-	GarbageCollector("/var/lib/gofed/resource_provider").run()
-	GarbageCollector("/var/lib/gofed/resource_client").run()

@@ -1,6 +1,5 @@
-from infra.system.resources.garbagecollector import GarbageCollector
-from gofed_resources.proposal.config.config import ResourcesConfig
+from infra.system.resources.resourceprovidergc import ResourceProviderGC
 
 if __name__ == "__main__":
-	GarbageCollector(ResourcesConfig().providerDirectory()).run()
+	ResourceProviderGC().run()
 
