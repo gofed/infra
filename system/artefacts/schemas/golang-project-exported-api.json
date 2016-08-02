@@ -576,8 +576,7 @@
 							}
 						},
 						"required": ["def"]
-					},
-					"uniqueItems": true
+					}
 				}
 			},
 			"required": ["type", "fields"]
