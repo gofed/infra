@@ -32,12 +32,12 @@
 #
 
 from gofedlib.packagemanager import PackageManager
-from system.models.graphs.datasets.distributionlatestbuilds import DistributionLatestBuildGraphDataset
-from system.models.graphs.datasetdependencygraphbuilder import DatasetDependencyGraphBuilder
-from system.models.graphs.basicdependencyanalysis import BasicDependencyAnalysis
+from gofedinfra.system.models.graphs.datasets.distributionlatestbuilds import DistributionLatestBuildGraphDataset
+from gofedinfra.system.models.graphs.datasetdependencygraphbuilder import DatasetDependencyGraphBuilder
+from gofedinfra.system.models.graphs.basicdependencyanalysis import BasicDependencyAnalysis
 from gofedlib.graphutils import GraphUtils
-from system.models.graphs.datasets.projectdatasetbuilder import ProjectDatasetBuilder
-from system.models.graphs.datasets.localprojectdatasetbuilder import LocalProjectDatasetBuilder
+from gofedinfra.system.models.graphs.datasets.projectdatasetbuilder import ProjectDatasetBuilder
+from gofedinfra.system.models.graphs.datasets.localprojectdatasetbuilder import LocalProjectDatasetBuilder
 
 import json
 import logging

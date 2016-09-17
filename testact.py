@@ -1,4 +1,4 @@
-from system.core.factory.actfactory import ActFactory
+from gofedinfra.system.core.factory.actfactory import ActFactory
 import json
 
 def prepareSpecModelDataProviderActWithUpstream():

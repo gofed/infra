@@ -6,9 +6,9 @@ import tempfile
 
 import pytest
 
-from infra.system.tests.utils import ProjectID
-from infra.system.plugins.repositorydataextractor.extractor import RepositoryDataExtractor
-from infra.system.helpers.artefact_schema_validator import ArtefactSchemaValidator
+from gofedinfra.system.tests.utils import ProjectID
+from gofedinfra.system.plugins.repositorydataextractor.extractor import RepositoryDataExtractor
+from gofedinfra.system.helpers.artefact_schema_validator import ArtefactSchemaValidator
 
 
 CONFIG_FILE_NAME = 'repositorydataextractor.json'

@@ -6,10 +6,10 @@ import tempfile
 
 import pytest
 
-from infra.system.tests.utils import ProjectID
-from infra.system.plugins.gosymbolsextractor.extractor import GoSymbolsExtractor
-from infra.system.plugins.distributiongosymbolsextractor.extractor import DistributionGoSymbolsExtractor
-from infra.system.helpers.artefact_schema_validator import ArtefactSchemaValidator
+from gofedinfra.system.tests.utils import ProjectID
+from gofedinfra.system.plugins.gosymbolsextractor.extractor import GoSymbolsExtractor
+from gofedinfra.system.plugins.distributiongosymbolsextractor.extractor import DistributionGoSymbolsExtractor
+from gofedinfra.system.helpers.artefact_schema_validator import ArtefactSchemaValidator
 
 
 CONFIG_FILE_NAME = 'gosymbolsextractor.json'

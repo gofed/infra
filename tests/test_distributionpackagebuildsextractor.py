@@ -3,8 +3,8 @@ import os
 
 import pytest
 
-from infra.system.plugins.distributionpackagebuildsextractor.extractor import DistributionPackageBuildsExtractor
-from infra.system.helpers.artefact_schema_validator import ArtefactSchemaValidator
+from gofedinfra.system.plugins.distributionpackagebuildsextractor.extractor import DistributionPackageBuildsExtractor
+from gofedinfra.system.helpers.artefact_schema_validator import ArtefactSchemaValidator
 
 
 CONFIG_FILE_NAME = 'distributionpackagebuildsextractor.json'

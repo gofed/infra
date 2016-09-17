@@ -46,12 +46,12 @@ if __name__ == "__main__":
 		keys = json.load(f)
 
 	# generate file storage artefact driver factory
-	with open("system/plugins/simplefilestorage/artefactdriverfactory.py", "w") as f:
+	with open("gofedinfra/system/plugins/simplefilestorage/artefactdriverfactory.py", "w") as f:
 		f.write(generateFileStorageArtefactFactory(keys))
-		print("system/plugins/simplefilestorage/artefactdriverfactory.py")
+		print("gofedinfra/system/plugins/simplefilestorage/artefactdriverfactory.py")
 
 	# generate driver factory
-	with open("system/plugins/simpleetcdstorage/artefactdriverfactory.py", "w") as f:
+	with open("gofedinfra/system/plugins/simpleetcdstorage/artefactdriverfactory.py", "w") as f:
 		f.write(generateEtcdStorageArtefactFactory(keys))
-		print("system/plugins/simpleetcdstorage/artefactdriverfactory.py")
+		print("gofedinfra/system/plugins/simpleetcdstorage/artefactdriverfactory.py")
 

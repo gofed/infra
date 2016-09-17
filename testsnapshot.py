@@ -1,5 +1,5 @@
-from system.models.snapshots.reconstructor import SnapshotReconstructor
-from system.models.snapshots.checker import SnapshotChecker
+from gofedinfra.system.models.snapshots.reconstructor import SnapshotReconstructor
+from gofedinfra.system.models.snapshots.checker import SnapshotChecker
 import logging
 logging.basicConfig(level=logging.INFO)
 import json

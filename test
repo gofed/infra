@@ -1,6 +1,6 @@
 #!/bin/sh
 
 export GOFED_DEVEL=1
-export PYTHONPATH=$(pwd)/third_party/gofed_resources:$(pwd)/third_party/gofedlib
+export PYTHONPATH=$(pwd)/third_party/gofed_resources:$(pwd)/third_party/gofedlib:$(pwd)
 
 py.test -vs -k "system"

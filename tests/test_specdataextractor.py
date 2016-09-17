@@ -3,8 +3,8 @@ import os
 
 import pytest
 
-from infra.system.plugins.specdataextractor.extractor import SpecDataExtractor
-from infra.system.helpers.artefact_schema_validator import ArtefactSchemaValidator
+from gofedinfra.system.plugins.specdataextractor.extractor import SpecDataExtractor
+from gofedinfra.system.helpers.artefact_schema_validator import ArtefactSchemaValidator
 
 
 CONFIG_FILE_NAME = 'specdataextractor.json'

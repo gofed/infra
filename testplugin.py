@@ -1,8 +1,8 @@
-#from system.plugins.repositorydataextractor.extractor import RepositoryDataExtractor
-#from system.plugins.repositorydataextractor.fake_extractor import FakeRepositoryDataExtractor
+#from gofedinfra.system.plugins.repositorydataextractor.extractor import RepositoryDataExtractor
+#from gofedinfra.system.plugins.repositorydataextractor.fake_extractor import FakeRepositoryDataExtractor
 import json
 
-from system.plugins.distributionpackagebuildsextractor.extractor import DistributionPackageBuildsExtractor
+from gofedinfra.system.plugins.distributionpackagebuildsextractor.extractor import DistributionPackageBuildsExtractor
 
 def runRepositoryDataExtractor():
 	extractor = RepositoryDataExtractor()

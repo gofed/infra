@@ -3,7 +3,7 @@ import json
 import traceback
 import sys
 
-from system.acts.scandistributionbuild.act import ScanDistributionBuildAct
+from gofedinfra.system.acts.scandistributionbuild.act import ScanDistributionBuildAct
 from gofedlib.kojiclient import FakeKojiClient, KojiClient
 from gofedlib.helpers import Rpm
 
