@@ -2,8 +2,8 @@ from infra.system.core.meta.metaprocessor import MetaProcessor
 from infra.system.artefacts.artefacts import ARTEFACT_GOLANG_PROJECT_PACKAGES, ARTEFACT_GOLANG_PROJECT_EXPORTED_API
 from infra.system.helpers.artefact_schema_validator import ArtefactSchemaValidator
 from infra.system.helpers.utils import getScriptDir
-from gofed_lib.go.symbolsextractor import extractor
-from gofed_lib.types import ExtractionError
+from gofedlib.go.symbolsextractor import extractor
+from gofedlib.types import ExtractionError
 import logging
 
 CONFIG_SOURCE_CODE_DIRECTORY = "resource"
@@ -19,6 +19,7 @@ class GoSymbolsExtractor(MetaProcessor):
 		)
 
 		"""Setting implicit flags"""
+		# TODO(jchaloup): make verbose and skip_errors configurable from user input
 		self.verbose = False
 		self.skip_errors = True
 

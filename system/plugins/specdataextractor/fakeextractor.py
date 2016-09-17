@@ -1,5 +1,5 @@
 from infra.system.plugins.specdataextractor.extractor import SpecDataExtractor
-from gofed_lib.utils import getScriptDir
+from gofedlib.utils import getScriptDir
 import json
 
 class FakeSpecDataExtractor(SpecDataExtractor):

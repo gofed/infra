@@ -1,4 +1,4 @@
-from gofed_lib.graphs.graphutils import GraphUtils
+from gofedlib.graphs.graphutils import GraphUtils
 
 class BasicDependencyAnalysis(object):
 

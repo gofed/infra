@@ -1,5 +1,5 @@
 from .act import GoCodeInspectionAct
-from gofed_lib.utils import getScriptDir
+from gofedlib.utils import getScriptDir
 import json
 
 class FakeGoCodeInspectionAct(GoCodeInspectionAct):

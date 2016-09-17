@@ -1,16 +1,16 @@
 from infra.system.core.meta.metaprocessor import MetaProcessor
 from infra.system.helpers.schema_validator import SchemaValidator
 from infra.system.helpers.artefact_schema_validator import ArtefactSchemaValidator
-from gofed_lib.utils import getScriptDir
+from gofedlib.utils import getScriptDir
 from infra.system.artefacts.artefacts import (
 	ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_BUILD,
 	ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_PACKAGE_BUILDS
 )
 import logging
 import time
-from gofed_lib.utils import dateToTimestamp
+from gofedlib.utils import dateToTimestamp
 
-from gofed_lib.distribution.clients.koji.client import KojiClient
+from gofedlib.distribution.clients.koji.client import KojiClient
 
 class DistributionPackageBuildsExtractor(MetaProcessor):
 

@@ -14,9 +14,9 @@ from infra.system.artefacts.artefacts import (
 	ARTEFACT_CACHE_GOLANG_PROJECT_DISTRIBUTION_PACKAGE_BUILDS
 )
 
-from gofed_lib.utils import dateToTimestamp
+from gofedlib.utils import dateToTimestamp
 from infra.system.helpers.itemsetcache.itemsetcache import ItemSetCache
-from gofed_lib.utils import intervalCovered
+from gofedlib.utils import intervalCovered
 from infra.system.core.acts.types import ActDataError
 import logging
 import json

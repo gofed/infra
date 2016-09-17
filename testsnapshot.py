@@ -4,10 +4,10 @@ import logging
 logging.basicConfig(level=logging.INFO)
 import json
 
-from gofed_lib.go.snapshot import Snapshot
-from gofed_lib.distribution.distributionsnapshot import DistributionSnapshot
-from gofed_lib.distribution.clients.pkgdb.client import FakePkgDBClient
-from gofed_lib.distribution.clients.koji.client import FakeKojiClient, KojiClient
+from gofedlib.go.snapshot import Snapshot
+from gofedlib.distribution.distributionsnapshot import DistributionSnapshot
+from gofedlib.distribution.clients.pkgdb.client import FakePkgDBClient
+from gofedlib.distribution.clients.koji.client import FakeKojiClient, KojiClient
 
 def test_reconstructor():
 	#repository = {

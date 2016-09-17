@@ -1,6 +1,6 @@
 import unittest
 from .basicdependencyanalysis import BasicDependencyAnalysis
-from gofed_lib.graphs.graphutils import GraphUtils, Graph
+from gofedlib.graphs.graphutils import GraphUtils, Graph
 
 class BasicDependencyAnalysisTest(unittest.TestCase):
 

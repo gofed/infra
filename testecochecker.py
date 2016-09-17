@@ -3,10 +3,10 @@ import logging
 import re
 import json
 
-from gofed_lib.kojiclient import FakeKojiClient, KojiClient
-from gofed_lib.pkgdb.client import FakePkgDBClient
-from gofed_lib.distributionsnapshot import DistributionSnapshot
-from gofed_lib.eco.capturer import EcoCapturer
+from gofedlib.kojiclient import FakeKojiClient, KojiClient
+from gofedlib.pkgdb.client import FakePkgDBClient
+from gofedlib.distributionsnapshot import DistributionSnapshot
+from gofedlib.eco.capturer import EcoCapturer
 from infra.system.models.ecosnapshots.distributionsnapshotchecker import DistributionSnapshotChecker
 
 #logging.basicConfig(level=logging.INFO)
@@ -46,7 +46,7 @@ if __name__ == "__main__":
 	pkgdb_client = FakePkgDBClient()
 
 	# TODO(jchaloup):
-	# - where to store snapshots? under gofed_lib or gofed_infra? I am inclined to use gofed_data to store all artefacts and other data kinds
+	# - where to store snapshots? under gofedlib or gofed_infra? I am inclined to use gofed_data to store all artefacts and other data kinds
 	#   as each snapshot is determined by timestamp, it can not be stored as artefacts are (without introducing additional list of snashots)
 	#   Other thought (once the storage can provide a list of artefact based on a partial key, repo artefact and cache can be regenerated
 	#   based on commits in a storage rather then on a list of commits retrieved from repository.

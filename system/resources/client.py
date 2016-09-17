@@ -3,8 +3,8 @@ import tarfile
 import tempfile
 import uuid
 from shutil import move
-from gofed_lib.utils import runCommand
-from gofed_lib.distribution.helpers import Build
+from gofedlib.utils import runCommand
+from gofedlib.distribution.helpers import Build
 import os
 
 class ResourceHandler(object):

@@ -8,7 +8,7 @@ from infra.system.artefacts.artefacts import (
 )
 
 from infra.system.helpers.artefactdecomposer import ArtefactDecomposer
-from gofed_lib.go.importpath.parserbuilder import ImportPathParserBuilder
+from gofedlib.go.importpath.parserbuilder import ImportPathParserBuilder
 
 class DistributionGoSymbolsExtractor(GoSymbolsExtractor):
 

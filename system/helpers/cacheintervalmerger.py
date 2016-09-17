@@ -1,4 +1,4 @@
-from gofed_lib.utils import intervalsOverlap
+from gofedlib.utils import intervalsOverlap
 
 class CacheIntervalBreaker(object):
 

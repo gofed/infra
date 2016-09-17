@@ -4,7 +4,7 @@ from .specifier import ResourceSpecifier
 from .fakeresourcehandler import FakeResourceHandler
 from .types import *
 from infra.system.helpers.schema_validator import SchemaValidator
-from gofed_lib.utils import getScriptDir
+from gofedlib.utils import getScriptDir
 import os
 
 class ResourceClientTest(unittest.TestCase):

@@ -55,8 +55,8 @@
 # This macro is future feature macro and will implemented when needed.
 #
 
-from gofed_lib.go.importpath.parserbuilder import ImportPathParserBuilder
-from gofed_lib.providers.providerbuilder import ProviderBuilder
+from gofedlib.go.importpath.parserbuilder import ImportPathParserBuilder
+from gofedlib.providers.providerbuilder import ProviderBuilder
 from infra.system.core.factory.actfactory import ActFactory
 from infra.system.core.factory.fakeactfactory import FakeActFactory
 from infra.system.artefacts.artefacts import (
@@ -66,7 +66,7 @@ from infra.system.artefacts.artefacts import (
 )
 from infra.system.core.acts.types import ActFailedError
 import logging
-from gofed_lib.utils import RED, GREEN, BLUE, WHITE, ENDC
+from gofedlib.utils import RED, GREEN, BLUE, WHITE, ENDC
 
 class SnapshotChecker(object):
 
@@ -179,7 +179,11 @@ class SnapshotChecker(object):
 				continue
 
 			upstream_commit = self._getCommitDate(providers[ipprefix], upstream[ipprefix])
-			distro_commit = self._getCommitDate(providers[ipprefix], rpms[ipprefix]["commit"])
+			try:
+				distro_commit = self._getCommitDate(providers[ipprefix], rpms[ipprefix]["commit"])
+			except KeyError as e:
+				logging.error("Unable to retrieve commit info for %s %s: %s" % (package, rpms[package]["commit"], e))
+				continue
 
 			if upstream_commit == {}:
 				logging.error("Unable to retrieve commit info for %s %s" % (package, packages[package]))

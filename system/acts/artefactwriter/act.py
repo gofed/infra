@@ -1,6 +1,6 @@
 from infra.system.core.meta.metaact import MetaAct
 from infra.system.resources import types
-from gofed_lib.utils import getScriptDir
+from gofedlib.utils import getScriptDir
 from infra.system.artefacts.artefacts import (
 	ARTEFACT_GOLANG_IPPREFIX_TO_RPM,
 	ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_PACKAGES,

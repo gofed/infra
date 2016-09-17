@@ -7,7 +7,7 @@ from infra.system.artefacts.artefacts import (
 	ARTEFACT_GOLANG_IPPREFIX_TO_PACKAGE_NAME
 )
 from infra.system.helpers.artefact_schema_validator import ArtefactSchemaValidator
-from gofed_lib.utils import getScriptDir
+from gofedlib.utils import getScriptDir
 from .SpecParser import SpecParser
 import re
 

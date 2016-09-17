@@ -1,5 +1,5 @@
 from .extractor import GoSymbolsExtractor
-from gofed_lib.utils import getScriptDir
+from gofedlib.utils import getScriptDir
 import json
 
 class FakeGoSymbolsExtractor(GoSymbolsExtractor):

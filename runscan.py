@@ -1,11 +1,11 @@
-from gofed_lib.packagemanager import PackageManager
+from gofedlib.packagemanager import PackageManager
 import json
 import traceback
 import sys
 
 from system.acts.scandistributionbuild.act import ScanDistributionBuildAct
-from gofed_lib.kojiclient import FakeKojiClient, KojiClient
-from gofed_lib.helpers import Rpm
+from gofedlib.kojiclient import FakeKojiClient, KojiClient
+from gofedlib.helpers import Rpm
 
 import logging
 #logging.basicConfig(level=logging.INFO)

@@ -6,9 +6,9 @@ from infra.system.helpers.artefact_schema_validator import ArtefactSchemaValidat
 from infra.system.helpers.schema_validator import SchemaValidator
 from infra.system.artefacts.artefacts import ARTEFACT_GOLANG_PROJECT_REPOSITORY_INFO, ARTEFACT_GOLANG_PROJECT_REPOSITORY_COMMIT
 
-from gofed_lib.utils import getScriptDir
-from gofed_lib.utils import dateToTimestamp
-from gofed_lib.repository.repositoryclientbuilder import RepositoryClientBuilder
+from gofedlib.utils import getScriptDir
+from gofedlib.utils import dateToTimestamp
+from gofedlib.repository.repositoryclientbuilder import RepositoryClientBuilder
 
 class RepositoryDataExtractor(MetaProcessor):
 

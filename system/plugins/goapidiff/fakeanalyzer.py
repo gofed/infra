@@ -1,6 +1,6 @@
 from .analyzer import GoApiDiff
 import json
-from gofed_lib.utils import getScriptDir
+from gofedlib.utils import getScriptDir
 
 class FakeGoApiDiff(GoApiDiff):
 

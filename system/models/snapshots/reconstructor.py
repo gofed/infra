@@ -3,17 +3,17 @@ from infra.system.artefacts.artefacts import (
 	ARTEFACT_GOLANG_PROJECT_PACKAGES,
 	ARTEFACT_GOLANG_PROJECT_REPOSITORY_COMMIT
 )
-from gofed_lib.go.importpath.decomposerbuilder import ImportPathsDecomposerBuilder
-from gofed_lib.go.importpath.normalizer import ImportPathNormalizer
-from gofed_lib.go.importpath.parserbuilder import ImportPathParserBuilder
-from gofed_lib.providers.providerbuilder import ProviderBuilder
-from gofed_lib.go.snapshot import Snapshot
+from gofedlib.go.importpath.decomposerbuilder import ImportPathsDecomposerBuilder
+from gofedlib.go.importpath.normalizer import ImportPathNormalizer
+from gofedlib.go.importpath.parserbuilder import ImportPathParserBuilder
+from gofedlib.providers.providerbuilder import ProviderBuilder
+from gofedlib.go.snapshot import Snapshot
 import logging
 import copy
 
 from infra.system.models.graphs.datasets.projectdatasetbuilder import ProjectDatasetBuilder
 from infra.system.models.graphs.datasetdependencygraphbuilder import DatasetDependencyGraphBuilder, LEVEL_GOLANG_PACKAGES
-from gofed_lib.graphs.graphutils import GraphUtils
+from gofedlib.graphs.graphutils import GraphUtils
 
 class ReconstructionError(Exception):
 	pass

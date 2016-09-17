@@ -12,7 +12,7 @@
 # - package builds info: consists of lists of builds, each build has its build time.
 #   The problem is to get a given interval of builds from cache or report the interval is not covered
 
-from gofed_lib.utils import intervalsOverlap
+from gofedlib.utils import intervalsOverlap
 
 class ItemSetCache(object):
 

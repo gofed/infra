@@ -31,11 +31,11 @@
 #
 #
 
-from gofed_lib.packagemanager import PackageManager
+from gofedlib.packagemanager import PackageManager
 from system.models.graphs.datasets.distributionlatestbuilds import DistributionLatestBuildGraphDataset
 from system.models.graphs.datasetdependencygraphbuilder import DatasetDependencyGraphBuilder
 from system.models.graphs.basicdependencyanalysis import BasicDependencyAnalysis
-from gofed_lib.graphutils import GraphUtils
+from gofedlib.graphutils import GraphUtils
 from system.models.graphs.datasets.projectdatasetbuilder import ProjectDatasetBuilder
 from system.models.graphs.datasets.localprojectdatasetbuilder import LocalProjectDatasetBuilder
 

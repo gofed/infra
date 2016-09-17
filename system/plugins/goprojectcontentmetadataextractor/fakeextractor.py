@@ -1,5 +1,5 @@
 from .extractor import GoProjectContentMetadataExtractor
-from gofed_lib.utils import getScriptDir
+from gofedlib.utils import getScriptDir
 import json
 
 class FakeGoProjectContentMetadataExtractor(GoProjectContentMetadataExtractor):

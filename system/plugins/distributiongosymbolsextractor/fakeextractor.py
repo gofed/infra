@@ -7,7 +7,7 @@ from infra.system.artefacts.artefacts import (
 from .extractor import DistributionGoSymbolsExtractor
 import json
 
-from gofed_lib.utils import getScriptDir
+from gofedlib.utils import getScriptDir
 
 class FakeDistributionGoSymbolsExtractor(DistributionGoSymbolsExtractor):
 

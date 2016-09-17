@@ -4,7 +4,7 @@ logger = logging.getLogger("scan_distribution_build_act")
 from infra.system.core.meta.metaact import MetaAct
 from infra.system.resources.specifier import ResourceSpecifier
 from infra.system.resources import types
-from gofed_lib.utils import getScriptDir
+from gofedlib.utils import getScriptDir
 from infra.system.artefacts.artefacts import (
 	ARTEFACT_GOLANG_PROJECT_INFO_FEDORA,
 	ARTEFACT_GOLANG_IPPREFIX_TO_PACKAGE_NAME,
@@ -12,7 +12,7 @@ from infra.system.artefacts.artefacts import (
 	ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_EXPORTED_API,
 	ARTEFACT_GOLANG_IPPREFIX_TO_RPM
 )
-from gofed_lib.distribution.helpers import Build, Rpm
+from gofedlib.distribution.helpers import Build, Rpm
 from infra.system.core.functions.types import FunctionFailedError
 
 class ScanDistributionBuildAct(MetaAct):

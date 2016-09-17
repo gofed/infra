@@ -1,5 +1,5 @@
-from gofed_lib.config.config import Config
-from gofed_lib.utils import getScriptDir
+from gofedlib.config.config import Config
+from gofedlib.utils import getScriptDir
 
 class InfraConfig(Config):
 

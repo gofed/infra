@@ -4,12 +4,12 @@ logger = logging.getLogger("distribution_snapshot_capturer")
 from infra.system.core.factory.actfactory import ActFactory
 from infra.system.core.factory.fakeactfactory import FakeActFactory
 from infra.system.artefacts.artefacts import ARTEFACT_GOLANG_DISTRIBUTION_SNAPSHOT
-from gofed_lib.distribution.eco.capturer import EcoCapturer
+from gofedlib.distribution.eco.capturer import EcoCapturer
 from infra.system.core.acts.types import ActFailedError
 from infra.system.core.functions.types import FunctionFailedError
-from gofed_lib.distribution.helpers import GolangRpm
-from gofed_lib.utils import BLUE, YELLOW, ENDC, WHITE
-from gofed_lib.distribution.distributionsnapshot import DistributionSnapshot
+from gofedlib.distribution.helpers import GolangRpm
+from gofedlib.utils import BLUE, YELLOW, ENDC, WHITE
+from gofedlib.distribution.distributionsnapshot import DistributionSnapshot
 import json
 
 class DistributionSnapshotChecker(object):

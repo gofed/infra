@@ -1,5 +1,5 @@
 from .act import GoExportedApiDiffAct
-from gofed_lib.utils import getScriptDir
+from gofedlib.utils import getScriptDir
 import json
 
 class FakeGoExportedApiDiffAct(GoExportedApiDiffAct):

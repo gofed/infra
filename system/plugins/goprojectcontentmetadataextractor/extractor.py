@@ -1,7 +1,7 @@
 from infra.system.core.meta.metaprocessor import MetaProcessor
 from infra.system.artefacts.artefacts import ARTEFACT_GOLANG_PROJECT_CONTENT_METADATA
-from gofed_lib.go.contentmetadataextractor import ContentMetadataExtractor
-from gofed_lib.utils import getScriptDir
+from gofedlib.go.contentmetadataextractor import ContentMetadataExtractor
+from gofedlib.utils import getScriptDir
 
 class GoProjectContentMetadataExtractor(MetaProcessor):
 

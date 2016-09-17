@@ -7,8 +7,8 @@ from infra.system.core.acts.types import ActFailedError
 from infra.system.core.functions.types import FunctionFailedError
 from infra.system.core.factory.actfactory import ActFactory
 from infra.system.core.factory.fakeactfactory import FakeActFactory
-from gofed_lib.distribution.distributionsnapshot import DistributionSnapshot
-from gofed_lib.utils import BLUE, YELLOW, ENDC, WHITE
+from gofedlib.distribution.distributionsnapshot import DistributionSnapshot
+from gofedlib.utils import BLUE, YELLOW, ENDC, WHITE
 
 from infra.system.artefacts.artefacts import ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_PACKAGE_BUILDS
 

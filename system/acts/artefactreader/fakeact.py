@@ -1,5 +1,5 @@
 from .act import ArtefactReaderAct
-from gofed_lib.utils import getScriptDir
+from gofedlib.utils import getScriptDir
 import json
 from infra.system.artefacts.artefacts import (
 	ARTEFACT_GOLANG_DISTRIBUTION_SNAPSHOT,

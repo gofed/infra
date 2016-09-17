@@ -1,8 +1,8 @@
 from infra.system.core.meta.metaprocessor import MetaProcessor
 from infra.system.artefacts.artefacts import ARTEFACT_GOLANG_PROJECTS_API_DIFF
 import logging
-from gofed_lib.utils import getScriptDir
-from gofed_lib.go.apidiff import apidiff
+from gofedlib.utils import getScriptDir
+from gofedlib.go.apidiff import apidiff
 
 class GoApiDiff(MetaProcessor):
 	"""

@@ -20,7 +20,7 @@
 import logging
 logger = logging.getLogger("distribution_latest_builds_dataset_builder")
 
-from gofed_lib.distribution.helpers import Rpm
+from gofedlib.distribution.helpers import Rpm
 from infra.system.core.factory.actfactory import ActFactory
 from infra.system.core.factory.fakeactfactory import FakeActFactory
 import json
@@ -29,7 +29,7 @@ from infra.system.core.functions.types import FunctionFailedError
 from infra.system.core.acts.types import ActFailedError
 from .datasetbuilder import DatasetBuilder
 from infra.system.artefacts.artefacts import ARTEFACT_GOLANG_DISTRIBUTION_SNAPSHOT
-from gofed_lib.distribution.distributionsnapshot import DistributionSnapshot
+from gofedlib.distribution.distributionsnapshot import DistributionSnapshot
 from infra.system.artefacts.artefacts import ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_PACKAGES
 
 class DistributionLatestBuildGraphDataset:
