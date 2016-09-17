@@ -1,6 +1,6 @@
-[submodule "third_party/gofed_lib"]
-	path = third_party/gofed_lib
-	url = https://github.com/gofed/lib
 [submodule "third_party/gofed_resources"]
 	path = third_party/gofed_resources
 	url = https://github.com/gofed/resources
+[submodule "third_party/gofedlib"]
+	path = third_party/gofedlib
+	url = http://github.com/gofed/gofedlib
