@@ -4,7 +4,8 @@
 from setuptools import setup, find_packages
 
 def getPackages():
-	return ['gofedinfra.system.resources',
+	return ['gofedinfra',
+		'gofedinfra.system.resources',
 		'gofedinfra.system.models.ecomanagement.fetchers',
 		'gofedinfra.system.models.ecomanagement.executors',
 		'gofedinfra.system.models.ecomanagement.watchers',
