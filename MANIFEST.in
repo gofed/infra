@@ -1,0 +1,14 @@
+include gofedinfra/system/acts/*/*.json
+recursive-include gofedinfra/system/acts/*/fakedata *
+
+recursive-include gofedinfra/system/artefacts/schemas *
+include gofedinfra/system/config/*.conf
+
+include gofedinfra/system/daemons/*.service
+
+recursive-include gofedinfra/system/plugins/*/fakedata *
+include gofedinfra/system/plugins/*.json
+include gofedinfra/system/plugins/*.md
+
+include gofedinfra/system/resources/*.json
+include gofedinfra/system/tests/*.json

@@ -47,17 +47,23 @@ def getPackages():
 		'gofedinfra.system.helpers',
 		'gofedinfra.system.helpers.artefactkeygenerator']
 
-
 setup(
-    name='gofedinfra',
-    version='0.0.1',
-    description='Gofed infrastructure',
-    long_description=''.join(open('README.md').readlines()),
-    keywords='gofed,infra',
-    author='Jan Chaloupka',
-    author_email='jchaloup@redhat.com',
-    url='https://github.com/gofed/infra',
-    license='GPL',
-    packages=getPackages(),
-    install_requires=open('requirements.txt').read().splitlines()
+	name='gofedinfra',
+	version='0.0.1',
+	description='Gofed infrastructure',
+	long_description=''.join(open('README.md').readlines()),
+	keywords='gofed,infra',
+	author='Jan Chaloupka',
+	author_email='jchaloup@redhat.com',
+	url='https://github.com/gofed/infra',
+	license='GPL',
+	packages=getPackages(),
+	install_requires=open('requirements.txt').read().splitlines(),
+	include_package_data=True
+	#package_data={
+	#	"gofedinfra.system.acts.artefactreader": ["gofedinfra/system/acts/artefactreader/*.json"]
+	#},
+	#package_dir={
+	#	"gofedinfra.system.acts.artefactreader": "gofedinfra/system/acts/artefactreader/fakedata"
+	#}
 )
