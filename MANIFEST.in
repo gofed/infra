@@ -7,8 +7,8 @@ include gofedinfra/system/config/*.conf
 include gofedinfra/system/daemons/*.service
 
 recursive-include gofedinfra/system/plugins/*/fakedata *
-include gofedinfra/system/plugins/*.json
-include gofedinfra/system/plugins/*.md
+include gofedinfra/system/plugins/*/*.json
+include gofedinfra/system/plugins/*/*.md
 
 include gofedinfra/system/resources/*.json
 include gofedinfra/system/tests/*.json
