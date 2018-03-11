@@ -1,0 +1,27 @@
+---
+- name: Go code inspection act
+  connection: local
+  hosts: localhost
+  roles:
+  - role: gofedinfra
+  tasks:
+  - name: Retrieve source code from a repository
+    repositorycoderetriever:
+      repository: github.com/coreos/etcd/cmd/etcdctl
+      hexsha: 121edf0467052d55876a817b89875fb39a99bf78
+    register: output
+
+  - debug: var=output
+
+  - name: Extract artefacts from a Go code
+    gosymbolsextractor:
+      directory: "{{ output.directory }}"
+      repository: github.com/coreos/etcd
+      hexsha: 121edf0467052d55876a817b89875fb39a99bf78
+      ipprefix: github.com/coreos/etcd
+    register: eoutput
+
+  - name: Remove working directory
+    file:
+      name: "{{ output.directory }}"
+      state: absent
