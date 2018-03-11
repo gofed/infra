@@ -4,13 +4,17 @@ from ansible.module_utils.basic import *
 from gofedlib.go.symbolsextractor import extractor
 from gofedlib.types import ExtractionError
 from gofedinfra.system.artefacts.artefacts import ARTEFACT_GOLANG_PROJECT_PACKAGES, ARTEFACT_GOLANG_PROJECT_EXPORTED_API
-
+from gofedlib.providers.providerbuilder import ProviderBuilder
 
 class GoSymbolsExtractor(object):
 
-    def __init__(self, directory, repository="", hexsha="", ipprefix=""):
+    def __init__(self, directory, repository={}, hexsha="", ipprefix=""):
         self._directory = directory
-        self._repository = repository
+
+        provider = ProviderBuilder().buildUpstreamWithLocalMapping()
+        provider.parse(repository)
+
+        self._repository = provider.signature()
         self._hexsha = hexsha
         self._ipprefix = ipprefix
 
