@@ -236,7 +236,9 @@ class SnapshotReconstructor(object):
 			package_nodes = filter(lambda l: l.startswith(self.unscanned_projects[prefix]["ipprefix"]), subgraph.nodes())
 			label_edges = dataset.getLabelEdges()
 			for node in package_nodes:
-				nodes = nodes + label_edges[node]
+                                # package that does not import any other package has no edge -> the label_edges[node] does not exist then
+                                if node in label_edges:
+                                        nodes = nodes + label_edges[node]
 
 		nodes = list(set(nodes))
 
