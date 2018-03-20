@@ -20,12 +20,12 @@ def main():
     if module.params["from_ts"]:
         from_ts = int(module.params["from_ts"])
     elif module.params["from_date"]:
-        from_ts = int(time.mktime(datetime.datetime.strptime(module.params["from_date"], "%d/%m/%Y").timetuple()))
+        from_ts = int(time.mktime(datetime.datetime.strptime(module.params["from_date"], "%Y-%m-%d").timetuple()))
 
     if module.params["to_ts"]:
         to_ts = int(module.params["to_ts"])
     elif module.params["to_date"]:
-        to_ts = int(time.mktime(datetime.datetime.strptime(module.params["to_date"], "%d/%m/%Y").timetuple()))
+        to_ts = int(time.mktime(datetime.datetime.strptime(module.params["to_date"], "%Y-%m-%d").timetuple()))
     else:
         to_ts = int(time.time())
 

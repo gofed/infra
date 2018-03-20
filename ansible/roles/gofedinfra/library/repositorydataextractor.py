@@ -11,7 +11,7 @@ from gofedinfra.system.artefacts.artefacts import ARTEFACT_GOLANG_PROJECT_REPOSI
 
 class RepositoryDataExtractor(object):
 
-    def __init__(self, directory, repository="", hexsha="", branch="", since=0, to=int(time.time()) + 86400, info={}):
+    def __init__(self, directory, repository="", hexsha="", branch="", since=int(time.mktime(datetime.datetime.strptime("2008-01", "%Y-%m").timetuple())), to=int(time.time()) + 86400, info={}):
         self._directory = directory
 
         provider = ProviderBuilder().buildUpstreamWithLocalMapping()
@@ -255,12 +255,13 @@ def main():
 
     module = AnsibleModule(argument_spec=fields)
 
-    from_ts = 0
     if module.params["from_ts"]:
         from_ts = int(module.params["from_ts"])
     elif module.params["from_date"]:
         from_ts = int(time.mktime(datetime.datetime.strptime(
             module.params["from_date"], "%Y-%m-%d").timetuple()))
+    else:
+        from_ts = int(time.mktime(datetime.datetime.strptime("2008-01", "%Y-%m").timetuple()))
 
     if module.params["to_ts"]:
         to_ts = int(module.params["to_ts"])
