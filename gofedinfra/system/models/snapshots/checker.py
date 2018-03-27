@@ -57,8 +57,8 @@
 
 from gofedlib.go.importpath.parserbuilder import ImportPathParserBuilder
 from gofedlib.providers.providerbuilder import ProviderBuilder
-from infra.system.core.factory.actfactory import ActFactory
-from infra.system.core.factory.fakeactfactory import FakeActFactory
+# from infra.system.core.factory.actfactory import ActFactory
+# from infra.system.core.factory.fakeactfactory import FakeActFactory
 from infra.system.artefacts.artefacts import (
 	ARTEFACT_GOLANG_IPPREFIX_TO_RPM,
 	ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_PACKAGES,
@@ -68,32 +68,38 @@ from infra.system.core.acts.types import ActFailedError
 import logging
 from gofedlib.utils import RED, GREEN, BLUE, WHITE, ENDC
 
+from infra.system.workers import Worker
+from infra.system.plugins.simplefilestorage.storagereader import StorageReader
+
 class SnapshotChecker(object):
 
 	def __init__(self, dryrun=False):
 		self.ipparser = ImportPathParserBuilder().buildWithLocalMapping()
 
-		if dryrun:
-			act_factory = FakeActFactory()
-		else:
-			act_factory = ActFactory()
-
-		self.artefactreaderact = act_factory.bake("artefact-reader")
-		self.commitreaderact = act_factory.bake("scan-upstream-repository")
+		# TODO(jchaloup): create a testing set
+		# if dryrun:
+		# 	act_factory = FakeActFactory()
+		# else:
+		# 	act_factory = ActFactory()
 
 		self._project_provider = ProviderBuilder().buildUpstreamWithLocalMapping()
 
 	def _getCommitDate(self, repository, commit):
-		try: 
-			artefact = self.commitreaderact.call({
-				"repository": repository,
-				"commit": commit
-			})
-		except ValueError as e:
-			logging.error(e)
-			return {}
 
-		return artefact[ARTEFACT_GOLANG_PROJECT_REPOSITORY_COMMIT][commit]
+		artefact_key = {
+			"artefact": ARTEFACT_GOLANG_PROJECT_REPOSITORY_COMMIT,
+			"repository": self._project_provider.parse(repository).signature(),
+			"commit": commit,
+		}
+
+		try:
+			return StorageReader().retrieve(artefact_key)
+		except KeyError:
+			Worker("scanupstreamrepository").setPayload({
+				"repository": repository,
+				"hexsha": commit,
+			}).do()
+			return StorageReader().retrieve(artefact_key)
 
 	def _comparePackages(self, package, upstream_commit, distro_commit):
 		if upstream_commit["cdate"] == distro_commit["cdate"]:
@@ -111,7 +117,7 @@ class SnapshotChecker(object):
 			"build": build,
 			"rpm": rpm
 		}
-		artefact = self.artefactreaderact.call(data)
+		artefact = StorageReader().retrieve(data)
 
 		# get list of defined packages
 		for ipprefix_class in artefact["data"]:
@@ -151,7 +157,7 @@ class SnapshotChecker(object):
 			upstream[ipprefix] = packages[package]
 
 			# iprefix -> provider prefix
-			providers[ipprefix] = self._project_provider.parse(ipprefix).signature()
+			providers[ipprefix] = self._project_provider.parse(ipprefix).prefix()
 
 			# ipprefix -> rpm
 			data = {
@@ -164,8 +170,8 @@ class SnapshotChecker(object):
 			# TODO(jchaloup): FF: fallback to generic mapping if ipprefix to pkg name
 			# and report that "maybe" the ipprefix is provided by this package
 			try:
-				rpms[ipprefix] = self.artefactreaderact.call(data)
-			except ActFailedError as e:
+				rpms[ipprefix] = StorageReader().retrieve(data)
+			except KeyError as e:
 				logging.error("Unable to get mapping for %s" % package)
 				pass
 
