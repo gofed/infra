@@ -6,10 +6,15 @@
   roles:
   - role: gofedinfra
   tasks:
-  - set_fact:
-      commit: 121edf0467052d55876a817b89875fb39a99bf78
-      repository: github.com/coreos/etcd
-      ipprefix: github.com/coreos/etcd
+  - fail:
+      msg: "commit variable is not set"
+    when: commit is undefined
+  - fail:
+      msg: "repository variable is not set"
+    when: repository is undefined
+  - fail:
+      msg: "ipprefix variable is not set"
+    when: ipprefix is undefined
 
   - name: Check if golang-project-packages artefacts already exist
     artefactreader:

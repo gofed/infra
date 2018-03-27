@@ -1,4 +1,3 @@
-from infra.system.core.factory.actfactory import ActFactory
 from infra.system.artefacts.artefacts import (
 	ARTEFACT_GOLANG_PROJECT_PACKAGES,
 	ARTEFACT_GOLANG_PROJECT_REPOSITORY_COMMIT
@@ -10,10 +9,14 @@ from gofedlib.providers.providerbuilder import ProviderBuilder
 from gofedlib.go.snapshot import Snapshot
 import logging
 import copy
+import operator
 
 from infra.system.models.graphs.datasets.projectdatasetbuilder import ProjectDatasetBuilder
 from infra.system.models.graphs.datasetdependencygraphbuilder import DatasetDependencyGraphBuilder, LEVEL_GOLANG_PACKAGES
 from gofedlib.graphs.graphutils import GraphUtils
+
+from infra.system.workers import Worker
+from infra.system.plugins.simplefilestorage.storagereader import StorageReader
 
 class ReconstructionError(Exception):
 	pass
@@ -23,11 +26,6 @@ class SnapshotReconstructor(object):
 	def __init__(self):
 		# parsers
 		self.ipparser = ImportPathParserBuilder().buildWithLocalMapping()
-
-		# acts
-		self.go_code_inspection_act = ActFactory().bake("go-code-inspection")
-		self.scan_upstream_repository_act = ActFactory().bake("scan-upstream-repository")
-
 		self._project_provider = ProviderBuilder().buildUpstreamWithLocalMapping()
 
 		# snapshot
@@ -46,13 +44,20 @@ class SnapshotReconstructor(object):
 		:param commit: commit
 		:type  commit: hex string
 		"""
-		data = {
-			"repository": repository,
-			"commit": commit
+		artefact_key = {
+			"artefact": ARTEFACT_GOLANG_PROJECT_REPOSITORY_COMMIT,
+			"repository": self._project_provider.parse(repository).signature(),
+			"commit": commit,
 		}
-		# TODO(jchaloup): catch exception if the commit is not found
-		commit_data = self.scan_upstream_repository_act.call(data)
-		return commit_data[ARTEFACT_GOLANG_PROJECT_REPOSITORY_COMMIT][commit]["cdate"]
+
+		try:
+			return StorageReader().retrieve(artefact_key)["cdate"]
+		except KeyError:
+			Worker("scanupstreamrepository").setPayload({
+				"repository": repository,
+				"hexsha": commit,
+			}).do()
+			return StorageReader().retrieve(artefact_key)["cdate"]
 
 	def _findYoungestCommits(self, commits):
 		# sort commits
@@ -78,27 +83,35 @@ class SnapshotReconstructor(object):
 		}
 
 		DAY = 3600*24
-		# try the last day, week, last month, last year
-		for delta in [1, 7, 30, 365]:
-			data["start_timestamp"] = timestamp - delta*DAY
-			try:
-				rdata = self.scan_upstream_repository_act.call(data)
-			except KeyError:
-				continue
+		# try the last day, week, last month, last year, all the time
+		for delta in [DAY, 7*DAY, 30*DAY, 365*DAY, timestamp]:
+			from_ts = timestamp - delta
 
-			if rdata[ARTEFACT_GOLANG_PROJECT_REPOSITORY_COMMIT] == {}:
-				continue
+			Worker("scanupstreamrepository").setPayload({
+				"repository": repository,
+				"from_ts": from_ts,
+				"to_ts": timestamp,
+			}).do()
+			info_artefact = StorageReader().retrieve({
+				"artefact": "golang-project-repository-info",
+				"repository": self._project_provider.parse(repository).signature(),
+			})
 
-			return self._findYoungestCommits(rdata[ARTEFACT_GOLANG_PROJECT_REPOSITORY_COMMIT])
+			# TODO(jchaloup): we should not iterate over all branches
+			potential_commits = {}
+			for branch in info_artefact["branches"]:
+				for commit in branch["commits"]:
+					if branch["commits"][commit] < from_ts:
+						continue
 
-		# unbound start_timestamp
-		del data["start_timestamp"]
-		try:
-			rdata = self.scan_upstream_repository_act.call(data)
-		except KeyError:
-			raise KeyError("Commit not found")
+					potential_commits[commit] = branch["commits"][commit]
 
-		return self._findYoungestCommits(rdata[ARTEFACT_GOLANG_PROJECT_REPOSITORY_COMMIT])
+			if potential_commits:
+				sorted_commits = sorted(potential_commits.items(), key=operator.itemgetter(1))
+				c, _ = sorted_commits[-1]
+				return c
+
+		raise KeyError("No closest commit found for {}".format(repository))
 
 	def _detectNextDependencies(self, dependencies, ipprefix, commit_timestamp):
 		dependencies = list(set(dependencies))
@@ -151,7 +164,7 @@ class SnapshotReconstructor(object):
 				raise ReconstructionError("Prefix provider error: %s" % e)
 
 			try:
-				closest_commit = self._findClosestCommit(provider, commit_timestamp)
+				closest_commit = self._findClosestCommit(provider_prefix, commit_timestamp)
 
 			except KeyError as e:
 				raise ReconstructionError("Closest commit to %s timestamp for %s not found" % (commit_timestamp, provider_prefix))
@@ -161,22 +174,28 @@ class SnapshotReconstructor(object):
 				"ipprefix": prefix,
 				"paths": map(lambda l: str(l), prefix_classes[prefix]),
 				"provider": provider,
-				"commit": closest_commit["c"],
-				#"timestamp": closest_commit["d"],
+				"commit": closest_commit,
 				"provider_prefix": provider_prefix
 			}
 
 		return next_projects
 
 	def _detectDirectDependencies(self, repository, commit, ipprefix, commit_timestamp, mains, tests):
-		data = {
-			"type": "upstream_source_code",
-			"repository": repository,
+		artefact_key = {
+			"artefact": ARTEFACT_GOLANG_PROJECT_PACKAGES,
+			"repository": self._project_provider.parse(repository).signature(),
 			"commit": commit,
-			"ipprefix": ipprefix
 		}
 
-		packages_artefact = self.go_code_inspection_act.call(data)[ARTEFACT_GOLANG_PROJECT_PACKAGES]
+		try:
+			packages_artefact = StorageReader().retrieve(artefact_key)
+		except KeyError:
+			Worker("gocodeinspection").setPayload({
+				"repository": repository,
+				"commit": commit,
+				"ipprefix": ipprefix,
+			}).do()
+			packages_artefact = StorageReader().retrieve(artefact_key)
 
 		# collect dependencies
 		direct_dependencies = []
@@ -221,7 +240,7 @@ class SnapshotReconstructor(object):
 		for prefix in self.unscanned_projects:
 			# get dataset
 			dataset = ProjectDatasetBuilder(
-				self.unscanned_projects[prefix]["provider"],
+				self.unscanned_projects[prefix]["provider_prefix"],
 				self.unscanned_projects[prefix]["commit"],
 				self.unscanned_projects[prefix]["ipprefix"]
 			).build()
@@ -303,4 +322,3 @@ class SnapshotReconstructor(object):
 
 	def snapshot(self):
 		return self._snapshot
-

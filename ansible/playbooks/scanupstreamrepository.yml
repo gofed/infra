@@ -6,74 +6,118 @@
   roles:
   - role: gofedinfra
   tasks:
-  - set_fact:
-      repository: github.com/kr/pretty
-      from_date: "2016-01-02"
-      to_date: "2018-02-02"
+  - fail:
+      msg: "repository variable is not set"
+    when: repository is undefined
 
-  - name: Retrieve repository info
-    artefactreader:
-      artefact: golang-project-repository-info
-      repository: "{{ repository }}"
-    register: info_output
-
-  - set_fact:
-      extract: true
-      current_info: {}
-
-  - when: info_output.found
+  - when: hexsha is defined
     block:
-    - set_fact:
-        current_info: "{{ info_output.artefact }}"
-
-    - name: Check if the commit date interval is covered
-      coveragechecker:
-        coverage: "{{ info_output.artefact['coverage'] }}"
-        from_date: "{{ from_date | default('') }}"
-        to_date: "{{ to_date | default('') }}"
-      register: commit_coverage
-
-    - set_fact:
-        extract: false
-      when: commit_coverage.covered
-
-    - debug: var=commit_coverage
-
-    - debug: var=extract
-
-  - when: extract
-    block:
-    - name: Retrieve repository
-      repositoryretriever:
-        repository: github.com/kr/pretty
-      register: routput
-
-    - debug: var=routput
-
-    - name: Extract repository info for a given coverage interval
-      repositorydataextractor:
+    - name: Retrieve golang-project-repository-commit
+      artefactreader:
+        artefact: golang-project-repository-commit
         repository: "{{ repository }}"
-        directory: "{{ routput.directory }}"
-        from_date: "{{ from_date | default('') }}"
-        to_date: "{{ to_date | default('') }}"
-        info: "{{ info_output.artefact }}"
-      register: ioutput
+        hexsha: "{{ hexsha }}"
+      register: commit_output
 
-    - name: Remove working directory
-      file:
-        name: "{{ routput.directory }}"
-        state: absent
+    - debug: var=commit_output
 
-    - debug: var=ioutput.artefacts
+    - when: not commit_output.found
+      block:
+      - name: Retrieve repository
+        repositoryretriever:
+          repository: "{{ repository }}"
+        register: routput
 
-    - name: Store golang-project-repository-info
-      artefactwriter:
-        artefact: "{{ ioutput.artefacts['golang-project-repository-info'] | to_json }}"
-      register: woutput
+      - debug: var=routput
 
-    - debug: var=woutput
+      - name: Extract commit info from the repository
+        repositorydataextractor:
+          repository: "{{ repository }}"
+          directory: "{{ routput.directory }}"
+          hexsha: "{{ hexsha }}"
+        register: ioutput
 
-    - name: Store all golang-project-repository-commit artefacts
-      artefactwriter:
-        artefact: "{{ ioutput.artefacts['golang-project-repository-commit'][item] | to_json }}"
-      with_items: "{{ ioutput.artefacts['golang-project-repository-commit'] }}"
+      - name: Remove working directory
+        file:
+          name: "{{ routput.directory }}"
+          state: absent
+
+      - debug: var=ioutput.artefacts
+
+      - name: Store all golang-project-repository-commit artefacts
+        artefactwriter:
+          artefact: "{{ ioutput.artefacts['golang-project-repository-commit'][item] | to_json }}"
+        with_items: "{{ ioutput.artefacts['golang-project-repository-commit'] }}"
+
+  - when: hexsha is not defined
+    block:
+    - name: Retrieve repository info
+      artefactreader:
+        artefact: golang-project-repository-info
+        repository: "{{ repository }}"
+      register: info_output
+
+    - set_fact:
+        extract: true
+        current_info: {}
+
+    - when: info_output.found
+      block:
+      - set_fact:
+          current_info: "{{ info_output.artefact }}"
+
+      - name: Check if the commit date interval is covered
+        coveragechecker:
+          coverage: "{{ info_output.artefact['coverage'] }}"
+          from_date: "{{ from_date | default('') }}"
+          to_date: "{{ to_date | default('') }}"
+          from_ts: "{{ from_ts | default('') }}"
+          to_ts: "{{ to_ts | default('') }}"
+        register: commit_coverage
+
+      - set_fact:
+          extract: false
+        when: commit_coverage.covered
+
+      - debug: var=commit_coverage
+
+      - debug: var=extract
+
+    - when: extract
+      block:
+      - name: Retrieve repository
+        repositoryretriever:
+          repository: "{{ repository }}"
+        register: routput
+
+      - debug: var=routput
+
+      - name: Extract repository info for a given coverage interval
+        repositorydataextractor:
+          repository: "{{ repository }}"
+          directory: "{{ routput.directory }}"
+          from_date: "{{ from_date | default('') }}"
+          to_date: "{{ to_date | default('') }}"
+          from_ts: "{{ from_ts | default('') }}"
+          to_ts: "{{ to_ts | default('') }}"
+          info: "{{ info_output.artefact }}"
+        register: ioutput
+
+      - name: Remove working directory
+        file:
+          name: "{{ routput.directory }}"
+          state: absent
+
+      - debug: var=ioutput
+
+      - name: Store golang-project-repository-info
+        artefactwriter:
+          artefact: "{{ ioutput.artefacts['golang-project-repository-info'] | to_json }}"
+        register: woutput
+
+      - debug: var=woutput
+
+      - name: Store all golang-project-repository-commit artefacts
+        artefactwriter:
+          artefact: "{{ ioutput.artefacts['golang-project-repository-commit'][item] | to_json }}"
+        with_items: "{{ ioutput.artefacts['golang-project-repository-commit'] }}"

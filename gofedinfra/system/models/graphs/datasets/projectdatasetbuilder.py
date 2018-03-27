@@ -1,8 +1,7 @@
 from .datasetbuilder import DatasetBuilder
-from infra.system.core.factory.actfactory import ActFactory
-from .types import DatasetError
-from infra.system.core.functions.types import FunctionFailedError
 from infra.system.artefacts.artefacts import ARTEFACT_GOLANG_PROJECT_PACKAGES
+from gofedlib.providers.providerbuilder import ProviderBuilder
+from infra.system.plugins.simplefilestorage.storagereader import StorageReader
 
 class ProjectDatasetBuilder(object):
 
@@ -10,23 +9,24 @@ class ProjectDatasetBuilder(object):
 		self.repository = repository
 		self.commit = commit
 		self.ipprefix = ipprefix
-		self.act = ActFactory().bake("go-code-inspection")
 
 	def build(self):
-		data = {
-			"type": "upstream_source_code",
-			"repository": self.repository,
+		artefact_key = {
+			"artefact": ARTEFACT_GOLANG_PROJECT_PACKAGES,
+			"repository": ProviderBuilder().buildUpstreamWithLocalMapping().parse(self.repository).signature(),
 			"commit": self.commit,
-			"ipprefix": self.ipprefix
 		}
 
-		builder = DatasetBuilder()
-
 		try:
-			artefact = self.act.call(data)
-		except FunctionFailedError as e:
-			raise DatasetError("Unable to create dataset: %s" % e)
+			packages_artefact = StorageReader().retrieve(artefact_key)
+		except KeyError:
+			Worker("gocodeinspection").setPayload({
+				"repository": self.repository,
+				"commit": self.commit,
+				"ipprefix": self.ipprefix,
+			}).do()
+			packages_artefact = StorageReader().retrieve(artefact_key)
 
-		builder.addArtefact(artefact[ARTEFACT_GOLANG_PROJECT_PACKAGES])
-
+		builder = DatasetBuilder()
+		builder.addArtefact(packages_artefact)
 		return builder.build().dataset()

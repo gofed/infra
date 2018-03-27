@@ -48,8 +48,10 @@ class RepositoryDataExtractor(object):
             self._repository, self._directory)
 
         # just a single commit
-        if self._hexsha != "":
-            self._commits[self._hexsha] = repo_client.commit(self._hexsha)
+        if self._hexsha:
+            self._commits[self._hexsha] = self._generateGolangProjectRepositoryCommit(
+                repo_client.commit(self._hexsha)
+            )
             return self
 
         all_branches = repo_client.branches()
@@ -99,10 +101,12 @@ class RepositoryDataExtractor(object):
                     # Extract missing info
                     y = int(ditem.year)
                     m = int(ditem.month)
-                    since = int(time.mktime(datetime.datetime.strptime("{}-{}".format(y, m), "%Y-%m").timetuple()))
-                    y += m / 12 # m-1 counting from 0, then + 1 and module 12 a.k.a (m-1+1)/12
+                    since = int(time.mktime(datetime.datetime.strptime(
+                        "{}-{}".format(y, m), "%Y-%m").timetuple()))
+                    y += m / 12  # m-1 counting from 0, then + 1 and module 12 a.k.a (m-1+1)/12
                     m = (m + 1) % 12
-                    to = int(time.mktime(datetime.datetime.strptime("{}-{}".format(y, m), "%Y-%m").timetuple()))
+                    to = int(time.mktime(datetime.datetime.strptime(
+                        "{}-{}".format(y, m), "%Y-%m").timetuple()))
 
                     for branch in all_branches:
                         l_commits = repo_client.commits(branch, since=since, to=to)
@@ -131,7 +135,7 @@ class RepositoryDataExtractor(object):
 
             # Mix branches
             for item in self._current_info["branches"]:
-                branches[ item["branch"] ] = item["commits"]
+                branches[item["branch"]] = item["commits"]
         else:
             self._coverage = self._generateDateCoverage()
 
@@ -140,9 +144,10 @@ class RepositoryDataExtractor(object):
         for branch in branched_commits:
             for commit in branched_commits[branch]:
                 try:
-                    branches[branch].append(commit)
+                    branches[branch][commit] = branched_commits[branch][commit]["cdate"]
                 except KeyError:
-                    branches[branch] = [commit]
+                    branches[branch] = {}
+                    branches[branch][commit] = branched_commits[branch][commit]["cdate"]
 
                 if commit in self._commits:
                     continue
@@ -153,11 +158,8 @@ class RepositoryDataExtractor(object):
         # from all branches (up to master) filter out all commits that are already covered in master branch
         if "master" in branches:
             for branch in filter(lambda l: l != "master", branches.keys()):
-                branches[branch] = list(set(branches[branch]) - set(branches["master"]))
-
-        # make all commits unique per branch
-        for branch in branches:
-            branches[branch] = list(set(branches[branch]))
+                for key in branches["master"].keys():
+                    branches[branch].pop(key, None)
 
         self._info = self._generateGolangProjectRepositoryInfo(branches)
 
@@ -198,7 +200,6 @@ class RepositoryDataExtractor(object):
             coverage[-1] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
 
         return coverage
-
 
     def _generateGolangProjectRepositoryCommit(self, commit):
         data = {}
@@ -277,6 +278,7 @@ def main():
         since=from_ts,
         to=to_ts,
         info=module.params["info"],
+        hexsha=module.params["hexsha"],
     )
 
     e.extract()
@@ -284,6 +286,8 @@ def main():
     result = dict(
         changed=True,
         covered=True,
+        since=from_ts,
+        to=to_ts,
         artefacts={
             ARTEFACT_GOLANG_PROJECT_REPOSITORY_INFO: e.golangProjectRepositoryInfo(),
             ARTEFACT_GOLANG_PROJECT_REPOSITORY_COMMIT: e.golangProjectRepositoryCommits(),
