@@ -1,0 +1,45 @@
+---
+- name: Local spec mode data provider act
+  gather_facts: no
+  connection: local
+  hosts: localhost
+  roles:
+  - role: gofedinfra
+  tasks:
+  - fail:
+      msg: "directory variable is not set"
+    when: directory is undefined
+  - fail:
+      msg: "ipprefix variable is not set"
+    when: ipprefix is undefined
+
+  - debug: var=directory
+
+  - name: Extract artefacts from a Go code
+    gosymbolsextractor:
+      directory: "{{ directory }}"
+      repository: "github.com/local/local"
+      hexsha: "local"
+      ipprefix: "{{ ipprefix }}"
+    register: eoutput
+
+  - name: Extract metadata from a Go code
+    goprojectcontentmetadataextractor:
+      directory: "{{ directory }}"
+      repository: "github.com/local/local"
+      hexsha: "local"
+    register: moutput
+
+  - name: Store golang-project-packages
+    artefactwriter:
+      artefact: "{{ eoutput.artefacts['golang-project-packages'] | to_json }}"
+    register: woutput
+
+  - debug: var=woutput
+
+  - name: Store golang-project-content-metadata
+    artefactwriter:
+      artefact: "{{ moutput.artefacts['golang-project-content-metadata'] | to_json }}"
+    register: woutput
+
+  - debug: var=woutput
