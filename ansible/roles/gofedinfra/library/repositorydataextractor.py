@@ -7,7 +7,7 @@ import datetime
 from gofedlib.repository.repositoryclientbuilder import RepositoryClientBuilder
 from gofedlib.providers.providerbuilder import ProviderBuilder
 from gofedinfra.system.artefacts.artefacts import ARTEFACT_GOLANG_PROJECT_REPOSITORY_INFO, ARTEFACT_GOLANG_PROJECT_REPOSITORY_COMMIT
-
+from gofedlib.utils import generateDateCoverage
 
 class RepositoryDataExtractor(object):
 
@@ -85,7 +85,7 @@ class RepositoryDataExtractor(object):
             coverage = {}
             c_y = int(datetime.datetime.now().year)
             c_m = int(datetime.datetime.now().month)
-            for item in self._current_info["coverage"] + self._generateDateCoverage():
+            for item in self._current_info["coverage"] + generateDateCoverage(self._since, self._to):
                 try:
                     ditem = datetime.datetime.strptime(item, "%Y-%m-%d %H:%M")
                     if ditem.year >= c_y and ditem.month >= c_m:
@@ -137,7 +137,7 @@ class RepositoryDataExtractor(object):
             for item in self._current_info["branches"]:
                 branches[item["branch"]] = item["commits"]
         else:
-            self._coverage = self._generateDateCoverage()
+            self._coverage = generateDateCoverage(self._since, self._to)
 
         self._coverage.sort(reverse=True)
 
@@ -164,42 +164,6 @@ class RepositoryDataExtractor(object):
         self._info = self._generateGolangProjectRepositoryInfo(branches)
 
         return self
-
-    def _generateDateCoverage(self):
-        coverage = []
-
-        if self._since == 0:
-            pass
-
-        dt = datetime.datetime.fromtimestamp(self._since)
-        from_y = int(dt.strftime("%Y"))
-        from_m = int(dt.strftime("%m"))
-
-        todt = datetime.datetime.fromtimestamp(self._to)
-        to_y = int(todt.strftime("%Y"))
-        to_m = int(todt.strftime("%m"))
-
-        while True:
-            mprefix = ""
-            if from_m < 10:
-                mprefix = "0"
-            coverage.append("{}-{}{}".format(from_y, mprefix, from_m))
-            if from_y == to_y and from_m == to_m:
-                break
-
-            from_m += 1
-            if from_m > 12:
-                from_m = 1
-                from_y += 1
-
-        # Alter the to so it covers entire month
-        todt = datetime.datetime.fromtimestamp(self._to)
-        c_y = int(datetime.datetime.now().year)
-        c_m = int(datetime.datetime.now().month)
-        if todt.year >= c_y and todt.month >= c_m:
-            coverage[-1] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
-
-        return coverage
 
     def _generateGolangProjectRepositoryCommit(self, commit):
         data = {}
