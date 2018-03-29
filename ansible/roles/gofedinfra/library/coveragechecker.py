@@ -83,6 +83,10 @@ def main():
     result = dict(
         changed=True,
         covered=covered,
+        tested={
+            "since": datetime.datetime.fromtimestamp(from_ts).strftime('%Y-%m-%d %H:%M:%S'),
+            "to": datetime.datetime.fromtimestamp(to_ts).strftime('%Y-%m-%d %H:%M:%S'),
+        }
     )
 
     module.exit_json(**result)

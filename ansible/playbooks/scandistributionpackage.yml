@@ -1,5 +1,5 @@
 ---
-- name: Scan upstream repository act
+- name: Scan distribution package act
   gather_facts: no
   connection: local
   hosts: localhost
@@ -15,11 +15,13 @@
 
   - name: Retrieve distro package info
     artefactreader:
-      artefact: golang-project-distribution-build
+      artefact: golang-project-distribution-package-builds
       distribution: "{{ distribution }}"
       package: "{{ package }}"
       product: "{{ product | default('') }}"
     register: info_output
+
+  - debug: var=info_output
 
   - set_fact:
       extract: true
@@ -38,6 +40,8 @@
         from_ts: "{{ from_ts | default('') }}"
         to_ts: "{{ to_ts | default('') }}"
       register: commit_coverage
+
+    - debug: var=commit_coverage
 
     - set_fact:
         extract: false

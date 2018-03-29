@@ -3,27 +3,25 @@ logger = logging.getLogger("distribution_packages_fetcher")
 
 import time
 from infra.system.artefacts.artefacts import ARTEFACT_GOLANG_DISTRIBUTION_SNAPSHOT
-from infra.system.core.acts.types import ActFailedError
-from infra.system.core.functions.types import FunctionFailedError
-from infra.system.core.factory.actfactory import ActFactory
-from infra.system.core.factory.fakeactfactory import FakeActFactory
+# from infra.system.core.factory.actfactory import ActFactory
+# from infra.system.core.factory.fakeactfactory import FakeActFactory
 from gofedlib.distribution.distributionsnapshot import DistributionSnapshot
 from gofedlib.utils import BLUE, YELLOW, ENDC, WHITE
 
 from infra.system.artefacts.artefacts import ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_PACKAGE_BUILDS
+from infra.system.workers import Worker, WorkerException
+from infra.system.plugins.simplefilestorage.storagereader import StorageReader
 
 class DistributionBuildsFetcher(object):
 
 	def __init__(self, pkgdb_client, dry_run=False):
 		self._pkgdb_client = pkgdb_client
 
-		if dry_run:
-			act_factory = FakeActFactory()
-		else:
-			act_factory = ActFactory()
-
-		self._artefactreaderact = act_factory.bake("artefact-reader")
-		self._scan_act = act_factory.bake("scan-distribution-package")
+		# TODO(jchaloup): make the dry work again
+		# if dry_run:
+		# 	act_factory = FakeActFactory()
+		# else:
+		# 	act_factory = ActFactory()
 
 	def fetch(self, distributions, since = 0, to = int(time.time() + 86400)):
 		"""Collect list of builds since a given date for each package
@@ -53,12 +51,13 @@ class DistributionBuildsFetcher(object):
 			dist_tag = collections[product][version]["dist_tag"]
 
 			logger.info("%sScanning %s %s ...%s" % (YELLOW, product, version, ENDC))
+
 			try:
-				data = self._artefactreaderact.call({
+				data = StorageReader().retrieve({
 					"artefact": ARTEFACT_GOLANG_DISTRIBUTION_SNAPSHOT,
-					"distribution": distribution.json()
+					"distribution": distribution.json(),
 				})
-			except ActFailedError:
+			except KeyError:
 				logger.error("Distribution snapshot for '%s' not found" % distribution)
 				continue
 
@@ -66,37 +65,15 @@ class DistributionBuildsFetcher(object):
 			for build in builds:
 				if builds[build]["build_ts"] >= since:
 					logger.info("%sScanning %s ...%s" % (BLUE, build, ENDC))
-					# get package's items info artefact
 					try:
-						items_info = self._artefactreaderact.call({
-							"artefact": ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_PACKAGE_BUILDS,
+						Worker("scandistributionpackage").setPayload({
 							"product": distribution.product(),
 							"distribution": dist_tag,
-							"package": build
-						})
-					except ActFailedError as e:
-						items_info = None
-
-					# if items_info artefact for package is found, take the build timestamp
-					# of the youngest covered build
-					if items_info == None:
-						start_ts = since
-					else:
-						start_ts = 0
-						for coverage in items_info["coverage"]:
-							start_ts = max(coverage["end"], start_ts)
-						# end is always > 0
-						start_ts = start_ts - 1
-
-					try:
-						self._scan_act.call({
 							"package": build,
-							"product": distribution.product(),
-							"distribution": dist_tag,
-							"start_timestamp": start_ts,
-							"end_timestamp": to
-						})
-					except ActFailedError as e:
+							"from_ts": since,
+							"to_ts": to,
+						}).do()
+					except WorkerException as e:
 						logger.error("%s: %s" (build, e))
 						continue
 
