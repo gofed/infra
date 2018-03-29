@@ -28,8 +28,11 @@ def main():
 
     fields = {
         "artefact": {"required": True, "type": "str"},
-        "repository": {"required": False, "type": "str"},
-        "hexsha": {"required": False, "type": "str"},
+        "repository": {"required": False, "type": "str", "default": ""},
+        "hexsha": {"required": False, "type": "str", "default": ""},
+        "product": {"required": False, "type": "str", "default": ""},
+        "distribution": {"required": False, "type": "str", "default": ""},
+        "package": {"required": False, "type": "str", "default": ""},
     }
 
     module = AnsibleModule(argument_spec=fields)
@@ -42,11 +45,25 @@ def main():
         "artefact": module.params["artefact"],
     }
 
-    if "repository" in module.params:
-        key["repository"] = ProviderBuilder().buildUpstreamWithLocalMapping().parse(module.params["repository"]).signature()
+    for field in fields:
+        if field == "repository":
+            try:
+                if module.params["repository"]:
+                    key["repository"] = ProviderBuilder().buildUpstreamWithLocalMapping().parse(module.params["repository"]).signature()
+            except KeyError:
+                pass
+            continue
 
-    if "hexsha" in module.params:
-        key["commit"] = module.params["hexsha"]
+        if field == "hexsha":
+            try:
+                if module.params["hexsha"]:
+                    key["commit"] = module.params["hexsha"]
+            except KeyError:
+                pass
+            continue
+
+        if field in module.params:
+            key[field] = module.params[field]
 
     try:
         artefact = StorageReader().retrieve(key)

@@ -1,0 +1,76 @@
+---
+- name: Scan upstream repository act
+  gather_facts: no
+  connection: local
+  hosts: localhost
+  roles:
+  - role: gofedinfra
+  tasks:
+  - fail:
+      msg: "distribution variable is not set"
+    when: distribution is undefined
+  - fail:
+      msg: "package variable is not set"
+    when: package is undefined
+
+  - name: Retrieve distro package info
+    artefactreader:
+      artefact: golang-project-distribution-build
+      distribution: "{{ distribution }}"
+      package: "{{ package }}"
+      product: "{{ product | default('') }}"
+    register: info_output
+
+  - set_fact:
+      extract: true
+      current_info: {}
+
+  - when: info_output.found
+    block:
+    - set_fact:
+        current_info: "{{ info_output.artefact }}"
+
+    - name: Check if the build date interval is covered
+      coveragechecker:
+        coverage: "{{ info_output.artefact['coverage'] }}"
+        from_date: "{{ from_date | default('') }}"
+        to_date: "{{ to_date | default('') }}"
+        from_ts: "{{ from_ts | default('') }}"
+        to_ts: "{{ to_ts | default('') }}"
+      register: commit_coverage
+
+    - set_fact:
+        extract: false
+      when: commit_coverage.covered
+
+    - debug: var=commit_coverage
+
+    - debug: var=extract
+
+  - when: extract
+    block:
+    - name: Extract repository info for a given coverage interval
+      distributionpackagebuildsextractor:
+        distribution: "{{ distribution }}"
+        package: "{{ package }}"
+        product: "{{ product | default('') }}"
+        from_date: "{{ from_date | default('') }}"
+        to_date: "{{ to_date | default('') }}"
+        from_ts: "{{ from_ts | default('') }}"
+        to_ts: "{{ to_ts | default('') }}"
+        info: "{{ info_output.artefact }}"
+      register: ioutput
+
+    - debug: var=ioutput
+
+    - name: Store golang-project-distribution-package-builds
+      artefactwriter:
+        artefact: "{{ ioutput.artefacts['golang-project-distribution-package-builds'] | to_json }}"
+      register: woutput
+
+    - debug: var=woutput
+
+    - name: Store all golang-project-distribution-build artefacts
+      artefactwriter:
+        artefact: "{{ ioutput.artefacts['golang-project-distribution-build'][item] | to_json }}"
+      with_items: "{{ ioutput.artefacts['golang-project-distribution-build'] }}"
