@@ -1,16 +1,19 @@
 import logging
 logger = logging.getLogger("distribution_snapshot_capturer")
 
-from infra.system.core.factory.actfactory import ActFactory
-from infra.system.core.factory.fakeactfactory import FakeActFactory
+# from infra.system.core.factory.actfactory import ActFactory
+# from infra.system.core.factory.fakeactfactory import FakeActFactory
 from infra.system.artefacts.artefacts import ARTEFACT_GOLANG_DISTRIBUTION_SNAPSHOT
 from gofedlib.distribution.eco.capturer import EcoCapturer
 from infra.system.core.acts.types import ActFailedError
-from infra.system.core.functions.types import FunctionFailedError
 from gofedlib.distribution.helpers import GolangRpm
 from gofedlib.utils import BLUE, YELLOW, ENDC, WHITE
 from gofedlib.distribution.distributionsnapshot import DistributionSnapshot
 import json
+
+from infra.system.workers import Worker, WorkerException
+from infra.system.plugins.simplefilestorage.storagereader import StorageReader
+from infra.system.plugins.simplefilestorage.storagewriter import StorageWriter
 
 class DistributionSnapshotChecker(object):
 	"""Checkout the ecosystem for new builds
@@ -30,14 +33,11 @@ class DistributionSnapshotChecker(object):
 		"""
 		self._koji_client = koji_client
 		self._pkgdb_client = pkgdb_client
-		if dry_run:
-			act_factory = FakeActFactory()
-		else:
-			act_factory = ActFactory()
-
-		self._artefactreaderact = act_factory.bake("artefact-reader")
-		self._artefactwriteract = act_factory.bake("artefact-writer")
-		self._scanbuildact = act_factory.bake("scan-distribution-build")
+		# TODO(jchaloup): make the dry case work again!!!
+		# if dry_run:
+		# 	act_factory = FakeActFactory()
+		# else:
+		# 	act_factory = ActFactory()
 
 		self._failed = {}
 		self._scanned = {}
@@ -61,6 +61,7 @@ class DistributionSnapshotChecker(object):
 		for package in snapshot.json()["builds"]:
 			# scan devel and unit-tests only
 			rpms = filter(lambda l: GolangRpm(package["build"], l).provideSourceCode(), package["rpms"])
+			print(package["rpms"])
 
 			if rpms == []:
 				continue
@@ -77,12 +78,15 @@ class DistributionSnapshotChecker(object):
 			logger.info("%s%s/%s scanning %s ... %s" % (WHITE, index, total, package["build"], ENDC))
 			index = index + 1
 			try:
-				self._scanbuildact.call(data)
-			except ActFailedError as e:
-				logger.error(e)
-				self._failed[key].append(package)
-				continue
-			except FunctionFailedError as e:
+				Worker("scandistributionbuild").setPayload({
+					"product": product,
+					"distribution": version,
+					"build": {
+						"name": package["build"],
+						"rpms": package["rpms"],
+					}
+				}).do()
+			except WorkerException as e:
 				logger.error(e)
 				self._failed[key].append(package)
 				continue
@@ -110,11 +114,11 @@ class DistributionSnapshotChecker(object):
 		distro_packages = []
 		for distribution in distributions:
 			try:
-				data = self._artefactreaderact.call({
+				data = StorageReader().retrieve({
 					"artefact": ARTEFACT_GOLANG_DISTRIBUTION_SNAPSHOT,
 					"distribution": distribution.json()
 				})
-			except ActFailedError:
+			except KeyError:
 				continue
 
 			distro_packages = distro_packages + DistributionSnapshot().read(data).builds().keys()
@@ -134,12 +138,12 @@ class DistributionSnapshotChecker(object):
 
 			if not full_check:
 				try:
-					data = self._artefactreaderact.call({
+					data = StorageReader().retrieve({
 						"artefact": ARTEFACT_GOLANG_DISTRIBUTION_SNAPSHOT,
 						"distribution": snapshots[snapshot]["distribution"].json()
 					})
 					latest_snapshot = DistributionSnapshot().read(data)
-				except ActFailedError:
+				except KeyError:
 					# TODO(jchaloup): catch additional exception once extended
 					pass
 
@@ -165,7 +169,6 @@ class DistributionSnapshotChecker(object):
 				data["artefact"] = ARTEFACT_GOLANG_DISTRIBUTION_SNAPSHOT
 
 				try:
-					self._artefactwriteract.call(data)
-				except ActFactory:
+					StorageWriter().store(data)
+				except KeyError:
 					logger.error("Unable to store snapshot for %s:%s" % (distribution.product(), distribution.version()))
-

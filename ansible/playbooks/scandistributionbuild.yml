@@ -15,7 +15,7 @@
   - debug: var=build
 
   - set_fact:
-      build_data: "{{ build | from_json }}"
+      build_data: "{{ build }}"
 
   - set_fact:
       missing_rpms: []
