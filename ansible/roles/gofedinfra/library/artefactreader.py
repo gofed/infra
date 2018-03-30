@@ -33,6 +33,8 @@ def main():
         "product": {"required": False, "type": "str", "default": ""},
         "distribution": {"required": False, "type": "str", "default": ""},
         "package": {"required": False, "type": "str", "default": ""},
+        "build": {"required": False, "type": "str", "default": ""},
+        "rpm": {"required": False, "type": "str", "default": ""},
     }
 
     module = AnsibleModule(argument_spec=fields)

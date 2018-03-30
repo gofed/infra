@@ -3,11 +3,12 @@
 from ansible.module_utils.basic import *
 from gofedinfra.system.plugins.specdataextractor.SpecParser import SpecParser
 from infra.system.artefacts.artefacts import (
-	ARTEFACT_GOLANG_PROJECT_TO_PACKAGE_NAME,
-	ARTEFACT_GOLANG_PROJECT_INFO_FEDORA,
-	ARTEFACT_GOLANG_IPPREFIX_TO_PACKAGE_NAME
+    ARTEFACT_GOLANG_PROJECT_TO_PACKAGE_NAME,
+    ARTEFACT_GOLANG_PROJECT_INFO_FEDORA,
+    ARTEFACT_GOLANG_IPPREFIX_TO_PACKAGE_NAME
 )
 from datetime import datetime
+
 
 class SpecDataExtractor(object):
 
@@ -64,6 +65,9 @@ class SpecDataExtractor(object):
         if self._project == "":
             self._project = self._ipprefix
 
+        if self._project.startswith("https://"):
+            self._project = self._project[8:]
+
         # Extract date from changelog and set its format
         header = sp.getLastChangelog().header
         if header == "":
@@ -72,7 +76,7 @@ class SpecDataExtractor(object):
             # TODO(jchaloup): preprocess the line before converting to date
             date_data = re.sub(r' +', ' ', header.split('-')[0])
             date_data = " ".join(date_data.split(" ")[:5])
-            self._lastupdated = datetime.strptime(date_data,"* %a %b %d %Y").strftime("%Y-%m-%d")
+            self._lastupdated = datetime.strptime(date_data, "* %a %b %d %Y").strftime("%Y-%m-%d")
         except ValueError as e:
             raise ValueError("invalid changelog header format: {}".format(e))
 
@@ -102,6 +106,7 @@ class SpecDataExtractor(object):
             "ipprefix": self._ipprefix,
             "name": self._package,
         }
+
 
 def main():
 
