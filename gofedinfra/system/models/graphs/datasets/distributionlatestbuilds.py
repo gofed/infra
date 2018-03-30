@@ -4,7 +4,7 @@
 # Specification:
 # - nodes: distribution rpms
 # - edges: (a, b) = rpm a depends on rpm b
-# 
+#
 # - support for multigraphs:
 #   - as one rpm (a) can import more packages from the same rpm (b), there can be more edges between two nodes in general
 #   - when constructing a dependency graph, all multiedges get merge into one
@@ -32,6 +32,9 @@ from infra.system.artefacts.artefacts import ARTEFACT_GOLANG_DISTRIBUTION_SNAPSH
 from gofedlib.distribution.distributionsnapshot import DistributionSnapshot
 from infra.system.artefacts.artefacts import ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_PACKAGES
 
+from infra.system.workers import Worker, WorkerException
+from infra.system.plugins.simplefilestorage.storagereader import StorageReader
+
 class DistributionLatestBuildGraphDataset:
 
 	def __init__(self, dry_run=False):
@@ -53,7 +56,6 @@ class DistributionLatestBuildGraphDataset:
 		else:
 			act_factory = ActFactory()
 
-		self.scan_distribution_build_act = act_factory.bake("scan-distribution-build")
 		self.artefactreaderact = act_factory.bake("artefact-reader")
 
 	def build(self, distribution):
@@ -88,14 +90,33 @@ class DistributionLatestBuildGraphDataset:
 				}
 			}
 
-			try:
-				artefacts = self.scan_distribution_build_act.call(data)
-			except FunctionFailedError as e:
-				logger.error(e)
-				continue
+			for rpm in builds[pkg]["rpms"]:
+				artefact_key = {
+					"artefact": ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_PACKAGES,
+					"product": distribution.product(),
+					"distribution": distribution.version(),
+					"build": builds[pkg]["build"],
+					"rpm": rpm,
+				}
 
-			for rpm in artefacts[ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_PACKAGES]:
-				builder.addDistributionArtefact(artefacts[ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_PACKAGES][rpm])
+				try:
+					artefact = StorageReader().retrieve(artefact_key)
+				except KeyError:
+					Worker("scandistributionbuild").setPayload({
+						"product": product,
+						"distribution": version,
+						"build": {
+							"name": builds[pkg]["build"],
+							"rpms": builds[pkg]["rpms"],
+						}
+					}).do()
+
+				try:
+					artefact = StorageReader().retrieve(artefact_key)
+				except KeyError as e:
+					logger.error(e)
+					continue
+
+				builder.addDistributionArtefact(artefact)
 
 		return builder.build().dataset()
-
