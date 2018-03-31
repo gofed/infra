@@ -1,5 +1,5 @@
 ---
-- name: Scan distribution package act
+- name: Scan distribution build act
   gather_facts: no
   connection: local
   hosts: localhost

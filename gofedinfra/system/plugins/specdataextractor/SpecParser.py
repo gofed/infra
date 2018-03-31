@@ -314,7 +314,7 @@ class SpecParser:
         """
         Get interpreted content of spec file
         """
-        stdout, stderr, rt = runCommand("rpmspec -D '%gocraftmeta(i) %{{expand:# comment}}' -P {}".format(spec))
+        stdout, stderr, rt = runCommand("rpmspec -D '%gocraftmeta(i) %{{expand:# comment}}' -D '%gometa(i) %{{expand:# comment}}' -P {}".format(spec))
         if rt != 0:
             logging.error(stderr)
             return []

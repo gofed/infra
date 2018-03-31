@@ -87,6 +87,19 @@
 
 - debug: var=routput
 
+- find:
+    paths: "{{ routput.directory }}"
+    recurse: yes
+  register: specdir
+
+- debug: var=specdir
+
+- command: >
+    ls "{{ routput.directory }}"
+  register: soutput
+
+- debug: var=soutput
+
 - name: Find spec file in the srpm
   find:
     paths: "{{ routput.directory }}"

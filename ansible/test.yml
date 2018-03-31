@@ -1,0 +1,84 @@
+---
+- name: Prepare testing environment
+  gather_facts: no
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Create temporary working directory
+    tempfile:
+      state: directory
+      suffix: corpus
+    register: output
+
+  - debug: var=output
+
+  - name: Set the working directory
+    ini_file:
+      path: ../gofedinfra/system/config/infra.conf
+      section: simplefilestorage
+      option: working_directory
+      value: "{{ output.path }}"
+    register: ini
+
+  - debug: var=ini
+
+# Test all entry points
+- include: playbooks/gocodeinspection.yml
+  vars:
+    commit: 378d26f46672a356c46195c28f61bdb4c0a781dd
+    repository: github.com/golang/sys
+    ipprefix: github.com/golang/sys
+
+- include: playbooks/goexportedapidiff.yml
+  vars:
+    hexsha1: 8c0ece68c28377f4c326d85b94f8df0dace46f80
+    hexsha2: 378d26f46672a356c46195c28f61bdb4c0a781dd
+    repository: github.com/golang/sys
+    ipprefix: github.com/golang/sys
+
+- include: playbooks/scandistributionbuild.yml
+  vars:
+    product: Fedora
+    distribution: f28
+    build:
+      name: golang-github-golang-sys-0-0.18.20180305gitf6cff07.fc28
+      rpms:
+      - golang-github-golang-sys-0-0.18.20180305gitf6cff07.fc28.src.rpm
+      - golang-github-golang-sys-devel-0-0.18.20180305gitf6cff07.fc28.aarch64.rpm
+      - golang-github-golang-sys-devel-0-0.18.20180305gitf6cff07.fc28.armv7hl.rpm
+      - golang-github-golang-sys-devel-0-0.18.20180305gitf6cff07.fc28.i686.rpm
+      - golang-github-golang-sys-devel-0-0.18.20180305gitf6cff07.fc28.ppc64le.rpm
+      - golang-github-golang-sys-devel-0-0.18.20180305gitf6cff07.fc28.s390x.rpm
+      - golang-github-golang-sys-devel-0-0.18.20180305gitf6cff07.fc28.x86_64.rpm
+
+# Requires koji python package
+# - include: playbooks/scandistributionpackage.yml
+#   vars:
+#     product: Fedora
+#     distribution: 28
+#     package: golang-github-golang-sys
+
+- include: playbooks/scanupstreamrepository.yml
+  vars:
+    repository: github.com/golang/sys
+
+- include: playbooks/scanupstreamrepository.yml
+  vars:
+    repository: github.com/golang/sys
+    hexsha: 12d9d5b28165b1684fdc69be47f71a36d85e9a2a
+
+- include: playbooks/specmodeldataprovider.yml
+  vars:
+    repository: github.com/golang/sys
+    ipprefix: github.com/golang/sys
+    hexsha: 378d26f46672a356c46195c28f61bdb4c0a781dd
+
+- name: Clean testing environment
+  gather_facts: no
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Remove working directory
+    file:
+      name: "{{ output.path }}"
+      state: absent

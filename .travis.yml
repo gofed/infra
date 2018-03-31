@@ -1,0 +1,12 @@
+language: python
+python:
+  - "2.7"
+script:
+  - make test
+install:
+  - sudo apt-get install rpm2cpio rpm
+  # 2.1.8- are buggy: https://github.com/gitpython-developers/GitPython/issues/687
+  - pip install gitpython==2.1.9
+  - pip install python-hglib==2.5
+  - pip install PyGithub==1.29 requests==2.10.0
+  - pip install ansible==2.3.0.0

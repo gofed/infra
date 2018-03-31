@@ -7,6 +7,7 @@ import tempfile
 import os
 from gofedlib.utils import runCommand
 
+
 class RpmRetriever(object):
 
     def __init__(self, product, distribution, build, rpm):
@@ -44,14 +45,16 @@ class RpmRetriever(object):
         return f.name
 
     def _extractRpm(self, resource_location):
-		# TODO(jchaloup): use python module (e.g. github.com/srossross/rpmfile)
-		dirpath = tempfile.mkdtemp()
-		cwd = os.getcwd()
-		os.chdir(dirpath)
-		runCommand("rpm2cpio %s | cpio -idmv" % resource_location)
-		os.chdir(cwd)
+        # TODO(jchaloup): use python module (e.g. github.com/srossross/rpmfile)
+        dirpath = tempfile.mkdtemp()
+        cwd = os.getcwd()
+        os.chdir(dirpath)
+        so, se, rc = runCommand("rpm2cpio %s | cpio -idmv" % resource_location)
+        if rc != 0:
+            raise Exception("rpm2cpio error\nrc: {}\n se: {}\nso: {}".format(rc, se, so))
+        os.chdir(cwd)
 
-		return dirpath
+        return dirpath
 
     def retrieve(self):
         # get n,v,r from build
