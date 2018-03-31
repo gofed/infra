@@ -1,0 +1,81 @@
+---
+- fail:
+    msg: "hexsha variable is not set"
+  when: hexsha is undefined
+- fail:
+    msg: "repository variable is not set"
+  when: repository is undefined
+- fail:
+    msg: "ipprefix variable is not set"
+  when: ipprefix is undefined
+
+- name: Check if golang-project-packages artefacts already exist
+  artefactreader:
+    artefact: golang-project-packages
+    repository: "{{ repository }}"
+    hexsha: "{{ hexsha }}"
+  register: packages_output
+
+- debug:
+   msg: "Artefact found: {{ packages_output.found }}"
+
+- name: Check if golang-project-content-metadata artefacts already exist
+  artefactreader:
+    artefact: golang-project-content-metadata
+    repository: "{{ repository }}"
+    hexsha: "{{ hexsha }}"
+  register: metadata_output
+
+- debug:
+   msg: "Artefact found: {{ metadata_output.found }}"
+
+- when: not packages_output.found or not metadata_output.found
+  block:
+  - name: Retrieve source code from a repository
+    repositorycoderetriever:
+      repository: "{{ repository }}"
+      hexsha: "{{ hexsha }}"
+    register: routput
+
+  - debug: var=routput
+
+  - name: Extract artefacts from a Go code
+    gosymbolsextractor:
+      directory: "{{ routput.directory }}"
+      repository: "{{ repository }}"
+      hexsha: "{{ hexsha }}"
+      ipprefix: "{{ ipprefix }}"
+    register: eoutput
+
+  - name: Extract metadata from a Go code
+    goprojectcontentmetadataextractor:
+      directory: "{{ routput.directory }}"
+      repository: "{{ repository }}"
+      hexsha: "{{ hexsha }}"
+    register: moutput
+
+  - name: Remove working directory
+    file:
+      name: "{{ routput.directory }}"
+      state: absent
+
+  - name: Store golang-project-packages
+    artefactwriter:
+      artefact: "{{ eoutput.artefacts['golang-project-packages'] | to_json }}"
+    register: woutput
+
+  - debug: var=woutput
+
+  - name: Store golang-project-exported-api
+    artefactwriter:
+      artefact: "{{ eoutput.artefacts['golang-project-exported-api'] | to_json }}"
+    register: woutput
+
+  - debug: var=woutput
+
+  - name: Store golang-project-content-metadata
+    artefactwriter:
+      artefact: "{{ moutput.artefacts['golang-project-content-metadata'] | to_json }}"
+    register: woutput
+
+  - debug: var=woutput

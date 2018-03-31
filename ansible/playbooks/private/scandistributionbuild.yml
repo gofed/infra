@@ -1,0 +1,173 @@
+---
+- fail:
+    msg: "distribution variable is not set"
+  when: distribution is undefined
+- fail:
+    msg: "build variable is not set"
+  when: build is undefined
+- debug: var=build
+
+- set_fact:
+    build_data: "{{ build }}"
+
+- set_fact:
+    missing_rpms: []
+
+- name: Check if golang-project-distribution-packages exists
+  artefactreader:
+    artefact: golang-project-distribution-packages2
+    distribution: "{{ distribution }}"
+    build: "{{ build_data['name'] }}"
+    rpm: "{{ item }}"
+    product: "{{ product | default('') }}"
+  when: item | rpmname(build_data['name']) is match(".*-devel$")
+  with_items: "{{ build_data['rpms']  }}"
+  register: packages_output
+
+- name: Collect rpms with missing artefacts
+  set_fact:
+    missing_rpms: "{{ missing_rpms + [ item.item ] }}"
+  when:
+  - item.changed
+  - not item.found
+  - item.item not in missing_rpms
+  with_items: "{{ packages_output.results }}"
+  loop_control:
+      label: "{{ item.item }}"
+
+- debug: var=missing_rpms
+
+- debug:
+    msg: "Name: {{ item | rpmname(build_data['name']) }}"
+  with_items: "{{ missing_rpms }}"
+
+- name: Check if golang-project-distribution-exported-api exists
+  artefactreader:
+    artefact: golang-project-distribution-exported-api
+    distribution: "{{ distribution }}"
+    build: "{{ build_data['name'] }}"
+    rpm: "{{ item }}"
+    product: "{{ product | default('') }}"
+  when: item | rpmname(build_data['name']) is match(".*-devel$")
+  with_items: "{{ build_data['rpms']  }}"
+  register: api_output
+
+- name: Collect rpms with missing artefacts
+  set_fact:
+    missing_rpms: "{{ missing_rpms + [ item.item ] }}"
+  when:
+  - item.changed
+  - not item.found
+  - item.item not in missing_rpms
+  with_items: "{{ api_output.results }}"
+  loop_control:
+      label: "{{ item.item }}"
+
+- debug: var=missing_rpms
+
+- debug:
+    msg: "Name: {{ item | rpmname(build_data['name']) }}"
+  with_items: "{{ missing_rpms }}"
+
+- name: Get srpm
+  set_fact:
+    srpm: "{{ item }}"
+  when: item | rpmarch(build_data['name']) == "src"
+  with_items: "{{ build_data['rpms']  }}"
+
+- debug: var=srpm
+
+- name: Retrieve srpm
+  rpmretriever:
+    product: "{{ product | default('') }}"
+    distribution: "{{ distribution }}"
+    build: "{{ build_data['name'] }}"
+    rpm: "{{ srpm }}"
+  register: routput
+
+- debug: var=routput
+
+- name: Find spec file in the srpm
+  find:
+    paths: "{{ routput.directory }}"
+    patterns: '*.spec'
+  register: specfile
+
+- fail:
+    msg: "Exactly one spec file not found, have {{ specfile.matched }} instead"
+  when: specfile.matched != 1
+
+- debug: var=specfile.files[0].path
+
+- name: Extract data from the spec file
+  specdataextractor:
+    specfile: "{{ specfile.files[0].path }}"
+    product: "{{ product | default('') }}"
+    distribution: "{{ distribution }}"
+    package: "{{ build_data['name'] | packagename }}"
+  register: spec_output
+
+- name: Remove working directory
+  file:
+    name: "{{ routput.directory }}"
+    state: absent
+
+- debug: var=spec_output
+
+- debug: var=spec_output.artefacts["golang-project-info-fedora"].commit
+
+- when: missing_rpms | length > 0
+  block:
+  - name: Retrieve rpm
+    rpmretriever:
+      product: "{{ product | default('') }}"
+      distribution: "{{ distribution }}"
+      build: "{{ build_data['name'] }}"
+      rpm: "{{ item }}"
+    with_items: "{{ missing_rpms }}"
+    register: rpms_output
+
+  - debug: var=rpms_output
+
+  - name: Extract data from rpms
+    godistributionsymbolsextractor:
+      directory: "{{ item.directory }}"
+      product: "{{ product | default('') }}"
+      distribution: "{{ distribution }}"
+      build: "{{ build_data['name'] }}"
+      rpm: "{{ item.item }}"
+      hexsha: "{{ spec_output.artefacts['golang-project-info-fedora'].commit }}"
+    with_items: "{{ rpms_output.results }}"
+    register: rpm_artefacts
+
+  - name: Remove working directory
+    file:
+      name: "{{ item.directory }}"
+      state: absent
+    with_items: "{{ rpms_output.results }}"
+
+  - name: Store all golang-project-distribution-packages artefacts
+    artefactwriter:
+      artefact: "{{ item.artefacts['golang-project-distribution-packages'] | to_json }}"
+    with_items: "{{ rpm_artefacts.results }}"
+    loop_control:
+        label: "{{ item.rpm }}"
+
+  - name: Store all golang-project-distribution-exported-api artefacts
+    artefactwriter:
+      artefact: "{{ item.artefacts['golang-project-distribution-exported-api'] | to_json }}"
+    with_items: "{{ rpm_artefacts.results }}"
+    loop_control:
+        label: "{{ item.rpm }}"
+
+  - name: Collect mappings
+    set_fact:
+      mapping: "{{ mapping | default([]) + item.artefacts['golang-ipprefix-to-rpm'] }}"
+    with_items: "{{ rpm_artefacts.results }}"
+    loop_control:
+      label: "{{ item.rpm }}"
+
+  - name: Store all golang-ipprefix-to-rpm artefacts
+    artefactwriter:
+      artefact: "{{ item | to_json }}"
+    with_items: "{{ mapping }}"
