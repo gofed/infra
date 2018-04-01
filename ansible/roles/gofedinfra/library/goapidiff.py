@@ -3,6 +3,7 @@
 from ansible.module_utils.basic import *
 from gofedlib.go.apidiff import apidiff
 from gofedinfra.system.artefacts.artefacts import ARTEFACT_GOLANG_PROJECTS_API_DIFF
+from gofedlib.providers.providerbuilder import ProviderBuilder
 
 """
 Input:
@@ -44,21 +45,27 @@ class GoApiDiff(object):
     def extract(self):
         # TODO(jchaloup): make sure the GoApiDiff throws
         # exception when repositories of both APIs are different!!!
+        # unless it is github.com/local/local
         self._apidiff = apidiff.GoApiDiff(
             self._exported_api1["packages"],
             self._exported_api2["packages"],
         ).runDiff().apiDiff()
 
-        self._repository = self._exported_api1["repository"]
+        # Local absorbs everything
+        if self._exported_api1["commit"] == "local" or self._exported_api2["commit"] == "local":
+            self._repository = ProviderBuilder().buildUpstreamWithLocalMapping().parse("github.com/local/local").signature()
+        else:
+            self._repository = self._exported_api1["repository"]
+
         self._commit1 = self._exported_api1["commit"]
         self._commit2 = self._exported_api2["commit"]
 
     def golangProjectsApiDiffArtefact(self):
         return {
             "artefact": ARTEFACT_GOLANG_PROJECTS_API_DIFF,
-            "repository": self._exported_api1["repository"],
+            "repository": self._repository,
             "commit1": self._exported_api1["commit"],
-            "commit2": self._exported_api1["commit"],
+            "commit2": self._exported_api2["commit"],
             "data": self._apidiff
         }
 

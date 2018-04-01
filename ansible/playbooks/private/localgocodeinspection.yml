@@ -1,0 +1,32 @@
+---
+- fail:
+    msg: "directory variable is not set"
+  when: directory is undefined
+
+- debug: var=directory
+
+- name: Extract artefacts from a Go code
+  gosymbolsextractor:
+    directory: "{{ directory }}"
+    repository: "github.com/local/local"
+    hexsha: "local"
+    ipprefix: "github.com/local/local"
+  register: eoutput
+
+- name: Store golang-project-packages
+  artefactwriter:
+    artefact: "{{ eoutput.artefacts['golang-project-packages'] | to_json }}"
+  register: woutput
+
+- debug: var=woutput
+
+- name: Store golang-project-exported-api
+  artefactwriter:
+    artefact: "{{ eoutput.artefacts['golang-project-exported-api'] | to_json }}"
+  register: woutput
+
+- debug: var=woutput
+
+- set_fact:
+    local_golang_project_packages: "{{ eoutput.artefacts['golang-project-packages'] | to_json }}"
+    local_golang_project_exported_api: "{{ eoutput.artefacts['golang-project-exported-api'] | to_json }}"

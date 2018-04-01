@@ -6,4 +6,26 @@
   roles:
   - role: gofedinfra
   tasks:
+  # Both upstream sources
   - include: private/goexportedapidiff.yml
+    when:
+    - hexsha1 is defined
+    - hexsha2 is defined
+
+  # 1 = localdir, 2 = upstream
+  - include: private/goexportedlocalupstreamapidiff.yml
+    when:
+    - directory1 is defined
+    - hexsha2 is defined
+
+  # 1 = upstream, 2 = locadir
+  - include: private/goexportedupstreamlocalapidiff.yml
+    when:
+    - hexsha1 is defined
+    - directory2 is defined
+
+  # 1 = localdir, 2 = locadir
+  - include: private/goexportedlocallocalapidiff.yml
+    when:
+    - directory1 is defined
+    - directory2 is defined
