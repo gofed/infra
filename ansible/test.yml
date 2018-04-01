@@ -52,11 +52,13 @@
       - golang-github-golang-sys-devel-0-0.18.20180305gitf6cff07.fc28.x86_64.rpm
 
 # Requires koji python package
-# - include: playbooks/scandistributionpackage.yml
-#   vars:
-#     product: Fedora
-#     distribution: 28
-#     package: golang-github-golang-sys
+- include: playbooks/scandistributionpackage.yml
+  vars:
+    product: Fedora
+    distribution: 28
+    package: golang-github-golang-sys
+  when:
+  - all | default(false)
 
 - include: playbooks/scanupstreamrepository.yml
   vars:
@@ -72,6 +74,33 @@
     repository: github.com/golang/sys
     ipprefix: github.com/golang/sys
     hexsha: 378d26f46672a356c46195c28f61bdb4c0a781dd
+
+- include: playbooks/goexportedapidiff.yml
+  vars:
+    directory1: /home/jchaloup/Packages/fedora/golang-github-golang-sys/sys-f6cff0780e542efa0c8e864dc8fa522808f6a598
+    hexsha2: 378d26f46672a356c46195c28f61bdb4c0a781dd
+    repository: github.com/golang/sys
+    ipprefix: github.com/golang/sys
+  when:
+  - all | default(false)
+
+- include: playbooks/goexportedapidiff.yml
+  vars:
+    hexsha1: 378d26f46672a356c46195c28f61bdb4c0a781dd
+    directory2: /home/jchaloup/Packages/fedora/golang-github-golang-sys/sys-f6cff0780e542efa0c8e864dc8fa522808f6a598
+    repository: github.com/golang/sys
+    ipprefix: github.com/golang/sys
+  when:
+  - all | default(false)
+
+- include: playbooks/goexportedapidiff.yml
+  vars:
+    directory1: /home/jchaloup/Packages/fedora/golang-github-golang-sys/sys-f6cff0780e542efa0c8e864dc8fa522808f6a598
+    directory2: /home/jchaloup/Packages/fedora/golang-github-golang-sys/sys-f6cff0780e542efa0c8e864dc8fa522808f6a598
+    repository: github.com/golang/sys
+    ipprefix: github.com/golang/sys
+  when:
+  - all | default(false)
 
 - name: Clean testing environment
   gather_facts: no
