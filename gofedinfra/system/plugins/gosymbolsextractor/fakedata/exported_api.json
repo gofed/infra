@@ -1,1 +1,0 @@
-[{"variables": [], "datatypes": [], "functions": [], "package": "appengine-hello"}, {"variables": [], "datatypes": [], "functions": [{"name": "Reverse", "def": {"params": [{"type": "identifier", "def": "string"}], "type": "function", "results": [{"type": "identifier", "def": "string"}]}}], "package": "stringutil"}]

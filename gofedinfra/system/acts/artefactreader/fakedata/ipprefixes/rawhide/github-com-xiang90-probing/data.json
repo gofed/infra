@@ -1,1 +1,0 @@
-{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/xiang90/probing", "build": "golang-github-xiang90-probing-0-0.3.git6a0cc1a.fc24", "commit": "6a0cc1ae81b4cc11db5e491e030e4b98fba79c19", "distribution": "rawhide", "rpm": "golang-github-xiang90-probing-devel-0-0.3.git6a0cc1a.fc24.noarch.rpm"}

@@ -1,1 +1,0 @@
-{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/ncw/swift", "build": "golang-github-ncw-swift-0-0.4.gitc54732e.fc25", "commit": "c54732e87b0b283d1baf0a18db689d0aea460ba3", "distribution": "rawhide", "rpm": "golang-github-ncw-swift-devel-0-0.4.gitc54732e.fc25.noarch.rpm"}

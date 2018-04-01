@@ -1,1 +1,0 @@
-{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/onsi/ginkgo", "build": "golang-github-onsi-ginkgo-1.1.0-7.fc24", "commit": "462326b1628e124b23f42e87a8f2750e3c4e2d24", "distribution": "rawhide", "rpm": "golang-github-onsi-ginkgo-devel-1.1.0-7.fc24.noarch.rpm"}

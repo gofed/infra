@@ -1,1 +1,0 @@
-{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/bgentry/speakeasy", "build": "golang-github-bgentry-speakeasy-0-0.5.git36e9cfd.fc24", "commit": "36e9cfdd690967f4f690c6edcc9ffacd006014a0", "distribution": "rawhide", "rpm": "golang-github-bgentry-speakeasy-devel-0-0.5.git36e9cfd.fc24.noarch.rpm"}

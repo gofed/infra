@@ -1,1 +1,0 @@
-{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "gopkg.in/v1/yaml", "build": "golang-gopkg-yaml-1-11.fc25", "commit": "bef53efd0c76e49e6de55ead051f886bea7e9420", "distribution": "rawhide", "rpm": "golang-gopkg-yaml-devel-1-11.fc25.noarch.rpm"}

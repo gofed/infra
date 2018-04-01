@@ -1,1 +1,0 @@
-{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/auth0/go-jwt-middleware", "build": "golang-github-auth0-go-jwt-middleware-0.1-3.git8c897f7.fc24", "commit": "8c897f7c3631a9e9405b9496fd8ce241acdef230", "distribution": "rawhide", "rpm": "golang-github-auth0-go-jwt-middleware-devel-0.1-3.git8c897f7.fc24.noarch.rpm"}

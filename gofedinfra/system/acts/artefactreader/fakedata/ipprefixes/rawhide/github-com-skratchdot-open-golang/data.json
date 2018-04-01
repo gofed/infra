@@ -1,1 +1,0 @@
-{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/skratchdot/open-golang", "build": "golang-github-skratchdot-open-golang-0-0.6.gitba570a1.fc24", "commit": "ba570a111973b539baf23c918213059543b5bb6e", "distribution": "rawhide", "rpm": "golang-github-skratchdot-open-golang-devel-0-0.6.gitba570a1.fc24.noarch.rpm"}

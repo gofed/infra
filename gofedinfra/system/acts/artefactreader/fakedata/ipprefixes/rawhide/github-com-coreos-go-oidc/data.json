@@ -1,1 +1,0 @@
-{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/coreos/go-oidc", "build": "golang-github-coreos-go-oidc-0-0.3.gitee7cb1f.fc24", "commit": "ee7cb1fb480df22f7d8c4c90199e438e454ca3b6", "distribution": "rawhide", "rpm": "golang-github-coreos-go-oidc-devel-0-0.3.gitee7cb1f.fc24.noarch.rpm"}

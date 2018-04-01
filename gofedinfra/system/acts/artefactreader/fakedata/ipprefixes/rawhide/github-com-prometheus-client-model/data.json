@@ -1,1 +1,0 @@
-{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/prometheus/client_model", "build": "golang-github-prometheus-client_model-0-0.7.gitfa8ad6f.fc24", "commit": "fa8ad6fec33561be4280a8f0514318c79d7f6cb6", "distribution": "rawhide", "rpm": "golang-github-prometheus-client_model-devel-0-0.7.gitfa8ad6f.fc24.noarch.rpm"}

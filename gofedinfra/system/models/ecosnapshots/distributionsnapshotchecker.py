@@ -1,11 +1,8 @@
 import logging
 logger = logging.getLogger("distribution_snapshot_capturer")
 
-# from infra.system.core.factory.actfactory import ActFactory
-# from infra.system.core.factory.fakeactfactory import FakeActFactory
 from infra.system.artefacts.artefacts import ARTEFACT_GOLANG_DISTRIBUTION_SNAPSHOT
 from gofedlib.distribution.eco.capturer import EcoCapturer
-from infra.system.core.acts.types import ActFailedError
 from gofedlib.distribution.helpers import GolangRpm
 from gofedlib.utils import BLUE, YELLOW, ENDC, WHITE
 from gofedlib.distribution.distributionsnapshot import DistributionSnapshot
@@ -33,11 +30,6 @@ class DistributionSnapshotChecker(object):
 		"""
 		self._koji_client = koji_client
 		self._pkgdb_client = pkgdb_client
-		# TODO(jchaloup): make the dry case work again!!!
-		# if dry_run:
-		# 	act_factory = FakeActFactory()
-		# else:
-		# 	act_factory = ActFactory()
 
 		self._failed = {}
 		self._scanned = {}

@@ -1,1 +1,0 @@
-{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/codegangsta/negroni", "build": "golang-github-codegangsta-negroni-0.1-3.gitc7477ad.fc24", "commit": "c7477ad8e330bef55bf1ebe300cf8aa67c492d1b", "distribution": "rawhide", "rpm": "golang-github-codegangsta-negroni-devel-0.1-3.gitc7477ad.fc24.noarch.rpm"}

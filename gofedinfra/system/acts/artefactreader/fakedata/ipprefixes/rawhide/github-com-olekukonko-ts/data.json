@@ -1,1 +1,0 @@
-{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/olekukonko/ts", "build": "golang-github-olekukonko-ts-0-0.1.gitecf753e.fc25", "commit": "ecf753e7c962639ab5a1fb46f7da627d4c0a04b8", "distribution": "rawhide", "rpm": "golang-github-olekukonko-ts-devel-0-0.1.gitecf753e.fc25.noarch.rpm"}

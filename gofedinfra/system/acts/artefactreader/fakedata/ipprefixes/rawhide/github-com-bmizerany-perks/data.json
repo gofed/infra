@@ -1,1 +1,0 @@
-{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/bmizerany/perks", "build": "golang-github-bmizerany-perks-0-0.6.gitd9a9656.fc24", "commit": "d9a9656a3a4b1c2864fdb44db2ef8619772d92aa", "distribution": "rawhide", "rpm": "golang-github-bmizerany-perks-devel-0-0.6.gitd9a9656.fc24.noarch.rpm"}

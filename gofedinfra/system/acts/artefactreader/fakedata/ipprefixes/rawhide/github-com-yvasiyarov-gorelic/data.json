@@ -1,1 +1,0 @@
-{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/yvasiyarov/gorelic", "build": "golang-github-yvasiyarov-gorelic-0-0.1.gita9bba5b.fc25", "commit": "a9bba5b9ab508a086f9a12b8c51fab68478e2128", "distribution": "rawhide", "rpm": "golang-github-yvasiyarov-gorelic-devel-0-0.1.gita9bba5b.fc25.noarch.rpm"}

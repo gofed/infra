@@ -1,1 +1,0 @@
-{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/gonum/blas", "build": "golang-github-gonum-blas-0-0.3.git80dca99.fc24", "commit": "80dca99229cccca259b550ae3f755cf79c65a224", "distribution": "rawhide", "rpm": "golang-github-gonum-blas-devel-0-0.3.git80dca99.fc24.noarch.rpm"}

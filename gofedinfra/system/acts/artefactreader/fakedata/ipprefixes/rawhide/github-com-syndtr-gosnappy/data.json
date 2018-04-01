@@ -1,1 +1,0 @@
-{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/syndtr/gosnappy", "build": "golang-github-syndtr-gosnappy-0-0.6.git156a073.fc24", "commit": "156a073208e131d7d2e212cb749feae7c339e846", "distribution": "rawhide", "rpm": "golang-github-syndtr-gosnappy-devel-0-0.6.git156a073.fc24.noarch.rpm"}

@@ -1,1 +1,0 @@
-{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/hawkular/hawkular-client-go", "build": "golang-github-hawkular-hawkular-client-go-0.3.4-3.fc24", "commit": "06bf87e3e131208c321ebd5d21576d94809537a1", "distribution": "rawhide", "rpm": "golang-github-hawkular-hawkular-client-go-devel-0.3.4-3.fc24.noarch.rpm"}

@@ -1,1 +1,0 @@
-{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/rackspace/gophercloud", "build": "golang-github-rackspace-gophercloud-1.0.0-10.fc24", "commit": "f3ced00552c1c7d4a6184500af9062cfb4ff4463", "distribution": "rawhide", "rpm": "golang-github-rackspace-gophercloud-devel-1.0.0-10.fc24.noarch.rpm"}

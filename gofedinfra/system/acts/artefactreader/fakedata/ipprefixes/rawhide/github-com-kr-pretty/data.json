@@ -1,1 +1,0 @@
-{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/kr/pretty", "build": "golang-github-kr-pretty-0-0.9.gitf31442d.fc24", "commit": "f31442d60e51465c69811e2107ae978868dbea5c", "distribution": "rawhide", "rpm": "golang-github-kr-pretty-devel-0-0.9.gitf31442d.fc24.noarch.rpm"}

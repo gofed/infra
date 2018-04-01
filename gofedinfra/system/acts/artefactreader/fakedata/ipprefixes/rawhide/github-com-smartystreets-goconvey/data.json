@@ -1,1 +1,0 @@
-{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/smartystreets/goconvey", "build": "golang-github-smartystreets-goconvey-1.6.1-0.1.gitbf58a9a.fc25", "commit": "bf58a9a1291224109919756b4dcc469c670cc7e4", "distribution": "rawhide", "rpm": "golang-github-smartystreets-goconvey-devel-1.6.1-0.1.gitbf58a9a.fc25.noarch.rpm"}

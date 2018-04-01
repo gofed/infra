@@ -1,1 +1,0 @@
-{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/armon/circbuf", "build": "golang-github-armon-circbuf-0-0.7.gitbbbad09.fc24", "commit": "bbbad097214e2918d8543d5201d12bfd7bca254d", "distribution": "rawhide", "rpm": "golang-github-armon-circbuf-devel-0-0.7.gitbbbad09.fc24.noarch.rpm"}

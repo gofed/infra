@@ -1,1 +1,0 @@
-{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/peterh/liner", "build": "golang-github-peterh-liner-0-0.3.git941195f.fc24", "commit": "941195f85dd7a23971a3d55142972d396278ddcf", "distribution": "rawhide", "rpm": "golang-github-peterh-liner-devel-0-0.3.git941195f.fc24.noarch.rpm"}

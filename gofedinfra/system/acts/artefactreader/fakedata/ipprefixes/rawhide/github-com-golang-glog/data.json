@@ -1,1 +1,0 @@
-{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/golang/glog", "build": "golang-github-golang-glog-0-0.10.gitfca8c88.fc25", "commit": "fca8c8854093a154ff1eb580aae10276ad6b1b5f", "distribution": "rawhide", "rpm": "golang-github-golang-glog-devel-0-0.10.gitfca8c88.fc25.noarch.rpm"}

@@ -1,1 +1,0 @@
-{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/Sirupsen/logrus", "build": "golang-github-Sirupsen-logrus-0.8.4-5.fc25", "commit": "3cb248e9df77413d58a6330dde84236d04c197d5", "distribution": "rawhide", "rpm": "golang-github-Sirupsen-logrus-devel-0.8.4-5.fc25.noarch.rpm"}

@@ -1,1 +1,0 @@
-{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/digitalocean/godo", "build": "golang-github-digitalocean-godo-0-0.4.git8dc1f54.fc24", "commit": "8dc1f54d1a60ffad00ff7842fd5b385dc5a31fd5", "distribution": "rawhide", "rpm": "golang-github-digitalocean-godo-devel-0-0.4.git8dc1f54.fc24.noarch.rpm"}

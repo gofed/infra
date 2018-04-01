@@ -1,1 +1,0 @@
-{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/hashicorp/mdns", "build": "golang-github-hashicorp-mdns-0-0.6.git2b439d3.fc24", "commit": "2b439d37011456df8ff83a70ffd1cd6046410113", "distribution": "rawhide", "rpm": "golang-github-hashicorp-mdns-devel-0-0.6.git2b439d3.fc24.noarch.rpm"}

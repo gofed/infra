@@ -1,1 +1,0 @@
-{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/ugorji/go", "build": "golang-github-ugorji-go-0-0.6.gitf1f1a80.fc24", "commit": "f1f1a805ed361a0e078bb537e4ea78cd37dcf065", "distribution": "rawhide", "rpm": "golang-github-ugorji-go-devel-0-0.6.gitf1f1a80.fc24.noarch.rpm"}

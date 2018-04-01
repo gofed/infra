@@ -1,1 +1,0 @@
-{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "code.google.com/p/gosqlite", "build": "golang-googlecode-sqlite-0-0.17.hg74691fb6f837.fc24", "commit": "74691fb6f83716190870cde1b658538dd4b18eb0", "distribution": "rawhide", "rpm": "golang-googlecode-sqlite-devel-0-0.17.hg74691fb6f837.fc24.noarch.rpm"}

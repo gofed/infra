@@ -1,1 +1,0 @@
-{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "speter.net/go/exp/math/dec/inf", "build": "golang-googlecode-go-decimal-inf-0-0.7.hg42ca6cd68aa9.fc24", "commit": "42ca6cd68aa922bc3f32f1e056e61b65945d9ad7", "distribution": "rawhide", "rpm": "golang-googlecode-go-decimal-inf-devel-0-0.7.hg42ca6cd68aa9.fc24.noarch.rpm"}

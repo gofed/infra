@@ -1,1 +1,0 @@
-{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/rakyll/globalconf", "build": "golang-github-rakyll-globalconf-0-0.5.git415abc3.fc24", "commit": "415abc325023f1a00cd2d9fa512e0e71745791a2", "distribution": "rawhide", "rpm": "golang-github-rakyll-globalconf-devel-0-0.5.git415abc3.fc24.noarch.rpm"}

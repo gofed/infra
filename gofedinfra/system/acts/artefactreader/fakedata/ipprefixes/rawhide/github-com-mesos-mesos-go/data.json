@@ -1,1 +1,0 @@
-{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/mesos/mesos-go", "build": "golang-github-mesos-mesos-go-0-0.5.git83b52d7.fc24", "commit": "83b52d7f648d2a2fa91330123d348d4090be2aed", "distribution": "rawhide", "rpm": "golang-github-mesos-mesos-go-devel-0-0.5.git83b52d7.fc24.noarch.rpm"}

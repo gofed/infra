@@ -1,1 +1,0 @@
-{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/go-sql-driver/mysql", "build": "golang-github-go-sql-driver-mysql-1.2-3.fc24", "commit": "0cc29e9fe8e25c2c58cf47bcab566e029bbaa88b", "distribution": "rawhide", "rpm": "golang-github-go-sql-driver-mysql-devel-1.2-3.fc24.noarch.rpm"}

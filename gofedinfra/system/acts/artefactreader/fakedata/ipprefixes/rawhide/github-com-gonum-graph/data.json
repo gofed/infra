@@ -1,1 +1,0 @@
-{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/gonum/graph", "build": "golang-github-gonum-graph-0.9-3.fc24", "commit": "bde6d0fbd9dec5a997e906611fe0364001364c41", "distribution": "rawhide", "rpm": "golang-github-gonum-graph-devel-0.9-3.fc24.noarch.rpm"}

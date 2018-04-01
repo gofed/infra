@@ -1,1 +1,0 @@
-{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/mattn/go-sqlite3", "build": "golang-github-mattn-go-sqlite3-1.0.0-3.fc24", "commit": "b4142c444a8941d0d92b0b7103a24df9cd815e42", "distribution": "rawhide", "rpm": "golang-github-mattn-go-sqlite3-devel-1.0.0-3.fc24.noarch.rpm"}

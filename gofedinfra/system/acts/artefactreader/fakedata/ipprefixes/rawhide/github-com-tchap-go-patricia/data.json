@@ -1,1 +1,0 @@
-{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/tchap/go-patricia", "build": "golang-github-tchap-go-patricia-1.0.1-8.fc25", "commit": "f64d0a63cd3363481c898faa9339de04d12213f9", "distribution": "rawhide", "rpm": "golang-github-tchap-go-patricia-devel-1.0.1-8.fc25.noarch.rpm"}

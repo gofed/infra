@@ -1,1 +1,0 @@
-{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/kraman/libcontainer", "build": "golang-github-kraman-libcontainer-0-0.7.gitd700e5b.fc24", "commit": "d700e5b21d05486c60f4be3d7bbd3f93065f00c9", "distribution": "rawhide", "rpm": "golang-github-kraman-libcontainer-devel-0-0.7.gitd700e5b.fc24.noarch.rpm"}

@@ -1,1 +1,0 @@
-{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/hashicorp/go-cleanhttp", "build": "golang-github-hashicorp-go-cleanhttp-0-0.3.git5df5ddc.fc24", "commit": "5df5ddc69534f1a4697289f1dca2193fbb40213f", "distribution": "rawhide", "rpm": "golang-github-hashicorp-go-cleanhttp-devel-0-0.3.git5df5ddc.fc24.noarch.rpm"}

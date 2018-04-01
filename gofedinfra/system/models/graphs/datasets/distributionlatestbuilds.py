@@ -21,12 +21,8 @@ import logging
 logger = logging.getLogger("distribution_latest_builds_dataset_builder")
 
 from gofedlib.distribution.helpers import Rpm
-from infra.system.core.factory.actfactory import ActFactory
-from infra.system.core.factory.fakeactfactory import FakeActFactory
 import json
 
-from infra.system.core.functions.types import FunctionFailedError
-from infra.system.core.acts.types import ActFailedError
 from .datasetbuilder import DatasetBuilder
 from infra.system.artefacts.artefacts import ARTEFACT_GOLANG_DISTRIBUTION_SNAPSHOT
 from gofedlib.distribution.distributionsnapshot import DistributionSnapshot
@@ -51,23 +47,17 @@ class DistributionLatestBuildGraphDataset:
 		# TODO(jchaloup):
 		# - inject the act and replace it with datasource instead
 		#   so the artefact/data can be picked from more sources
-		if dry_run:
-			act_factory = FakeActFactory()
-		else:
-			act_factory = ActFactory()
-
-		self.artefactreaderact = act_factory.bake("artefact-reader")
 
 	def build(self, distribution):
 		"""Build dataset for a given list of buildes
 		"""
 		# get latets rpms from the latest distribution snapshot
 		try:
-			data = self.artefactreaderact.call({
+			artefact = StorageReader().retrieve({
 				"artefact": ARTEFACT_GOLANG_DISTRIBUTION_SNAPSHOT,
 				"distribution": distribution.json()
 			})
-		except ActFailedError:
+		except KeyError:
 			raise KeyError("Distribution snapshot for '%s' not found" % distribution)
 
 		counter = 0

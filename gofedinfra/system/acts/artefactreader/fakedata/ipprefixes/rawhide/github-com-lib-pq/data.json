@@ -1,1 +1,0 @@
-{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/lib/pq", "build": "golang-github-lib-pq-0-0.3.git0dad96c.fc24", "commit": "0dad96c0b94f8dee039aa40467f767467392a0af", "distribution": "rawhide", "rpm": "golang-github-lib-pq-devel-0-0.3.git0dad96c.fc24.noarch.rpm"}

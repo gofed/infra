@@ -1,1 +1,0 @@
-{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/gorilla/websocket", "build": "golang-github-gorilla-websocket-0-0.7.gitecff5aa.fc24", "commit": "ecff5aabe41f13b4cdf897e3c0c9bbccbe552a29", "distribution": "rawhide", "rpm": "golang-github-gorilla-websocket-devel-0-0.7.gitecff5aa.fc24.noarch.rpm"}

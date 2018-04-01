@@ -1,1 +1,0 @@
-{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/hashicorp/go-immutable-radix", "build": "golang-github-hashicorp-go-immutable-radix-0-0.3.gitaca1bd0.fc24", "commit": "aca1bd0689e10884f20d114aff148ddb849ece80", "distribution": "rawhide", "rpm": "golang-github-hashicorp-go-immutable-radix-devel-0-0.3.gitaca1bd0.fc24.noarch.rpm"}

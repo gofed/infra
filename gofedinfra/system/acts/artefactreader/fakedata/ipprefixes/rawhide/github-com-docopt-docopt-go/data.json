@@ -1,1 +1,0 @@
-{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/docopt/docopt-go", "build": "golang-github-docopt-docopt-go-0-0.4.git.854c423.fc24", "commit": "854c423c810880e30b9fecdabb12d54f4a92f9bb", "distribution": "rawhide", "rpm": "golang-github-docopt-docopt-go-devel-0-0.4.git.854c423.fc24.noarch.rpm"}

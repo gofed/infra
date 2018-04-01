@@ -1,1 +1,0 @@
-{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/cpuguy83/go-md2man", "build": "golang-github-cpuguy83-go-md2man-1.0.4-4.fc25", "commit": "71acacd42f85e5e82f70a55327789582a5200a90", "distribution": "rawhide", "rpm": "golang-github-cpuguy83-go-md2man-devel-1.0.4-4.fc25.noarch.rpm"}

@@ -1,1 +1,0 @@
-{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/gogo/protobuf", "build": "golang-googlecode-gogoprotobuf-0.1-0.4.gite8904f5.fc24", "commit": "e8904f58e872a473a5b91bc9bf3377d223555263", "distribution": "rawhide", "rpm": "golang-github-gogo-protobuf-devel-0.1-0.4.gite8904f5.fc24.noarch.rpm"}

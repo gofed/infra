@@ -1,1 +1,0 @@
-{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/gorilla/mux", "build": "golang-github-gorilla-mux-0-0.21.git8096f47.fc24", "commit": "8096f47503459bcc74d1f4c487b7e6e42e5746b5", "distribution": "rawhide", "rpm": "golang-github-gorilla-mux-devel-0-0.21.git8096f47.fc24.noarch.rpm"}

@@ -57,14 +57,12 @@
 
 from gofedlib.go.importpath.parserbuilder import ImportPathParserBuilder
 from gofedlib.providers.providerbuilder import ProviderBuilder
-# from infra.system.core.factory.actfactory import ActFactory
-# from infra.system.core.factory.fakeactfactory import FakeActFactory
 from infra.system.artefacts.artefacts import (
 	ARTEFACT_GOLANG_IPPREFIX_TO_RPM,
 	ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_PACKAGES,
 	ARTEFACT_GOLANG_PROJECT_REPOSITORY_COMMIT
 )
-from infra.system.core.acts.types import ActFailedError
+
 import logging
 from gofedlib.utils import RED, GREEN, BLUE, WHITE, ENDC
 
@@ -75,13 +73,6 @@ class SnapshotChecker(object):
 
 	def __init__(self, dryrun=False):
 		self.ipparser = ImportPathParserBuilder().buildWithLocalMapping()
-
-		# TODO(jchaloup): create a testing set
-		# if dryrun:
-		# 	act_factory = FakeActFactory()
-		# else:
-		# 	act_factory = ActFactory()
-
 		self._project_provider = ProviderBuilder().buildUpstreamWithLocalMapping()
 
 	def _getCommitDate(self, repository, commit):
@@ -205,7 +196,7 @@ class SnapshotChecker(object):
 			# check if packages in ipprefix class are covered in distribution
 			try:
 				not_covered = self._checkPackageCoverage(product, distribution, rpms[ipprefix]["build"], rpms[ipprefix]["rpm"], ipprefix, ipprefixes[ipprefix])
-			except ActFailedError:
+			except KeyError:
 				logging.error("golang-project-packages artefact for '%s' not retrieved" % ipprefix)
 				print "%s: %scoverage unknown%s" % (comparison, RED, ENDC)
 				continue

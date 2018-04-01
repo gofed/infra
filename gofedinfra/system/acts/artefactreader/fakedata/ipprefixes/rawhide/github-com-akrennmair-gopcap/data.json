@@ -1,1 +1,0 @@
-{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/akrennmair/gopcap", "build": "golang-github-akrennmair-gopcap-0-0.1.git00e1103.fc25", "commit": "00e11033259acb75598ba416495bb708d864a010", "distribution": "rawhide", "rpm": "golang-github-akrennmair-gopcap-devel-0-0.1.git00e1103.fc25.noarch.rpm"}

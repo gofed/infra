@@ -1,1 +1,0 @@
-{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/julienschmidt/httprouter", "build": "golang-github-julienschmidt-httprouter-1.1-4.fc24", "commit": "6aacfd5ab513e34f7e64ea9627ab9670371b34e7", "distribution": "rawhide", "rpm": "golang-github-julienschmidt-httprouter-devel-1.1-4.fc24.noarch.rpm"}

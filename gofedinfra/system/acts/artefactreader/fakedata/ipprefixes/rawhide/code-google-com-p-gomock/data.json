@@ -1,1 +1,0 @@
-{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "code.google.com/p/gomock", "build": "golang-googlecode-gomock-0-0.6.gitd581abf.fc24", "commit": "d581abfc04272f381d7a05e4b80163ea4e2b9447", "distribution": "rawhide", "rpm": "golang-googlecode-gomock-devel-0-0.6.gitd581abf.fc24.noarch.rpm"}

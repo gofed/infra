@@ -1,1 +1,0 @@
-{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/armon/go-metrics", "build": "golang-github-armon-go-metrics-0-0.7.git6c5fa0d.fc24", "commit": "6c5fa0d8f48f4661c9ba8709799c88d425ad20f0", "distribution": "rawhide", "rpm": "golang-github-armon-go-metrics-devel-0-0.7.git6c5fa0d.fc24.noarch.rpm"}

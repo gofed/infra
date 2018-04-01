@@ -1,1 +1,0 @@
-{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/coreos/go-semver", "build": "golang-github-coreos-go-semver-0-0.8.git568e959.fc24", "commit": "568e959cd89871e61434c1143528d9162da89ef2", "distribution": "rawhide", "rpm": "golang-github-coreos-go-semver-devel-0-0.8.git568e959.fc24.noarch.rpm"}

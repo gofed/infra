@@ -1,1 +1,0 @@
-{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "gopkg.in/gcfg.v1", "build": "golang-googlecode-gcfg-0-0.9.git5866678.fc24", "commit": "5866678811acbcbc248097f2c524cbc4d13abd8b", "distribution": "rawhide", "rpm": "golang-gopkg-gcfg-devel-0-0.9.git5866678.fc24.noarch.rpm"}

@@ -1,1 +1,0 @@
-{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "golang.org/x/oauth2", "build": "golang-googlecode-goauth2-0-0.15.git8914e50.fc25", "commit": "8914e5017ca260f2a3a1575b1e6868874050d95e", "distribution": "rawhide", "rpm": "golang-golangorg-oauth2-devel-0-0.15.git8914e50.fc25.noarch.rpm"}

@@ -3,8 +3,6 @@ logger = logging.getLogger("distribution_packages_fetcher")
 
 import time
 from infra.system.artefacts.artefacts import ARTEFACT_GOLANG_DISTRIBUTION_SNAPSHOT
-# from infra.system.core.factory.actfactory import ActFactory
-# from infra.system.core.factory.fakeactfactory import FakeActFactory
 from gofedlib.distribution.distributionsnapshot import DistributionSnapshot
 from gofedlib.utils import BLUE, YELLOW, ENDC, WHITE
 
@@ -17,11 +15,6 @@ class DistributionBuildsFetcher(object):
 	def __init__(self, pkgdb_client, dry_run=False):
 		self._pkgdb_client = pkgdb_client
 
-		# TODO(jchaloup): make the dry work again
-		# if dry_run:
-		# 	act_factory = FakeActFactory()
-		# else:
-		# 	act_factory = ActFactory()
 
 	def fetch(self, distributions, since = 0, to = int(time.time() + 86400)):
 		"""Collect list of builds since a given date for each package

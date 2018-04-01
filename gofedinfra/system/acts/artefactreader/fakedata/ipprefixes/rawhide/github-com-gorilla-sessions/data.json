@@ -1,1 +1,0 @@
-{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/gorilla/sessions", "build": "golang-github-gorilla-sessions-0-0.3.gitaa5e036.fc24", "commit": "aa5e036e6c44aec69a32eb41097001978b29ad31", "distribution": "rawhide", "rpm": "golang-github-gorilla-sessions-devel-0-0.3.gitaa5e036.fc24.noarch.rpm"}

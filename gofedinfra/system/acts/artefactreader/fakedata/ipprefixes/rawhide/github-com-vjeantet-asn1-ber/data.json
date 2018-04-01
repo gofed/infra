@@ -1,1 +1,0 @@
-{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/vjeantet/asn1-ber", "build": "golang-github-vjeantet-asn1-ber-0-0.3.git85041cd.fc24", "commit": "85041cd0f4769ebf4a5ae600b1e921e630d6aff0", "distribution": "rawhide", "rpm": "golang-github-vjeantet-asn1-ber-devel-0-0.3.git85041cd.fc24.noarch.rpm"}

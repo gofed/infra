@@ -1,1 +1,0 @@
-{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/elazarl/go-bindata-assetfs", "build": "golang-github-elazarl-go-bindata-assetfs-0-0.8.git3dcc965.fc24", "commit": "3dcc96556217539f50599357fb481ac0dc7439b9", "distribution": "rawhide", "rpm": "golang-github-elazarl-go-bindata-assetfs-devel-0-0.8.git3dcc965.fc24.noarch.rpm"}

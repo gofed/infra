@@ -1,1 +1,0 @@
-{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "google.golang.org/grpc", "build": "golang-github-grpc-grpc-go-0-0.6.gitb88c12e.fc25", "commit": "b88c12e7caf74af3928de99a864aaa9916fa5aad", "distribution": "rawhide", "rpm": "golang-github-grpc-grpc-go-devel-0-0.6.gitb88c12e.fc25.noarch.rpm"}

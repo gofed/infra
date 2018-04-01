@@ -1,1 +1,0 @@
-{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/gorilla/handlers", "build": "golang-github-gorilla-handlers-0-0.3.git60c7bfd.fc24", "commit": "60c7bfde3e33c201519a200a4507a158cc03a17b", "distribution": "rawhide", "rpm": "golang-github-gorilla-handlers-devel-0-0.3.git60c7bfd.fc24.noarch.rpm"}

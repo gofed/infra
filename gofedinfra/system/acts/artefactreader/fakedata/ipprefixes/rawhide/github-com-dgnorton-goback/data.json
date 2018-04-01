@@ -1,1 +1,0 @@
-{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/dgnorton/goback", "build": "golang-github-dgnorton-goback-0-0.6.gita49ca3c.fc24", "commit": "a49ca3c0a18f50ae0b8a247e012db4385e516cf4", "distribution": "rawhide", "rpm": "golang-github-dgnorton-goback-devel-0-0.6.gita49ca3c.fc24.noarch.rpm"}

@@ -1,1 +1,0 @@
-{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/hashicorp/raft-mdb", "build": "golang-github-hashicorp-raft-mdb-0-0.2.git4ec3694.fc24", "commit": "4ec3694ffbc74d34f7532e70ef2e9c3546a0c0b0", "distribution": "rawhide", "rpm": "golang-github-hashicorp-raft-mdb-devel-0-0.2.git4ec3694.fc24.noarch.rpm"}

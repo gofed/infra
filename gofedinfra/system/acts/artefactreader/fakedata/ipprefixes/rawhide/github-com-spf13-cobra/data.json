@@ -1,1 +1,0 @@
-{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/spf13/cobra", "build": "golang-github-spf13-cobra-0-0.16.git8e91712.fc25", "commit": "8e91712f174ced10270cf66615e0a9127e7c4de5", "distribution": "rawhide", "rpm": "golang-github-spf13-cobra-devel-0-0.16.git8e91712.fc25.noarch.rpm"}

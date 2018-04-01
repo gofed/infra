@@ -1,1 +1,0 @@
-{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/hashicorp/serf", "build": "golang-github-hashicorp-serf-0.6.4-0.3.gita72c045.fc24", "commit": "a72c0453da2ba628a013e98bf323a76be4aa1443", "distribution": "rawhide", "rpm": "golang-github-hashicorp-serf-devel-0.6.4-0.3.gita72c045.fc24.noarch.rpm"}

@@ -1,1 +1,0 @@
-{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/howeyc/gopass", "build": "golang-github-howeyc-gopass-0-0.5.git2c70fa7.fc24", "commit": "2c70fa70727c953c51695f800f25d6b44abb368e", "distribution": "rawhide", "rpm": "golang-github-howeyc-gopass-devel-0-0.5.git2c70fa7.fc24.noarch.rpm"}

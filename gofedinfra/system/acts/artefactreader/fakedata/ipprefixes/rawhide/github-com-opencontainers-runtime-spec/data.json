@@ -1,1 +1,0 @@
-{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/opencontainers/runtime-spec", "build": "golang-github-opencontainers-runtime-spec-0.5.0-0.1.git6e08c69.fc25", "commit": "6e08c6983ef8c2173f10ca09266907d4e9e71716", "distribution": "rawhide", "rpm": "golang-github-opencontainers-runtime-spec-devel-0.5.0-0.1.git6e08c69.fc25.noarch.rpm"}

@@ -1,1 +1,0 @@
-{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/vishvananda/netns", "build": "golang-github-vishvananda-netns-0-0.7.git604eaf1.fc24", "commit": "604eaf189ee867d8c147fafc28def2394e878d25", "distribution": "rawhide", "rpm": "golang-github-vishvananda-netns-devel-0-0.7.git604eaf1.fc24.noarch.rpm"}

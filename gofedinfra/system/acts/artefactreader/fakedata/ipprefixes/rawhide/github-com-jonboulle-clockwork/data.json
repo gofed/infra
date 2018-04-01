@@ -1,1 +1,0 @@
-{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/jonboulle/clockwork", "build": "golang-github-jonboulle-clockwork-0-0.6.git3f831b6.fc24", "commit": "3f831b65b61282ba6bece21b91beea2edc4c887a", "distribution": "rawhide", "rpm": "golang-github-jonboulle-clockwork-devel-0-0.6.git3f831b6.fc24.noarch.rpm"}

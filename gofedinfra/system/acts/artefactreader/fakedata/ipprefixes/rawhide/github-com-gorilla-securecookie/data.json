@@ -1,1 +1,0 @@
-{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/gorilla/securecookie", "build": "golang-github-gorilla-securecookie-0-0.3.git1b0c7f6.fc24", "commit": "1b0c7f6e9ab3d7f500fd7d50c7ad835ff428139b", "distribution": "rawhide", "rpm": "golang-github-gorilla-securecookie-devel-0-0.3.git1b0c7f6.fc24.noarch.rpm"}

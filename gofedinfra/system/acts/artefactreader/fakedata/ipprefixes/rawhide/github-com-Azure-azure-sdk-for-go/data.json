@@ -1,1 +1,0 @@
-{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/Azure/azure-sdk-for-go", "build": "golang-github-Azure-azure-sdk-for-go-1.2-0.3.git97d9593.fc24", "commit": "97d9593768bbbbd316f9c055dfc5f780933cd7fc", "distribution": "rawhide", "rpm": "golang-github-Azure-azure-sdk-for-go-devel-1.2-0.3.git97d9593.fc24.noarch.rpm"}

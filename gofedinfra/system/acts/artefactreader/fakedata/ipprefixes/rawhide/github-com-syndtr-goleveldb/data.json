@@ -1,1 +1,0 @@
-{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/syndtr/goleveldb", "build": "golang-github-syndtr-goleveldb-0-0.6.git012f65f.fc24", "commit": "012f65f74744ed62a80abac6e9a8c86e71c2b6fa", "distribution": "rawhide", "rpm": "golang-github-syndtr-goleveldb-devel-0-0.6.git012f65f.fc24.noarch.rpm"}

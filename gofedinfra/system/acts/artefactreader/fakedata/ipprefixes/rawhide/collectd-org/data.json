@@ -1,1 +1,0 @@
-{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "collectd.org", "build": "golang-github-collectd-go-collectd-0-0.3.git9fc824c.fc24", "commit": "9fc824c70f713ea0f058a07b49a4c563ef2a3b98", "distribution": "rawhide", "rpm": "golang-github-collectd-go-collectd-devel-0-0.3.git9fc824c.fc24.noarch.rpm"}

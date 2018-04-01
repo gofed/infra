@@ -1,1 +1,0 @@
-{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/gonum/matrix", "build": "golang-github-gonum-matrix-0-0.3.gitfb13962.fc24", "commit": "fb1396264e2e259ff714a408a7b0142d238b198d", "distribution": "rawhide", "rpm": "golang-github-gonum-matrix-devel-0-0.3.gitfb13962.fc24.noarch.rpm"}

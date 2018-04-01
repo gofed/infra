@@ -1,1 +1,0 @@
-{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/rakyll/statik", "build": "golang-github-rakyll-statik-0-0.6.gitf19d7c2.fc24", "commit": "f19d7c21cd036701d42ec176b13e0946cc9591b0", "distribution": "rawhide", "rpm": "golang-github-rakyll-statik-devel-0-0.6.gitf19d7c2.fc24.noarch.rpm"}

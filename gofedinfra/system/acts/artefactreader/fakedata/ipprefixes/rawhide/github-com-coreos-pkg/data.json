@@ -1,1 +1,0 @@
-{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/coreos/pkg", "build": "golang-github-coreos-pkg-0-0.6.git2c77715.fc25", "commit": "2c77715c4df99b5420ffcae14ead08f52104065d", "distribution": "rawhide", "rpm": "golang-github-coreos-pkg-devel-0-0.6.git2c77715.fc25.noarch.rpm"}

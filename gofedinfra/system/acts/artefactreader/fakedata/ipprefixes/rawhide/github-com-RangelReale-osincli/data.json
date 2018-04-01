@@ -1,1 +1,0 @@
-{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/RangelReale/osincli", "build": "golang-github-RangelReale-osincli-0-0.3.git23618ea.fc24", "commit": "23618ea0fc3faa3f43954ce8ff48e31f5c784212", "distribution": "rawhide", "rpm": "golang-github-RangelReale-osincli-devel-0-0.3.git23618ea.fc24.noarch.rpm"}

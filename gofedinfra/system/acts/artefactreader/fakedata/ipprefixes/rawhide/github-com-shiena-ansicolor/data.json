@@ -1,1 +1,0 @@
-{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/shiena/ansicolor", "build": "golang-github-shiena-ansicolor-0-0.3.gitd445752.fc24", "commit": "d445752f6f66f9cd987722f109149f6799cdf1de", "distribution": "rawhide", "rpm": "golang-github-shiena-ansicolor-devel-0-0.3.gitd445752.fc24.noarch.rpm"}

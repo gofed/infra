@@ -1,1 +1,0 @@
-{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/goraft/raft", "build": "golang-github-goraft-raft-0-0.10.git73f9c44.fc24", "commit": "73f9c4439b79819178fffa968f13729b101bb02d", "distribution": "rawhide", "rpm": "golang-github-goraft-raft-devel-0-0.10.git73f9c44.fc24.noarch.rpm"}

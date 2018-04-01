@@ -1,1 +1,0 @@
-{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/racker/perigee", "build": "golang-github-racker-perigee-0-0.5.git0c00cb0.fc24", "commit": "0c00cb0a026b71034ebc8205263c77dad3577db5", "distribution": "rawhide", "rpm": "golang-github-racker-perigee-devel-0-0.5.git0c00cb0.fc24.noarch.rpm"}

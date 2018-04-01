@@ -1,1 +1,0 @@
-{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/golang/groupcache", "build": "golang-github-golang-groupcache-0-0.6.git604ed57.fc24", "commit": "604ed5785183e59ae2789449d89e73f3a2a77987", "distribution": "rawhide", "rpm": "golang-github-golang-groupcache-devel-0-0.6.git604ed57.fc24.noarch.rpm"}

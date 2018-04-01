@@ -1,1 +1,0 @@
-{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "bitbucket.org/ww/goautoneg", "build": "golang-bitbucket-ww-goautoneg-0-0.7.git75cd24fc2f2c.fc24", "commit": "75cd24fc2f2c2a2088577d12123ddee5f54e0675", "distribution": "rawhide", "rpm": "golang-bitbucket-ww-goautoneg-devel-0-0.7.git75cd24fc2f2c.fc24.noarch.rpm"}

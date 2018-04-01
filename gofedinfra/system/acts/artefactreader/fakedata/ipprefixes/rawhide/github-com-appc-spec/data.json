@@ -1,1 +1,0 @@
-{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/appc/spec", "build": "golang-github-appc-spec-0.5.1-7.git37bef67.fc24", "commit": "37bef679148751952f169298fa0ea8171373d95c", "distribution": "rawhide", "rpm": "golang-github-appc-spec-devel-0.5.1-7.git37bef67.fc24.noarch.rpm"}

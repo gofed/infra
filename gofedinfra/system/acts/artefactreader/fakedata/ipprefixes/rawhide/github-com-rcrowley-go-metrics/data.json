@@ -1,1 +1,0 @@
-{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/rcrowley/go-metrics", "build": "golang-github-rcrowley-go-metrics-0-0.7.gitdee209f.fc24", "commit": "dee209f2455f101a5e4e593dea94872d2c62d85d", "distribution": "rawhide", "rpm": "golang-github-rcrowley-go-metrics-devel-0-0.7.gitdee209f.fc24.noarch.rpm"}

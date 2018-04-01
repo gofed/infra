@@ -1,1 +1,0 @@
-{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/miekg/dns", "build": "golang-github-miekg-dns-0-0.9.gitd274557.fc24", "commit": "d27455715200c7d3e321a1e5cadb27c9ee0b0f02", "distribution": "rawhide", "rpm": "golang-github-miekg-dns-devel-0-0.9.gitd274557.fc24.noarch.rpm"}

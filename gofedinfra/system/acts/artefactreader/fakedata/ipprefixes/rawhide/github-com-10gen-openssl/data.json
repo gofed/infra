@@ -1,1 +1,0 @@
-{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/10gen/openssl", "build": "golang-github-10gen-openssl-0-0.8.git4c6dbaf.fc24", "commit": "4c6dbafa5ec35b3ffc6a1b1e1fe29c3eba2053ec", "distribution": "rawhide", "rpm": "golang-github-10gen-openssl-devel-0-0.8.git4c6dbaf.fc24.noarch.rpm"}

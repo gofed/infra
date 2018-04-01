@@ -1,1 +1,0 @@
-{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "golang.org/x/exp", "build": "golang-googlecode-go-exp-0-0.11.gitd00e13e.fc25", "commit": "d00e13ec443927751b2bd49e97dea7bf3b6a6487", "distribution": "rawhide", "rpm": "golang-github-golang-exp-devel-0-0.11.gitd00e13e.fc25.noarch.rpm"}

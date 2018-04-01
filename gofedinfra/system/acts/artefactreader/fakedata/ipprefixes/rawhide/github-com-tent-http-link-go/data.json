@@ -1,1 +1,0 @@
-{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/tent/http-link-go", "build": "golang-github-tent-http-link-go-0-0.2.gitac974c6.fc24", "commit": "ac974c61c2f990f4115b119354b5e0b47550e888", "distribution": "rawhide", "rpm": "golang-github-tent-http-link-go-devel-0-0.2.gitac974c6.fc24.noarch.rpm"}

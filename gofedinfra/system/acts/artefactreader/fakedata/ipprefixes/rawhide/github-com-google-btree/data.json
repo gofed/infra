@@ -1,1 +1,0 @@
-{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/google/btree", "build": "golang-github-google-btree-0-0.4.gitcc6329d.fc24", "commit": "cc6329d4279e3f025a53a83c397d2339b5705c45", "distribution": "rawhide", "rpm": "golang-github-google-btree-devel-0-0.4.gitcc6329d.fc24.noarch.rpm"}

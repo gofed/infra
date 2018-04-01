@@ -1,1 +1,0 @@
-{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/samalba/dockerclient", "build": "golang-github-samalba-dockerclient-0-0.3.gitc37a52f.fc24", "commit": "c37a52f55ab5a9edb9ffd4cf6e78692962b29b8d", "distribution": "rawhide", "rpm": "golang-github-samalba-dockerclient-devel-0-0.3.gitc37a52f.fc24.noarch.rpm"}

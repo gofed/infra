@@ -1,1 +1,0 @@
-{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/tonnerre/golang-pretty", "build": "golang-github-tonnerre-golang-pretty-0-0.5.gite7fccc0.fc24", "commit": "e7fccc03e91bad289b96c21aa3312a220689bdd7", "distribution": "rawhide", "rpm": "golang-github-tonnerre-golang-pretty-devel-0-0.5.gite7fccc0.fc24.noarch.rpm"}

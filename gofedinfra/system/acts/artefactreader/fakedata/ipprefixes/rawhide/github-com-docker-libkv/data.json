@@ -1,1 +1,0 @@
-{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/docker/libkv", "build": "golang-github-docker-libkv-0-0.4.gitb68985b.fc24", "commit": "b68985b1d0224e002ce0e5dd5d08d06930d3be61", "distribution": "rawhide", "rpm": "golang-github-docker-libkv-devel-0-0.4.gitb68985b.fc24.noarch.rpm"}

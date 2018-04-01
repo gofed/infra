@@ -1,1 +1,0 @@
-{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/hashicorp/hcl", "build": "golang-github-hashicorp-hcl-0-0.7.git2deb1d1.fc24", "commit": "2deb1d1db27ed473f38fe65a16044572b9ff9d30", "distribution": "rawhide", "rpm": "golang-github-hashicorp-hcl-devel-0-0.7.git2deb1d1.fc24.noarch.rpm"}

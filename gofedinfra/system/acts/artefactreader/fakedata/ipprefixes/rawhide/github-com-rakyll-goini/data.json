@@ -1,1 +1,0 @@
-{"artefact": "golang-ipprefix-to-rpm", "product": "Fedora", "ipprefix": "github.com/rakyll/goini", "build": "golang-github-glacjay-goini-0-0.6.git5261baf.fc24", "commit": "5261baf26f41eeffae5fd27be784302e389b7699", "distribution": "rawhide", "rpm": "golang-github-glacjay-goini-devel-0-0.6.git5261baf.fc24.noarch.rpm"}
