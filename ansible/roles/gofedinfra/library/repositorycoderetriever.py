@@ -21,6 +21,7 @@ import urllib2
 import tempfile
 import tarfile
 import os
+import shutil
 
 
 class ResourceUnableToRetrieveError(Exception):
@@ -116,7 +117,7 @@ def main():
         "hexsha": {"required": True, "type": "str"},
         # "version": {"required": False, "type": "str" },
         # "tag": {"required": False, "type": "str" },
-        "directory": {"required": False, "type": "str"},
+        "directory": {"required": False, "type": "str", "default": ""},
     }
 
     module = AnsibleModule(argument_spec=fields)
@@ -124,8 +125,12 @@ def main():
     r = RepositoryCodeRetriever(module.params["repository"], hexsha=module.params["hexsha"])
     failed = False
     errmsg = ""
+    codedir = r.codedir()
     try:
         r.retrieve()
+        if module.params["directory"] != "":
+            os.rename(r.codedir(), module.params["directory"])
+            codedir = module.params["directory"]
     except urllib2.URLError as err:
         failed = True
         errmsg = err
@@ -138,7 +143,7 @@ def main():
 
     result = dict(
         repository=r.repository(),
-        directory=r.codedir(),
+        directory=codedir,
         changed=True,
     )
 
