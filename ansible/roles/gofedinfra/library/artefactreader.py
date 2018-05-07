@@ -29,6 +29,7 @@ def main():
     fields = {
         "artefact": {"required": True, "type": "str"},
         "repository": {"required": False, "type": "str", "default": ""},
+        "ipprefix": {"required": False, "type": "str", "default": ""},
         "hexsha": {"required": False, "type": "str", "default": ""},
         "product": {"required": False, "type": "str", "default": ""},
         "distribution": {"required": False, "type": "str", "default": ""},
@@ -52,14 +53,6 @@ def main():
             try:
                 if module.params["repository"]:
                     key["repository"] = ProviderBuilder().buildUpstreamWithLocalMapping().parse(module.params["repository"]).signature()
-            except KeyError:
-                pass
-            continue
-
-        if field == "hexsha":
-            try:
-                if module.params["hexsha"]:
-                    key["commit"] = module.params["hexsha"]
             except KeyError:
                 pass
             continue
