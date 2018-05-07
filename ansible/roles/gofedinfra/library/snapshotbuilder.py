@@ -10,6 +10,7 @@ class SnapshotBuilder(object):
         self._snapshotfile = snapshotfile
         self._snapshot = Snapshot()
         self._providers = {}
+        self._ipp2repo = {}
 
     def parse(self):
         self._snapshot.clear()
@@ -28,8 +29,8 @@ class SnapshotBuilder(object):
     def packages(self):
         return self._snapshot.packages()
 
-    def classes(self):
-        return self._snapshot.classes()
+    def ipp2repo(self):
+        return self._ipp2repo
 
     def providers(self):
         return self._providers
@@ -39,6 +40,10 @@ class SnapshotBuilder(object):
         classes = self._snapshot.classes()
         for key in classes:
             self._providers[up.parse(key).prefix()] = classes[key]
+
+        for package in self._snapshot.packages():
+            self._ipp2repo[ package ] = up.parse(package).prefix()
+
         return self
 
 
@@ -59,7 +64,7 @@ def main():
         artefact = {
             "artefact": "golang-dependency-snapshot",
             "packages": snapshot.packages(),
-            "classes": snapshot.classes(),
+            "ipp2repo": snapshot.ipp2repo(),
             "providers": snapshot.providers(),
         }
     except ValueError as err:
