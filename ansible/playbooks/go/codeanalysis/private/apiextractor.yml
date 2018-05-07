@@ -1,0 +1,213 @@
+---
+- fail:
+    msg: "snapshotfile variable is not set"
+  when: snapshotfile is undefined
+
+- fail:
+    msg: "project variable is not set"
+  when: project is undefined
+
+- fail:
+    msg: "hexsha variable is not set"
+  when: hexsha is undefined
+
+- fail:
+    msg: "goversion variable is not set"
+  when: goversion is undefined
+
+- name: Create working directory
+  set_fact:
+    extractor_wd: /tmp/test
+
+- name: Create generated directory
+  set_fact:
+    generated_wd: "{{ extractor_wd }}/generated"
+
+- name: Create directory for the Go stdlib
+  file:
+    path: "{{ generated_wd }}/golang/"
+    state: directory
+
+- name: Retrieve Go stdlib
+  unarchive:
+    src: "https://github.com/gofed/data/raw/master/stdlib/go{{ goversion }}.tar.gz"
+    dest: "{{ generated_wd }}/golang/"
+    remote_src: true
+
+- name: Retrieve CGO symbols
+  get_url:
+    url: https://raw.githubusercontent.com/gofed/symbols-extractor/master/cgo/cgo.yml
+    dest: "{{ generated_wd }}/cgo.yml"
+    mode: 0444
+
+- name: Build dependency snapshot
+  snapshotbuilder:
+    snapshotfile: "{{ snapshotfile }}"
+  register: output
+
+- debug: var=output
+
+# Build queries
+- name: Construct api, contract and static-allocation keys
+  set_fact:
+    api_keys: "{{ api_keys | default([]) + [{'artefact': 'golang-project-api', 'hexsha': output.artefact.packages[item], 'ipprefix': item}] }}"
+    contract_keys: "{{ api_keys | default([]) + [{'artefact': 'golang-project-contracts', 'hexsha': output.artefact.packages[item], 'ipprefix': item}] }}"
+    static_allocation_keys: "{{ api_keys | default([]) + [{'artefact': 'golang-project-static-allocations', 'hexsha': output.artefact.packages[item], 'ipprefix': item}] }}"
+  with_items: "{{ output.artefact.packages }}"
+
+- name: Construct ipp2repo mapping
+  set_fact:
+    ipp2repo: "{{ ipp2repo | default({}) | combine({ item: output.artefact.ipp2repo[item]}) }}"
+  with_items: "{{ output.artefact.ipp2repo }}"
+
+# Retrieve source code of projects with missing artefacts
+- name: Create GOPATH directories
+  file:
+    path: "{{ extractor_wd }}/src/{{ output.artefact.providers[item]['ipprefix'] }}"
+    state: directory
+  with_items: "{{ output.artefact.providers }}"
+  loop_control:
+    label: "{{ extractor_wd }}/src/{{ output.artefact.providers[item]['ipprefix'] }}"
+
+#### golang-project-api ####
+- name: Collect golang-project-api artefacts
+  artefactreader:
+    artefact: golang-project-api
+    ipprefix: "{{ item.ipprefix }}"
+    hexsha: "{{ item.hexsha }}"
+  with_items: "{{ api_keys }}"
+  register: api_artefacts
+
+- name: Make a list of missing artefacts
+  set_fact:
+    repos2process: "{{ repos2process | default({}) | combine({ ipp2repo[item.item.ipprefix]: 1 }) }}"
+  when: not item.found
+  with_items: "{{ api_artefacts.results }}"
+  loop_control:
+    label: "{{ item.item.ipprefix }} -> {{ ipp2repo[item.item.ipprefix] }}"
+
+#### golang-project-contracts ####
+- name: Collect golang-project-contracts artefacts
+  artefactreader:
+    artefact: golang-project-contracts
+    ipprefix: "{{ item.ipprefix }}"
+    hexsha: "{{ item.hexsha }}"
+  with_items: "{{ api_keys }}"
+  register: contract_artefacts
+
+- name: Make a list of missing artefacts
+  set_fact:
+    repos2process: "{{ repos2process | default({}) | combine({ ipp2repo[item.item.ipprefix]: 1 }) }}"
+  when: not item.found
+  with_items: "{{ contract_artefacts.results }}"
+  loop_control:
+    label: "{{ item.item.ipprefix }} -> {{ ipp2repo[item.item.ipprefix] }}"
+
+#### golang-project-static-allocations ####
+- name: Collect golang-project-static-allocations artefacts
+  artefactreader:
+    artefact: golang-project-static-allocations
+    ipprefix: "{{ item.ipprefix }}"
+    hexsha: "{{ item.hexsha }}"
+  with_items: "{{ api_keys }}"
+  register: static_allocation_artefacts
+
+- name: Make a list of missing artefacts
+  set_fact:
+    repos2process: "{{ repos2process | default({}) | combine({ ipp2repo[item.item.ipprefix]: 1 }) }}"
+  when: not item.found
+  with_items: "{{ static_allocation_artefacts.results }}"
+  loop_control:
+    label: "{{ item.item.ipprefix }} -> {{ ipp2repo[item.item.ipprefix] }}"
+
+- debug: var=repos2process
+
+- name: Create generated directories
+  file:
+    path: "{{ generated_wd }}/{{ item.artefact.ipprefix }}/{{ item.artefact.hexsha }}"
+    state: directory
+  when: item.found
+  with_items: "{{ api_artefacts.results }}"
+  loop_control:
+    label: "{{ item.item.ipprefix }}:{{ item.item.hexsha }}"
+
+- name: Store artefacts
+  copy:
+     content: "{{ item.artefact.data | artefact2json }}"
+     dest: "{{ generated_wd }}/{{ item.artefact.ipprefix }}/{{ item.artefact.hexsha }}/api.json"
+  when: item.found
+  with_items: "{{ api_artefacts.results }}"
+  loop_control:
+    label: "{{ item.item.ipprefix }}:{{ item.item.hexsha }}"
+
+- name: Retrieve code from project dependency repositories
+  repositorycoderetriever:
+    repository: "{{ item }}"
+    hexsha: "{{ output.artefact.providers[item]['hexsha'] }}"
+    directory: "{{ extractor_wd }}/src/{{ output.artefact.providers[item]['ipprefix'] }}"
+  with_items: "{{ repos2process }}"
+  register: routput
+
+- name: Create GOPATH directory for the project
+  file:
+    path: "{{ extractor_wd }}/src/{{ project }}"
+    state: directory
+
+- name: Retrieve code from project repository
+  repositorycoderetriever:
+    repository: "{{ project }}"
+    hexsha: "{{ hexsha }}"
+    directory: "{{ extractor_wd }}/src/{{ project }}"
+  register: routput
+
+- name: Extract api
+  apiextractor:
+    gopath: "{{ extractor_wd }}"
+    generated: "{{ generated_wd }}"
+    package_path: "{{ project }}"
+    hexsha: "{{ hexsha }}"
+    depsfile: "{{ snapshotfile }}"
+    cgodir: "{{ generated_wd }}/cgo.yml"
+  register: eoutput
+
+# https://github.com/ansible/ansible/pull/36307
+# Thus, ansible >= 2.5 is needed
+# - debug:
+#     msg: "golang-project-api: {{ (item['data'] | artefact2json)['qid'] }}"
+#   with_items: "{{ eoutput.artefacts['golang-project-api'] }}"
+#   loop_control:
+#     label: "{{ item['ipprefix'] }}"
+#
+# - debug:
+#     msg: "golang-project-contracts: {{ (item | artefact2json)['ipprefix'] }}"
+#   with_items: "{{ eoutput.artefacts['golang-project-contracts'] }}"
+#   loop_control:
+#     label: "{{ (item | artefact2json)['ipprefix'] }}"
+#
+# - debug:
+#     msg: "golang-project-static-allocations: {{ (item | artefact2json)['ipprefix'] }}"
+#   with_items: "{{ eoutput.artefacts['golang-project-static-allocations'] }}"
+#   loop_control:
+#     label: "{{ (item | artefact2json)['ipprefix'] }}"
+
+# Store all artefacts
+- name: Store golang-project-api artefacts
+  artefactwriter:
+    artefact: "{{ item }}"
+  with_items: "{{ eoutput.artefacts['golang-project-api'] }}"
+  loop_control:
+    label: "{{ item['ipprefix'] }}"
+
+- name: Store golang-project-contracts artefacts
+  artefactwriter:
+    artefact: "{{ item }}"
+  with_items: "{{ eoutput.artefacts['golang-project-contracts'] }}"
+  loop_control:
+    label: "{{ item['ipprefix'] }}"
+
+- name: Store golang-project-static-allocations artefacts
+  artefactwriter:
+    artefact: "{{ item }}"
+  with_items: "{{ eoutput.artefacts['golang-project-static-allocations'] }}"
+  loop_control:
+    label: "{{ item['ipprefix'] }}"
