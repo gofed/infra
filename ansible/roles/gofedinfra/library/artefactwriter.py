@@ -8,23 +8,16 @@ from gofedinfra.system.plugins.simplefilestorage.artefactdriverfactory import Ar
 
 class StorageWriter(MetaStorageWriter):
 
-	def store(self, data):
-		"""Store artefact into storage
+    def store(self, data):
+        """Store artefact into storage
 
-		param data: artefact writable to storage
-		type  data: dictionary
-		"""
-		if "artefact" not in data:
-			raise KeyError("artefact key not found in %s" % json.dumps(data))
+        param data: artefact writable to storage
+        type  data: dictionary
+        """
+        if "artefact" not in data:
+            raise KeyError("artefact key not found in %s" % json.dumps(data))
 
-		driver = ArtefactDriverFactory().build(data["artefact"])
-		if driver == None:
-			raise KeyError("artefact driver for %s not found" % data["artefact"])
-
-		return driver.store(data)
-		#	return False
-
-		return True
+        return ArtefactDriverFactory().build(data["artefact"]).store(data)
 
 def main():
 
@@ -49,12 +42,14 @@ def main():
 
     result = dict(
         artefact_at=artefact_at,
-        changed=True,
         stored=True,
     )
 
     if failed:
         result["stored"] = False
+        module.fail_json(msg=errmsg, **result)
+    else:
+        result["changed"] = True
 
     module.exit_json(**result)
 

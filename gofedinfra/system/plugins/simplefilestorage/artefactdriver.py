@@ -39,8 +39,8 @@ class ArtefactDriver(object):
 			with open(data_file, "r") as f:
 				return json.load(f)
 		except IOError as e:
-			logger.info("Unable to retrieve %s artefact with '%s' key" % (self.artefact, key))
-			raise KeyError("Unable to retrieve %s artefact with '%s' key" % (self.artefact, key))
+			logger.info("Unable to retrieve {} artefact with '{}' key under {}".format(self.artefact, key, self.working_directory))
+			raise KeyError("Unable to retrieve {} artefact with '{}' key under {}".format(self.artefact, key, self.working_directory))
 
 		return {}
 
@@ -64,4 +64,4 @@ class ArtefactDriver(object):
 		with file(os.path.join(data_path, "data.json"), "w") as f:
 			json.dump(data, f)
 		# it is okay to ignore IOError exception
-
+		return os.path.join(data_path, "data.json")

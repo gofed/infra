@@ -13,13 +13,6 @@ class StorageWriter(MetaStorageWriter):
 		"""
 		if "artefact" not in data:
 			raise KeyError("artefact key not found in %s" % json.dumps(data))
-	
-		driver = ArtefactDriverFactory().build(data["artefact"])
-		if driver == None:
-			raise KeyError("artefact driver for %s not found" % data["artefact"])
 
-		if not driver.store(data):
-			return False
-
-		return True
+		return ArtefactDriverFactory().build(data["artefact"]).store(data)
 

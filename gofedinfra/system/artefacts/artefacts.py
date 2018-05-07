@@ -18,3 +18,7 @@ ARTEFACT_CACHE_GOLANG_PROJECT_REPOSITORY_COMMITS = "cache-golang-project-reposit
 ARTEFACT_GOLANG_IPPREFIX_TO_RPM="golang-ipprefix-to-rpm"
 ARTEFACT_GOLANG_DISTRIBUTION_SNAPSHOT="golang-distribution-snapshot"
 ARTEFACT_CACHE_GOLANG_PROJECT_DISTRIBUTION_PACKAGE_BUILDS = "cache-golang-project-distribution-package-builds"
+
+ARTEFACT_GOLANG_PROJECT_API = "golang-project-api"
+ARTEFACT_GOLANG_PROJECT_CONTRACTS = "golang-project-contracts"
+ARTEFACT_GOLANG_PROJECT_STATIC_ALLOCATIONS = "golang-project-static-allocations"

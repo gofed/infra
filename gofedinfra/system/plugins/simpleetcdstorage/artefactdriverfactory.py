@@ -23,6 +23,9 @@ class ArtefactDriverFactory(object):
 		self.artefacts.append(artefacts.ARTEFACT_GOLANG_IPPREFIX_TO_RPM)
 		self.artefacts.append(artefacts.ARTEFACT_GOLANG_DISTRIBUTION_SNAPSHOT)
 		self.artefacts.append(artefacts.ARTEFACT_CACHE_GOLANG_PROJECT_DISTRIBUTION_PACKAGE_BUILDS)
+		self.artefacts.append(artefacts.ARTEFACT_GOLANG_PROJECT_API)
+		self.artefacts.append(artefacts.ARTEFACT_GOLANG_PROJECT_CONTRACTS)
+		self.artefacts.append(artefacts.ARTEFACT_GOLANG_PROJECT_STATIC_ALLOCATIONS)
 
 	def build(self, artefact):
 		if artefact not in self.artefacts:

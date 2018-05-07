@@ -8,6 +8,12 @@ import StringIO
 import gzip
 import base64
 
+from gofedinfra.system.artefacts.artefacts import (
+    ARTEFACT_GOLANG_PROJECT_API,
+    ARTEFACT_GOLANG_PROJECT_STATIC_ALLOCATIONS,
+    ARTEFACT_GOLANG_PROJECT_CONTRACTS
+)
+
 class ApiExtractor(object):
 
     def __init__(self, gopath, generated, package_path, hexsha, depsfile, cgodir = ""):
@@ -66,18 +72,18 @@ class ApiExtractor(object):
                     # The list of all packages for a given project is
                     # stored in golang-project-packages artefact
                     # So it's ok to use the ipprefix as a part of the api artefact key
-                    artefact["artefact"] = "golang-project-api"
+                    artefact["artefact"] = ARTEFACT_GOLANG_PROJECT_API
                     self._api_artefacts.append(self._dict2gzip(artefact))
                     continue
 
                 if file == "contracts.json":
-                    artefact["artefact"] = "golang-project-contracts"
+                    artefact["artefact"] = ARTEFACT_GOLANG_PROJECT_CONTRACTS
                     self._contract_artefacts.append(self._dict2gzip(artefact))
                     continue
 
                 if file == "allocated.json":
-                    artefact["artefact"] = "golang-project-static-allocations"
-                    self._contract_artefacts.append(self._dict2gzip(artefact))
+                    artefact["artefact"] = ARTEFACT_GOLANG_PROJECT_STATIC_ALLOCATIONS
+                    self._static_alloc_artefacts.append(self._dict2gzip(artefact))
                     continue
 
     def apiArtefacts(self):

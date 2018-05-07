@@ -107,5 +107,20 @@
 	"id": "cache-golang-project-distribution-package-builds",
 	"artefact": "ARTEFACT_CACHE_GOLANG_PROJECT_DISTRIBUTION_PACKAGE_BUILDS",
 	"keys": ["artefact", "product", "distribution", "package"]
+},
+{
+	"id": "golang-project-api",
+	"artefact": "ARTEFACT_GOLANG_PROJECT_API",
+	"keys": ["artefact", "ipprefix", "hexsha"]
+},
+{
+	"id": "golang-project-contracts",
+	"artefact": "ARTEFACT_GOLANG_PROJECT_CONTRACTS",
+	"keys": ["artefact", "ipprefix", "hexsha"]
+},
+{
+	"id": "golang-project-static-allocations",
+	"artefact": "ARTEFACT_GOLANG_PROJECT_STATIC_ALLOCATIONS",
+	"keys": ["artefact", "ipprefix", "hexsha"]
 }
 ]
