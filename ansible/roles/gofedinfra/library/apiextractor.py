@@ -45,12 +45,11 @@ class ApiExtractor(object):
         up = ProviderBuilder().buildUpstreamWithLocalMapping()
         gl = len(self._generated)
         for root, dirs, files in os.walk(self._generated):
-            if root.startswith(os.path.join(self._generated, "golang")):
+            if root.startswith(os.path.join(self._generated, "golang/")):
                 continue
 
             # TODO(jchaloup): generate artefacts in parallel
             for file in filter(lambda f: f.endswith(".json"), files):
-
                 if file != "contracts.json" and file != "api.json" and file != "allocated.json":
                     continue
 
@@ -65,7 +64,7 @@ class ApiExtractor(object):
                     # Repository of origin
                     "project": up.parse(ipprefix).prefix(),
                     "hexsha": hexsha,
-                    "data": data,
+                    "data": self._dict2gzip(data),
                 }
 
                 if file == "api.json":
@@ -73,17 +72,17 @@ class ApiExtractor(object):
                     # stored in golang-project-packages artefact
                     # So it's ok to use the ipprefix as a part of the api artefact key
                     artefact["artefact"] = ARTEFACT_GOLANG_PROJECT_API
-                    self._api_artefacts.append(self._dict2gzip(artefact))
+                    self._api_artefacts.append(artefact)
                     continue
 
                 if file == "contracts.json":
                     artefact["artefact"] = ARTEFACT_GOLANG_PROJECT_CONTRACTS
-                    self._contract_artefacts.append(self._dict2gzip(artefact))
+                    self._contract_artefacts.append(artefact)
                     continue
 
                 if file == "allocated.json":
                     artefact["artefact"] = ARTEFACT_GOLANG_PROJECT_STATIC_ALLOCATIONS
-                    self._static_alloc_artefacts.append(self._dict2gzip(artefact))
+                    self._static_alloc_artefacts.append(artefact)
                     continue
 
     def apiArtefacts(self):
