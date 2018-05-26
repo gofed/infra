@@ -14,14 +14,18 @@ from gofedinfra.system.artefacts.artefacts import (
     ARTEFACT_GOLANG_PROJECT_CONTRACTS
 )
 
+
 class ApiExtractor(object):
 
-    def __init__(self, gopath, generated, package_path, hexsha, depsfile, cgodir = ""):
-        self._extractor = extractor.ApiExtractor(gopath, generated, package_path, hexsha, depsfile, cgodir)
+    def __init__(self, gopath, generated, package_path, hexsha, depsfile, goversion, artefact_prefix, artefact_key, cgodir=""):
+        self._extractor = extractor.ApiExtractor(
+            gopath, generated, package_path, hexsha, depsfile, goversion, cgodir)
         self._generated = generated
         self._api_artefacts = []
         self._contract_artefacts = []
         self._static_alloc_artefacts = []
+        self._artefact_prefix = artefact_prefix
+        self._artefact_key = artefact_key
 
     def extract(self):
         self._extractor.extract()
@@ -36,7 +40,6 @@ class ApiExtractor(object):
         data = fd.getvalue()
         fd.close()
         return base64.b64encode(data)
-
 
     def _generateArtefacts(self):
         self._api_artefacts = []
@@ -60,28 +63,29 @@ class ApiExtractor(object):
                     data = json.load(fp)
 
                 artefact = {
-                    "ipprefix": ipprefix,
                     # Repository of origin
                     "project": up.parse(ipprefix).prefix(),
-                    "hexsha": hexsha,
                     "data": self._dict2gzip(data),
                 }
+
+                for key in self._artefact_key:
+                    artefact[key] = self._artefact_key[key]
 
                 if file == "api.json":
                     # The list of all packages for a given project is
                     # stored in golang-project-packages artefact
                     # So it's ok to use the ipprefix as a part of the api artefact key
-                    artefact["artefact"] = ARTEFACT_GOLANG_PROJECT_API
+                    artefact["artefact"] = "{}-api".format(self._artefact_prefix)
                     self._api_artefacts.append(artefact)
                     continue
 
                 if file == "contracts.json":
-                    artefact["artefact"] = ARTEFACT_GOLANG_PROJECT_CONTRACTS
+                    artefact["artefact"] = "{}-contracts".format(self._artefact_prefix)
                     self._contract_artefacts.append(artefact)
                     continue
 
                 if file == "allocated.json":
-                    artefact["artefact"] = ARTEFACT_GOLANG_PROJECT_STATIC_ALLOCATIONS
+                    artefact["artefact"] = "{}-static-allocations".format(self._artefact_prefix)
                     self._static_alloc_artefacts.append(artefact)
                     continue
 
@@ -94,6 +98,7 @@ class ApiExtractor(object):
     def statisAllocationArtefacts(self):
         return self._static_alloc_artefacts
 
+
 def main():
 
     fields = {
@@ -103,9 +108,24 @@ def main():
         "hexsha": {"required": True, "type": "str"},
         "depsfile": {"required": True, "type": "str"},
         "cgodir": {"required": False, "type": "str", "default": ""},
+        "goversion": {"required": True, "type": "str"},
+        "artefact": {"required": True, "type": "dict"},
     }
 
     module = AnsibleModule(argument_spec=fields)
+
+    if "prefix" not in module.params["artefact"]:
+        module.fail_json(msg="artefact argument missing prefix field")
+
+    if "key" not in module.params["artefact"]:
+        module.fail_json(msg="artefact argument missing key field")
+
+    if type({}) != type(module.params["artefact"]["key"]):
+        module.fail_json(msg="artefact.key field is not a dictionary")
+
+    for key in module.params["artefact"]["key"]:
+        if type("") != type(module.params["artefact"]["key"][key]):
+            module.fail_json(msg="artefact.key is not a simple dictionary")
 
     e = ApiExtractor(
         gopath=module.params["gopath"],
@@ -114,6 +134,9 @@ def main():
         hexsha=module.params["hexsha"],
         depsfile=module.params["depsfile"],
         cgodir=module.params["cgodir"],
+        goversion=module.params["goversion"],
+        artefact_prefix=module.params["artefact"]["prefix"],
+        artefact_key=module.params["artefact"]["key"],
     )
 
     failed = False
@@ -140,6 +163,7 @@ def main():
         module.fail_json(msg=errmsg, **result)
 
     module.exit_json(**result)
+
 
 if __name__ == '__main__':
     main()

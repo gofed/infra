@@ -33,6 +33,7 @@
     src: "https://github.com/gofed/data/raw/master/stdlib/go{{ goversion }}.tar.gz"
     dest: "{{ generated_wd }}/golang/"
     remote_src: true
+    validate_certs: False
 
 - name: Retrieve CGO symbols
   get_url:
@@ -75,7 +76,7 @@
     artefact: golang-project-api
     ipprefix: "{{ item.ipprefix }}"
     hexsha: "{{ item.hexsha }}"
-  with_items: "{{ api_keys }}"
+  with_items: "{{ api_keys | default ([]) }}"
   register: api_artefacts
 
 - name: Make a list of missing artefacts
@@ -92,7 +93,7 @@
     artefact: golang-project-contracts
     ipprefix: "{{ item.ipprefix }}"
     hexsha: "{{ item.hexsha }}"
-  with_items: "{{ api_keys }}"
+  with_items: "{{ api_keys | default([]) }}"
   register: contract_artefacts
 
 - name: Make a list of missing artefacts
@@ -109,7 +110,7 @@
     artefact: golang-project-static-allocations
     ipprefix: "{{ item.ipprefix }}"
     hexsha: "{{ item.hexsha }}"
-  with_items: "{{ api_keys }}"
+  with_items: "{{ api_keys | default([]) }}"
   register: static_allocation_artefacts
 
 - name: Make a list of missing artefacts
@@ -145,7 +146,7 @@
     repository: "{{ item }}"
     hexsha: "{{ output.artefact.providers[item]['hexsha'] }}"
     directory: "{{ extractor_wd }}/src/{{ output.artefact.providers[item]['ipprefix'] }}"
-  with_items: "{{ repos2process }}"
+  with_items: "{{ repos2process | default({}) }}"
   register: routput
 
 - name: Create GOPATH directory for the project
@@ -168,6 +169,13 @@
     hexsha: "{{ hexsha }}"
     depsfile: "{{ snapshotfile }}"
     cgodir: "{{ generated_wd }}/cgo.yml"
+    goversion: "{{ goversion }}"
+    artefact:
+      prefix: golang-project
+      key:
+        hexsha: "{{ hexsha }}"
+        ipprefix: "{{ project }}"
+
   register: eoutput
 
 # https://github.com/ansible/ansible/pull/36307
