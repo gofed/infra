@@ -1,0 +1,101 @@
+---
+# Build queries
+- name: Construct api, contract and static-allocation keys
+  set_fact:
+    api_keys: "{{ api_keys | default([]) + [{'artefact': artefact_prefix + '-api', 'hexsha': output.artefact.packages[item], 'ipprefix': item}] }}"
+    contract_keys: "{{ api_keys | default([]) + [{'artefact': artefact_prefix + '-contracts', 'hexsha': output.artefact.packages[item], 'ipprefix': item}] }}"
+    static_allocation_keys: "{{ api_keys | default([]) + [{'artefact': artefact_prefix + '-static-allocations', 'hexsha': output.artefact.packages[item], 'ipprefix': item}] }}"
+  with_items: "{{ output.artefact.packages }}"
+
+- name: Construct ipp2repo mapping
+  set_fact:
+    ipp2repo: "{{ ipp2repo | default({}) | combine({ item: output.artefact.ipp2repo[item]}) }}"
+  with_items: "{{ output.artefact.ipp2repo }}"
+
+# Retrieve source code of projects with missing artefacts
+- name: Create GOPATH directories
+  file:
+    path: "{{ extractor_wd }}/src/{{ output.artefact.providers[item]['ipprefix'] }}"
+    state: directory
+  with_items: "{{ output.artefact.providers }}"
+  loop_control:
+    label: "{{ extractor_wd }}/src/{{ output.artefact.providers[item]['ipprefix'] }}"
+
+#### api ####
+- name: Collect api artefacts
+  artefactreader:
+    artefact: "{{ artefact_prefix }}-api"
+    ipprefix: "{{ item.ipprefix }}"
+    hexsha: "{{ item.hexsha }}"
+  with_items: "{{ api_keys | default ([]) }}"
+  register: api_artefacts
+
+- name: Make a list of missing artefacts
+  set_fact:
+    repos2process: "{{ repos2process | default({}) | combine({ ipp2repo[item.item.ipprefix]: 1 }) }}"
+  when: not item.found
+  with_items: "{{ api_artefacts.results }}"
+  loop_control:
+    label: "{{ item.item.ipprefix }} -> {{ ipp2repo[item.item.ipprefix] }}"
+
+#### contracts ####
+- name: Collect contracts artefacts
+  artefactreader:
+    artefact: "{{ artefact_prefix }}-contracts"
+    ipprefix: "{{ item.ipprefix }}"
+    hexsha: "{{ item.hexsha }}"
+  with_items: "{{ api_keys | default([]) }}"
+  register: contract_artefacts
+
+- name: Make a list of missing artefacts
+  set_fact:
+    repos2process: "{{ repos2process | default({}) | combine({ ipp2repo[item.item.ipprefix]: 1 }) }}"
+  when: not item.found
+  with_items: "{{ contract_artefacts.results }}"
+  loop_control:
+    label: "{{ item.item.ipprefix }} -> {{ ipp2repo[item.item.ipprefix] }}"
+
+#### static-allocations ####
+- name: Collect static-allocations artefacts
+  artefactreader:
+    artefact: "{{ artefact_prefix }}-static-allocations"
+    ipprefix: "{{ item.ipprefix }}"
+    hexsha: "{{ item.hexsha }}"
+  with_items: "{{ api_keys | default([]) }}"
+  register: static_allocation_artefacts
+
+- name: Make a list of missing artefacts
+  set_fact:
+    repos2process: "{{ repos2process | default({}) | combine({ ipp2repo[item.item.ipprefix]: 1 }) }}"
+  when: not item.found
+  with_items: "{{ static_allocation_artefacts.results }}"
+  loop_control:
+    label: "{{ item.item.ipprefix }} -> {{ ipp2repo[item.item.ipprefix] }}"
+
+- debug: var=repos2process
+
+- name: Create generated directories
+  file:
+    path: "{{ generated_wd }}/{{ item.artefact.ipprefix }}/{{ item.artefact.hexsha }}"
+    state: directory
+  when: item.found
+  with_items: "{{ api_artefacts.results }}"
+  loop_control:
+    label: "{{ item.item.ipprefix }}:{{ item.item.hexsha }}"
+
+- name: Store artefacts
+  copy:
+     content: "{{ item.artefact.data | artefact2json }}"
+     dest: "{{ generated_wd }}/{{ item.artefact.ipprefix }}/{{ item.artefact.hexsha }}/api.json"
+  when: item.found
+  with_items: "{{ api_artefacts.results }}"
+  loop_control:
+    label: "{{ item.item.ipprefix }}:{{ item.item.hexsha }}"
+
+- name: Retrieve code from project dependency repositories
+  repositorycoderetriever:
+    repository: "{{ item }}"
+    hexsha: "{{ output.artefact.providers[item]['hexsha'] }}"
+    directory: "{{ extractor_wd }}/src/{{ output.artefact.providers[item]['ipprefix'] }}"
+  with_items: "{{ repos2process | default({}) }}"
+  register: routput

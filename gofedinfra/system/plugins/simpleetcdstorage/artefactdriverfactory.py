@@ -26,6 +26,9 @@ class ArtefactDriverFactory(object):
 		self.artefacts.append(artefacts.ARTEFACT_GOLANG_PROJECT_API)
 		self.artefacts.append(artefacts.ARTEFACT_GOLANG_PROJECT_CONTRACTS)
 		self.artefacts.append(artefacts.ARTEFACT_GOLANG_PROJECT_STATIC_ALLOCATIONS)
+		self.artefacts.append(artefacts.ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_API)
+		self.artefacts.append(artefacts.ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_CONTRACTS)
+		self.artefacts.append(artefacts.ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_STATIC_ALLOCATIONS)
 
 	def build(self, artefact):
 		if artefact not in self.artefacts:

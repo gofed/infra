@@ -8,8 +8,20 @@
   when: goversion is undefined
 
 - fail:
-    msg: "project variable is not set"
-  when: project is undefined
+    msg: "product variable is not set"
+  when: product is undefined
+
+- fail:
+    msg: "distribution variable is not set"
+  when: distribution is undefined
+
+- fail:
+    msg: "build variable is not set"
+  when: build is undefined
+
+- fail:
+    msg: "rpm variable is not set"
+  when: rpm is undefined
 
 - fail:
     msg: "ipprefix variable is not set"
@@ -18,6 +30,10 @@
 - fail:
     msg: "hexsha variable is not set"
   when: hexsha is undefined
+
+- fail:
+    msg: "codedir variable is not set"
+  when: codedir is undefined
 
 - name: Create working directory
   set_fact:
@@ -41,21 +57,23 @@
 
 - include: prepareextractorwd.yml
   vars:
-    artefact_prefix: "golang-project"
+    artefact_prefix: "golang-project-distribution"
     extractor_wd: "{{ extractor_wd }}"
     generated_wd: "{{ generated_wd }}"
 
-- name: Create GOPATH directory for the project
+- set_fact:
+    project_dir: "{{ extractor_wd }}/src/{{ ipprefix }}"
+
+- name: Create GOPATH directory dirname for the project
   file:
-    path: "{{ extractor_wd }}/src/{{ project }}"
+    path: "{{ project_dir | dirname }}"
     state: directory
 
-- name: Retrieve code from project repository
-  repositorycoderetriever:
-    repository: "{{ project }}"
-    hexsha: "{{ hexsha }}"
-    directory: "{{ extractor_wd }}/src/{{ ipprefix }}"
-  register: routput
+- name: Create GOPATH directory for the project
+  file:
+    src: "{{ codedir }}"
+    dest: "{{ extractor_wd }}/src/{{ ipprefix }}"
+    state: link
 
 - name: Extract api
   apiextractor:
@@ -67,51 +85,37 @@
     cgodir: "{{ generated_wd }}/cgo.yml"
     goversion: "{{ goversion }}"
     artefact:
-      prefix: golang-project
+      prefix: golang-project-distribution
       key:
+        product: "{{ product }}"
+        distribution: "{{ distribution }}"
+        build: "{{ build }}"
+        rpm: "{{ rpm }}"
         hexsha: "{{ hexsha }}"
         ipprefix: "{{ ipprefix }}"
 
   register: eoutput
 
-# https://github.com/ansible/ansible/pull/36307
-# Thus, ansible >= 2.5 is needed
-# - debug:
-#     msg: "golang-project-api: {{ (item['data'] | artefact2json)['qid'] }}"
-#   with_items: "{{ eoutput.artefacts['golang-project-api'] }}"
-#   loop_control:
-#     label: "{{ item['ipprefix'] }}"
-#
-# - debug:
-#     msg: "golang-project-contracts: {{ (item | artefact2json)['ipprefix'] }}"
-#   with_items: "{{ eoutput.artefacts['golang-project-contracts'] }}"
-#   loop_control:
-#     label: "{{ (item | artefact2json)['ipprefix'] }}"
-#
-# - debug:
-#     msg: "golang-project-static-allocations: {{ (item | artefact2json)['ipprefix'] }}"
-#   with_items: "{{ eoutput.artefacts['golang-project-static-allocations'] }}"
-#   loop_control:
-#     label: "{{ (item | artefact2json)['ipprefix'] }}"
+- debug: var=eoutput
 
 # Store all artefacts
-- name: Store golang-project-api artefacts
+- name: Store api artefacts
   artefactwriter:
     artefact: "{{ item }}"
-  with_items: "{{ eoutput.artefacts['golang-project-api'] }}"
+  with_items: "{{ eoutput.artefacts['golang-project-distribution-api'] }}"
   loop_control:
     label: "{{ item['ipprefix'] }}"
 
-- name: Store golang-project-contracts artefacts
+- name: Store contracts artefacts
   artefactwriter:
     artefact: "{{ item }}"
-  with_items: "{{ eoutput.artefacts['golang-project-contracts'] }}"
+  with_items: "{{ eoutput.artefacts['golang-project-distribution-contracts'] }}"
   loop_control:
     label: "{{ item['ipprefix'] }}"
 
-- name: Store golang-project-static-allocations artefacts
+- name: Store static-allocations artefacts
   artefactwriter:
     artefact: "{{ item }}"
-  with_items: "{{ eoutput.artefacts['golang-project-static-allocations'] }}"
+  with_items: "{{ eoutput.artefacts['golang-project-distribution-static-allocations'] }}"
   loop_control:
     label: "{{ item['ipprefix'] }}"

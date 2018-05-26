@@ -19,6 +19,9 @@ from .cachegolangprojectdistributionpackagebuilds import CacheGolangProjectDistr
 from .golangprojectapi import GolangProjectApiKeyGenerator
 from .golangprojectcontracts import GolangProjectContractsKeyGenerator
 from .golangprojectstaticallocations import GolangProjectStaticAllocationsKeyGenerator
+from .golangprojectdistributionapi import GolangProjectDistributionApiKeyGenerator
+from .golangprojectdistributioncontracts import GolangProjectDistributionContractsKeyGenerator
+from .golangprojectdistributionstaticallocations import GolangProjectDistributionStaticAllocationsKeyGenerator
 
 class KeyGeneratorFactory:
 
@@ -83,5 +86,14 @@ class KeyGeneratorFactory:
 
 		if artefact == artefacts.ARTEFACT_GOLANG_PROJECT_STATIC_ALLOCATIONS:
 			return GolangProjectStaticAllocationsKeyGenerator()
+
+		if artefact == artefacts.ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_API:
+			return GolangProjectDistributionApiKeyGenerator()
+
+		if artefact == artefacts.ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_CONTRACTS:
+			return GolangProjectDistributionContractsKeyGenerator()
+
+		if artefact == artefacts.ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_STATIC_ALLOCATIONS:
+			return GolangProjectDistributionStaticAllocationsKeyGenerator()
 
 		raise ValueError("Invalid artefact: %s" % artefact)

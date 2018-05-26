@@ -152,9 +152,9 @@ def main():
         package_path=module.params["package_path"],
         hexsha=module.params["hexsha"],
         artefacts={
-            "golang-project-api": e.apiArtefacts(),
-            "golang-project-contracts": e.contractArtefacts(),
-            "golang-project-static-allocations": e.statisAllocationArtefacts(),
+            "{}-api".format(module.params["artefact"]["prefix"]): e.apiArtefacts(),
+            "{}-contracts".format(module.params["artefact"]["prefix"]): e.contractArtefacts(),
+            "{}-static-allocations".format(module.params["artefact"]["prefix"]): e.statisAllocationArtefacts(),
         },
         changed=True,
     )

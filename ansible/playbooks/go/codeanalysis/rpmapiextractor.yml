@@ -1,0 +1,9 @@
+---
+- name: Go code rpm api extractor
+  gather_facts: no
+  connection: local
+  hosts: localhost
+  roles:
+  - role: gofedinfra
+  tasks:
+  - include: private/rpmapiextractor.yml

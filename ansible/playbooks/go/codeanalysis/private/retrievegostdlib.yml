@@ -1,0 +1,18 @@
+---
+- name: Create directory for the Go stdlib
+  file:
+    path: "{{ generated_wd }}/golang/"
+    state: directory
+
+- name: Retrieve Go stdlib
+  unarchive:
+    src: "https://github.com/gofed/data/raw/master/stdlib/go{{ goversion }}.tar.gz"
+    dest: "{{ generated_wd }}/golang/"
+    remote_src: true
+    validate_certs: False
+
+- name: Retrieve CGO symbols
+  get_url:
+    url: https://raw.githubusercontent.com/gofed/symbols-extractor/master/cgo/cgo.yml
+    dest: "{{ generated_wd }}/cgo.yml"
+    mode: 0444

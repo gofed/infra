@@ -122,5 +122,20 @@
 	"id": "golang-project-static-allocations",
 	"artefact": "ARTEFACT_GOLANG_PROJECT_STATIC_ALLOCATIONS",
 	"keys": ["artefact", "ipprefix", "hexsha"]
+},
+{
+	"id": "golang-project-distribution-api",
+	"artefact": "ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_API",
+	"keys": ["artefact", "product", "distribution", "build", "rpm"]
+},
+{
+	"id": "golang-project-distribution-contracts",
+	"artefact": "ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_CONTRACTS",
+	"keys": ["artefact", "product", "distribution", "build", "rpm"]
+},
+{
+	"id": "golang-project-distribution-static-allocations",
+	"artefact": "ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_STATIC_ALLOCATIONS",
+	"keys": ["artefact", "product", "distribution", "build", "rpm"]
 }
 ]

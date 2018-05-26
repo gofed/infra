@@ -22,3 +22,7 @@ ARTEFACT_CACHE_GOLANG_PROJECT_DISTRIBUTION_PACKAGE_BUILDS = "cache-golang-projec
 ARTEFACT_GOLANG_PROJECT_API = "golang-project-api"
 ARTEFACT_GOLANG_PROJECT_CONTRACTS = "golang-project-contracts"
 ARTEFACT_GOLANG_PROJECT_STATIC_ALLOCATIONS = "golang-project-static-allocations"
+
+ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_API = "golang-project-distribution-api"
+ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_CONTRACTS = "golang-project-distribution-contracts"
+ARTEFACT_GOLANG_PROJECT_DISTRIBUTION_STATIC_ALLOCATIONS = "golang-project-distribution-static-allocations"
