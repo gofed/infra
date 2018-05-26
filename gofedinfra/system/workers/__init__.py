@@ -3,8 +3,19 @@ import sys
 from collections import namedtuple
 
 from ansible.parsing.dataloader import DataLoader
-from ansible.vars import VariableManager
-from ansible.inventory import Inventory
+try:
+    from ansible.vars import VariableManager
+    old_ansible = True
+except ImportError:
+    from ansible.vars.manager import VariableManager
+    old_ansible = False
+
+if old_ansible:
+    from ansible.inventory import Inventory
+else:
+    from ansible.inventory.manager import InventoryManager
+    from ansible.playbook.play import Play
+
 from ansible.executor.playbook_executor import PlaybookExecutor
 
 from gofedlib.utils import getScriptDir
@@ -32,55 +43,94 @@ class Worker(object):
         return self
 
     def do(self):
-        self._variable_manager = VariableManager()
-        self._loader = DataLoader()
-        self._inventory = Inventory(
-            loader=self._loader,
-            variable_manager=self._variable_manager,
-        )
+        if old_ansible:
+            self._variable_manager = VariableManager()
+            self._loader = DataLoader()
+            self._inventory = Inventory(
+                loader=self._loader,
+                variable_manager=self._variable_manager,
+            )
+        else:
+            self._loader = DataLoader()
+            self._inventory = InventoryManager(
+                loader=self._loader,
+            )
+            self._variable_manager = VariableManager(
+                loader=self._loader,
+                inventory=self._inventory,
+            )
+
+        options = [
+            'listtags',
+            'listtasks',
+            'listhosts',
+            'syntax',
+            'connection',
+            'module_path',
+            'forks',
+            'remote_user',
+            'private_key_file',
+            'ssh_common_args',
+            'ssh_extra_args',
+            'sftp_extra_args',
+            'scp_extra_args',
+            'become',
+            'become_method',
+            'become_user',
+            'verbosity',
+            'check'
+        ]
+
+        if not old_ansible:
+            options.append('diff')
 
         Options = namedtuple(
-            'Options', [
-                'listtags',
-                'listtasks',
-                'listhosts',
-                'syntax',
-                'connection',
-                'module_path',
-                'forks',
-                'remote_user',
-                'private_key_file',
-                'ssh_common_args',
-                'ssh_extra_args',
-                'sftp_extra_args',
-                'scp_extra_args',
-                'become',
-                'become_method',
-                'become_user',
-                'verbosity',
-                'check'
-            ]
+            'Options', options
         )
-        self._options = Options(
-            listtags=False,
-            listtasks=False,
-            listhosts=False,
-            syntax=False,
-            connection='local',
-            module_path=None,
-            forks=100,
-            remote_user='gofed',
-            private_key_file=None,
-            ssh_common_args=None,
-            ssh_extra_args=None,
-            sftp_extra_args=None,
-            scp_extra_args=None,
-            become=False,
-            become_method=None,
-            become_user='root',
-            verbosity=None,
-            check=False
-        )
+
+        if old_ansible:
+            self._options = Options(
+                listtags=False,
+                listtasks=False,
+                listhosts=False,
+                syntax=False,
+                connection='local',
+                module_path=None,
+                forks=100,
+                remote_user='gofed',
+                private_key_file=None,
+                ssh_common_args=None,
+                ssh_extra_args=None,
+                sftp_extra_args=None,
+                scp_extra_args=None,
+                become=False,
+                become_method=None,
+                become_user='root',
+                verbosity=None,
+                check=False
+            )
+        else:
+            self._options = Options(
+                listtags=False,
+                listtasks=False,
+                listhosts=False,
+                syntax=False,
+                connection='local',
+                module_path=None,
+                forks=100,
+                remote_user='gofed',
+                private_key_file=None,
+                ssh_common_args=None,
+                ssh_extra_args=None,
+                sftp_extra_args=None,
+                scp_extra_args=None,
+                become=False,
+                become_method=None,
+                become_user='root',
+                verbosity=None,
+                check=False,
+                diff=False
+            )
 
         extra_vars = {}
         for key in self._data:
