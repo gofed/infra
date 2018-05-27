@@ -42,8 +42,6 @@
 - include: prepareextractorwd.yml
   vars:
     artefact_prefix: "golang-project"
-    extractor_wd: "{{ extractor_wd }}"
-    generated_wd: "{{ generated_wd }}"
 
 - name: Create GOPATH directory for the project
   file:
@@ -70,7 +68,6 @@
       prefix: golang-project
       key:
         hexsha: "{{ hexsha }}"
-        ipprefix: "{{ ipprefix }}"
 
   register: eoutput
 

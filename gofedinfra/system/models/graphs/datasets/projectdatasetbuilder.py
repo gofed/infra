@@ -2,6 +2,7 @@ from .datasetbuilder import DatasetBuilder
 from infra.system.artefacts.artefacts import ARTEFACT_GOLANG_PROJECT_PACKAGES
 from gofedlib.providers.providerbuilder import ProviderBuilder
 from infra.system.plugins.simplefilestorage.storagereader import StorageReader
+from infra.system.workers import Worker
 
 class ProjectDatasetBuilder(object):
 

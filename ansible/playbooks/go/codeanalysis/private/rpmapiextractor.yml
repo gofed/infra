@@ -58,8 +58,6 @@
 - include: prepareextractorwd.yml
   vars:
     artefact_prefix: "golang-project-distribution"
-    extractor_wd: "{{ extractor_wd }}"
-    generated_wd: "{{ generated_wd }}"
 
 - set_fact:
     project_dir: "{{ extractor_wd }}/src/{{ ipprefix }}"
@@ -92,7 +90,6 @@
         build: "{{ build }}"
         rpm: "{{ rpm }}"
         hexsha: "{{ hexsha }}"
-        ipprefix: "{{ ipprefix }}"
 
   register: eoutput
 

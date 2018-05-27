@@ -66,6 +66,7 @@ class ApiExtractor(object):
                     # Repository of origin
                     "project": up.parse(ipprefix).prefix(),
                     "data": self._dict2gzip(data),
+                    "ipprefix": ipprefix,
                 }
 
                 for key in self._artefact_key:

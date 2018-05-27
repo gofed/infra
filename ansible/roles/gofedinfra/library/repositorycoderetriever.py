@@ -125,9 +125,10 @@ def main():
     r = RepositoryCodeRetriever(module.params["repository"], hexsha=module.params["hexsha"])
     failed = False
     errmsg = ""
-    codedir = r.codedir()
+    codedir = ""
     try:
         r.retrieve()
+        codedir = r.codedir()
         if module.params["directory"] != "":
             os.rename(r.codedir(), module.params["directory"])
             codedir = module.params["directory"]
