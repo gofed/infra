@@ -2,9 +2,9 @@
 # Build queries
 - name: Construct api, contract and static-allocation keys
   set_fact:
-    api_keys: "{{ api_keys | default([]) + [{'artefact': artefact_prefix + '-api', 'hexsha': output.artefact.packages[item], 'ipprefix': item}] }}"
-    contract_keys: "{{ api_keys | default([]) + [{'artefact': artefact_prefix + '-contracts', 'hexsha': output.artefact.packages[item], 'ipprefix': item}] }}"
-    static_allocation_keys: "{{ api_keys | default([]) + [{'artefact': artefact_prefix + '-static-allocations', 'hexsha': output.artefact.packages[item], 'ipprefix': item}] }}"
+    api_keys: "{{ api_keys | default([]) + [{'artefact': 'golang-project-api', 'hexsha': output.artefact.packages[item], 'ipprefix': item}] }}"
+    contract_keys: "{{ api_keys | default([]) + [{'artefact': 'golang-project-contracts', 'hexsha': output.artefact.packages[item], 'ipprefix': item}] }}"
+    static_allocation_keys: "{{ api_keys | default([]) + [{'artefact': 'golang-project-static-allocations', 'hexsha': output.artefact.packages[item], 'ipprefix': item}] }}"
   with_items: "{{ output.artefact.packages }}"
 
 - name: Construct ipp2repo mapping
@@ -24,7 +24,7 @@
 #### api ####
 - name: Collect api artefacts
   artefactreader:
-    artefact: "{{ artefact_prefix }}-api"
+    artefact: "golang-project-api"
     ipprefix: "{{ item.ipprefix }}"
     hexsha: "{{ item.hexsha }}"
   with_items: "{{ api_keys | default ([]) }}"
@@ -41,7 +41,7 @@
 #### contracts ####
 - name: Collect contracts artefacts
   artefactreader:
-    artefact: "{{ artefact_prefix }}-contracts"
+    artefact: "golang-project-contracts"
     ipprefix: "{{ item.ipprefix }}"
     hexsha: "{{ item.hexsha }}"
   with_items: "{{ api_keys | default([]) }}"
@@ -58,7 +58,7 @@
 #### static-allocations ####
 - name: Collect static-allocations artefacts
   artefactreader:
-    artefact: "{{ artefact_prefix }}-static-allocations"
+    artefact: "golang-project-static-allocations"
     ipprefix: "{{ item.ipprefix }}"
     hexsha: "{{ item.hexsha }}"
   with_items: "{{ api_keys | default([]) }}"

@@ -3,6 +3,7 @@
 from ansible.module_utils.basic import *
 from gofedlib.go.apiextractor import extractor
 from gofedlib.providers.providerbuilder import ProviderBuilder
+from gofedlib.go.snapshot import Snapshot
 import json
 import StringIO
 import gzip
@@ -27,6 +28,21 @@ class ApiExtractor(object):
         self._artefact_prefix = artefact_prefix
         self._artefact_key = artefact_key
 
+        self._package_path = package_path
+        self._snapshot = Snapshot()
+        self._snapshot.clear()
+        # Detect the snapshot type based on file name
+        if depsfile.endswith("Godeps.json"):
+            self._snapshot.readGodepsFile(depsfile)
+            return
+        if depsfile.endswith("glide.lock"):
+            self._snapshot.readGlideLockFile(depsfile)
+            return
+        if depsfile.endswith("Glogfile"):
+            self._snapshot.readGLOGFILE(depsfile)
+            return
+        raise ValueError("Dependency file format not recognized")
+
     def extract(self):
         self._extractor.extract()
         self._generateArtefacts()
@@ -47,6 +63,9 @@ class ApiExtractor(object):
         self._static_alloc_artefacts = []
         up = ProviderBuilder().buildUpstreamWithLocalMapping()
         gl = len(self._generated)
+
+        packages = self._snapshot.packages()
+
         for root, dirs, files in os.walk(self._generated):
             if root.startswith(os.path.join(self._generated, "golang/")):
                 continue
@@ -69,24 +88,37 @@ class ApiExtractor(object):
                     "ipprefix": ipprefix,
                 }
 
-                for key in self._artefact_key:
-                    artefact[key] = self._artefact_key[key]
+                # All artefacts of project dependencies are generated from upstream commits
+                # and they correspond to golang-project namespace.
+                # So the artefact key can be applied only on the project itself.
+                if ipprefix.startswith(self._package_path):
+                    artefact_prefix = self._artefact_prefix
+                    for key in self._artefact_key:
+                        artefact[key] = self._artefact_key[key]
+                else:
+                    artefact_prefix = "golang-project"
+                    try:
+                        artefact["hexsha"] = packages[ipprefix]
+                    except KeyError:
+                        # Package not found => do not generate the artefact
+                        continue
+
 
                 if file == "api.json":
                     # The list of all packages for a given project is
                     # stored in golang-project-packages artefact
                     # So it's ok to use the ipprefix as a part of the api artefact key
-                    artefact["artefact"] = "{}-api".format(self._artefact_prefix)
+                    artefact["artefact"] = "{}-api".format(artefact_prefix)
                     self._api_artefacts.append(artefact)
                     continue
 
                 if file == "contracts.json":
-                    artefact["artefact"] = "{}-contracts".format(self._artefact_prefix)
+                    artefact["artefact"] = "{}-contracts".format(artefact_prefix)
                     self._contract_artefacts.append(artefact)
                     continue
 
                 if file == "allocated.json":
-                    artefact["artefact"] = "{}-static-allocations".format(self._artefact_prefix)
+                    artefact["artefact"] = "{}-static-allocations".format(artefact_prefix)
                     self._static_alloc_artefacts.append(artefact)
                     continue
 

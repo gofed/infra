@@ -1,9 +1,5 @@
 ---
 - fail:
-    msg: "snapshotfile variable is not set"
-  when: snapshotfile is undefined
-
-- fail:
     msg: "goversion variable is not set"
   when: goversion is undefined
 
@@ -23,17 +19,58 @@
     msg: "rpm variable is not set"
   when: rpm is undefined
 
-- fail:
-    msg: "ipprefix variable is not set"
-  when: ipprefix is undefined
+- name: Retrieve rpm
+  rpmretriever:
+    product: "{{ product }}"
+    distribution: "{{ distribution }}"
+    build: "{{ build }}"
+    rpm: "{{ rpm }}"
+  register: routput
+
+- debug: var=routput
+
+- set_fact:
+    rpmdir: "{{ routput.directory }}"
+
+# Find all .goipath files and retrieve commit and ipprefix
+- name: Find .goipath in the rpm
+  find:
+    paths: "{{ rpmdir }}"
+    patterns: '.goipath'
+    recurse: yes
+    hidden: yes
+  register: goipaths
+
+- debug: var=goipaths
 
 - fail:
-    msg: "hexsha variable is not set"
-  when: hexsha is undefined
+    msg: "Single .goipath expected to be found. Got {{ goipaths.matched }} instead"
+  when: goipaths.matched != 1
+
+# glide.lock is expected to be in the same directory as a .goipath
+- name: Collect all .goipaths
+  set_fact:
+    goipath: "{{ goipaths.files[0].path }}"
+    hexsha: "{{ goipaths.files[0].path | goipath2hexsha }}"
+    ipprefix: "{{ goipaths.files[0].path.split('src/')[-1] | dirname }}"
+    codedir: "{{ goipaths.files[0].path | dirname }}"
+    snapshotfile: "{{ (goipaths.files[0].path | dirname) + '/glide.lock' }}"
+
+- debug: var=goipath
+- debug: var=hexsha
+- debug: var=ipprefix
+- debug: var=snapshotfile
+
+- name: Check if glide.lock file exists
+  stat:
+    path: "{{ snapshotfile }}"
+  register: stat_result
+
+- debug: var=stat_result
 
 - fail:
-    msg: "codedir variable is not set"
-  when: codedir is undefined
+    msg: "Unable to find {{ item.stat.path }} file"
+  when: not stat_result.stat.exists
 
 - name: Create working directory
   set_fact:
@@ -56,8 +93,6 @@
 - debug: var=output
 
 - include: prepareextractorwd.yml
-  vars:
-    artefact_prefix: "golang-project-distribution"
 
 - set_fact:
     project_dir: "{{ extractor_wd }}/src/{{ ipprefix }}"

@@ -59,3 +59,5 @@ For more information contact jchaloup@redhat.com.
   * Ansible playbook level testing (start with online testing -> just run all the playbooks in a loop, one Ansible playbook running all entry points)
   * Model level testing (on top of a testing data corpus)
 * Make playbook entry points, all the rest under private directory
+* integrate the new go symbols extractor, replace the current gosymbolsextractor
+* generate data corpus with allocated symbols (clear the previous one) as a timestamped tarball
