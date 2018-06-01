@@ -35,7 +35,7 @@ class RepositoryRetriever(object):
             clone_url = "https://github.com/%s/%s" % (self._repository["username"], self._repository["project"])
             Repo.clone_from(clone_url, self._repo_dir)
         elif self._repository["provider"] == "bitbucket":
-            close_url = "https://bitbucket.org/%s/%s" % (self._repository["username"], self._repository["project"])
+            clone_url = "https://bitbucket.org/%s/%s" % (self._repository["username"], self._repository["project"])
             hglib.clone(b(clone_url), b(self._repo_dir))
         else:
             raise ValueError("Unknown repo: %s" % self._repository["provider"])
