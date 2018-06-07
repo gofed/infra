@@ -42,11 +42,6 @@ class DatasetBuilder(object):
 
 		raise ValueError("Artefact is not valid packages artefact: %s" % artefact)
 
-	def _prefixPackage(self, prefix, package):
-		if package == ".":
-			return prefix
-		return "%s/%s" % (prefix, package)
-
 	def _extractProjectPackagesRequirements(self, artefact, node_name):
 		"""
 		:param artefact: golang-project-*-packages artefact
@@ -58,11 +53,10 @@ class DatasetBuilder(object):
 
 		vertices[node_name] = {}
 		edges[node_name] = {}
-
 		# vertices
 		vertices[node_name]["devel"] = []
 		for package in artefact["data"]["packages"]:
-			vertices[node_name]["devel"].append(self._prefixPackage(artefact["ipprefix"], package))
+			vertices[node_name]["devel"].append(package)
 
 		# edges
 		edges[node_name]["devel"] = []

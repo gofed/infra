@@ -1,0 +1,80 @@
+---
+- fail:
+    msg: "snapshotfile variable is not set"
+  when: snapshotfile is undefined
+
+- fail:
+    msg: "goversion variable is not set"
+  when: goversion is undefined
+
+- fail:
+    msg: "project variable is not set"
+  when: project is undefined
+
+- fail:
+    msg: "ipprefix variable is not set"
+  when: ipprefix is undefined
+
+- fail:
+    msg: "hexsha variable is not set"
+  when: hexsha is undefined
+
+- name: Create temp directory
+  tempfile:
+    state: directory
+    suffix: _golist
+  register: tmp_dir
+
+- name: Build dependency snapshot
+  snapshotbuilder:
+    snapshotfile: "{{ snapshotfile }}"
+  register: output
+
+- debug: var=output
+
+- name: Create GOPATH directories
+  file:
+    path: "{{ tmp_dir.path }}/src/{{ output.artefact.providers[item]['ipprefix'] }}"
+    state: directory
+  with_items: "{{ output.artefact.providers }}"
+  loop_control:
+    label: "{{ tmp_dir.path }}/src/{{ output.artefact.providers[item]['ipprefix'] }}"
+
+- name: Retrieve code from project dependency repositories
+  repositorycoderetriever:
+    repository: "{{ item }}"
+    hexsha: "{{ output.artefact.providers[item]['hexsha'] }}"
+    directory: "{{ tmp_dir.path }}/src/{{ output.artefact.providers[item]['ipprefix'] }}"
+  with_items: "{{ output.artefact.providers }}"
+  register: routput
+
+- name: Create GOPATH directory for the project
+  file:
+    path: "{{ tmp_dir.path }}/src/{{ ipprefix }}"
+    state: directory
+
+- name: Retrieve code from project repository
+  repositorycoderetriever:
+    repository: "{{ project }}"
+    hexsha: "{{ hexsha }}"
+    directory: "{{ tmp_dir.path }}/src/{{ ipprefix }}"
+  register: routput
+
+- name: Check all the project packages build
+  gobuild:
+    package-path: "{{ ipprefix }}"
+    gopath: "{{ tmp_dir.path }}"
+    library: yes
+  register: result
+
+- debug: var=result
+
+- name: Delete temp directory
+  file:
+    path: "{{ tmp_dir.path }}"
+    state: absent
+
+- fail:
+    msg: "Some packages failed to build"
+  when: not result.status[item]['built'] | bool
+  with_items: "{{ result.status }}"
