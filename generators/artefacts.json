@@ -24,10 +24,7 @@
 {
 	"id": "golang-project-packages",
 	"artefact": "ARTEFACT_GOLANG_PROJECT_PACKAGES",
-	"keys": ["artefact", "repository", "commit"],
-	"key_order": {
-		"repository": ["provider", "username", "project"]
-	}
+	"keys": ["artefact", "ipprefix", "hexsha"]
 },
 {
 	"id": "golang-project-info-fedora",

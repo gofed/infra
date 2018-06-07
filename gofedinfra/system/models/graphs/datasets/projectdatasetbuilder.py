@@ -14,16 +14,16 @@ class ProjectDatasetBuilder(object):
 	def build(self):
 		artefact_key = {
 			"artefact": ARTEFACT_GOLANG_PROJECT_PACKAGES,
-			"repository": ProviderBuilder().buildUpstreamWithLocalMapping().parse(self.repository).signature(),
-			"commit": self.commit,
+			"ipprefix": self.ipprefix,
+			"hexsha": self.commit,
 		}
 
 		try:
 			packages_artefact = StorageReader().retrieve(artefact_key)
 		except KeyError:
-			Worker("gocodeinspection").setPayload({
-				"repository": self.repository,
-				"commit": self.commit,
+			Worker("go/codeanalysis/golistextractor").setPayload({
+				"project": self.repository,
+				"hexsha": self.commit,
 				"ipprefix": self.ipprefix,
 			}).do()
 			packages_artefact = StorageReader().retrieve(artefact_key)

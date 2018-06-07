@@ -66,26 +66,26 @@ class DatasetBuilder(object):
 
 		# edges
 		edges[node_name]["devel"] = []
-		for dependencies in artefact["data"]["dependencies"]:
-			edges[node_name]["devel"] = edges[node_name]["devel"] + map(lambda l: (self._prefixPackage(artefact["ipprefix"], dependencies["package"]), l["name"]), dependencies["dependencies"])
+		for package in artefact["data"]["dependencies"]:
+			edges[node_name]["devel"] = edges[node_name]["devel"] + map(lambda l: (package, l), artefact["data"]["dependencies"][package])
 
 		# main packages
 		vertices[node_name]["main"] = []
 		edges[node_name]["main"] = []
 		for main in artefact["data"]["main"]:
 			# dirname from filename says in which package the dependencies are required/imported
-			pkg = os.path.dirname(main["filename"])
-			vertices[node_name]["main"].append("%s/%s" % (artefact["ipprefix"], pkg))
-			edges[node_name]["main"] = edges[node_name]["main"] + map(lambda l: (self._prefixPackage(artefact["ipprefix"], pkg), l),  main["dependencies"])
+			pkg = os.path.dirname(main)
+			vertices[node_name]["main"].append(pkg)
+			edges[node_name]["main"] = edges[node_name]["main"] + map(lambda l: (pkg, l), artefact["data"]["main"][main])
 		# one directory can have multiple filename import the same package
 		edges[node_name]["main"] = list(set(edges[node_name]["main"]))
 
 		# unit-tests
 		vertices[node_name]["tests"] = []
 		edges[node_name]["tests"] = []
-		for test in artefact["data"]["tests"]:
-			vertices[node_name]["tests"].append("%s/%s" % (artefact["ipprefix"], test["test"]))
-			edges[node_name]["tests"] = edges[node_name]["tests"] + map(lambda l: (self._prefixPackage(artefact["ipprefix"], test["test"]), l),  test["dependencies"])
+		for package in artefact["data"]["tests"]:
+			vertices[node_name]["tests"].append(package)
+			edges[node_name]["tests"] = edges[node_name]["tests"] + map(lambda l: (package, l), artefact["data"]["tests"][package])
 
 		return (vertices, edges)
 
@@ -202,4 +202,3 @@ class DatasetBuilder(object):
 		alphabet = list(set(alphabet))
 
 		return GraphDataset(vertices, edges, alphabet, parents, labels)
-

@@ -1,0 +1,9 @@
+---
+- name: Go list extractor
+  gather_facts: no
+  connection: local
+  hosts: localhost
+  roles:
+  - role: gofedinfra
+  tasks:
+  - include: private/golistextractor.yml

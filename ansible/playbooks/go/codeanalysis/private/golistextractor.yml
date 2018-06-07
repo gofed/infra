@@ -1,0 +1,69 @@
+---
+- fail:
+    msg: "project variable is not set"
+  when: project is undefined
+
+- fail:
+    msg: "ipprefix variable is not set"
+  when: ipprefix is undefined
+
+- fail:
+    msg: "hexsha variable is not set"
+  when: hexsha is undefined
+
+- debug: var=project
+- debug: var=ipprefix
+- debug: var=hexsha
+
+- name: Collect packages artefact
+  artefactreader:
+    artefact: "golang-project-packages"
+    ipprefix: "{{ ipprefix }}"
+    hexsha: "{{ hexsha }}"
+  register: result
+
+- debug: var=result
+
+- when: not result.found
+  block:
+  - name: Create temp directory
+    tempfile:
+      state: directory
+      suffix: _golist
+    register: tmp_dir
+
+  - name: Create GOPATH directory for the project
+    file:
+      path: "{{ tmp_dir.path }}/src/{{ ipprefix }}"
+      state: directory
+
+  - name: Retrieve code from project repository
+    repositorycoderetriever:
+      repository: "{{ project }}"
+      hexsha: "{{ hexsha }}"
+      directory: "{{ tmp_dir.path }}/src/{{ ipprefix }}"
+    register: routput
+
+  - name: Extract api
+    golist:
+      package-path: "{{ ipprefix }}"
+      gopath: "{{ tmp_dir.path }}"
+      artefact:
+        prefix: golang-project
+        key:
+          project: "{{ project }}"
+          hexsha: "{{ hexsha }}"
+          ipprefix: "{{ ipprefix }}"
+    register: eoutput
+
+  - name: Delete temp directory
+    file:
+      path: "{{ tmp_dir.path }}"
+      state: absent
+
+  - debug: var=eoutput
+
+  # Store all artefacts
+  - name: Store golang-project-packages artefact
+    artefactwriter:
+      artefact: "{{ eoutput.artefact }}"

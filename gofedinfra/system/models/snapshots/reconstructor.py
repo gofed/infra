@@ -183,29 +183,31 @@ class SnapshotReconstructor(object):
 	def _detectDirectDependencies(self, repository, commit, ipprefix, commit_timestamp, mains, tests):
 		artefact_key = {
 			"artefact": ARTEFACT_GOLANG_PROJECT_PACKAGES,
-			"repository": self._project_provider.parse(repository).signature(),
-			"commit": commit,
+			"ipprefix": ipprefix,
+			"hexsha": commit,
 		}
 
 		try:
 			packages_artefact = StorageReader().retrieve(artefact_key)
 		except KeyError:
-			Worker("gocodeinspection").setPayload({
-				"repository": repository,
-				"commit": commit,
+			Worker("go/codeanalysis/golistextractor").setPayload({
+				"project": repository,
+				"hexsha": commit,
 				"ipprefix": ipprefix,
 			}).do()
 			packages_artefact = StorageReader().retrieve(artefact_key)
 
+		data = packages_artefact["data"]
+
 		# collect dependencies
 		direct_dependencies = []
-		for package in packages_artefact["data"]["dependencies"]:
-			direct_dependencies = direct_dependencies + map(lambda l: l["name"], package["dependencies"])
+		for package in data["dependencies"]:
+			direct_dependencies = direct_dependencies + data["dependencies"][package]
 
 		if mains != []:
 			paths = {}
 			for path in packages_artefact["data"]["main"]:
-				paths[path["filename"]] = path["dependencies"]
+				paths[path] = packages_artefact["data"]["main"][path]
 
 			for main in mains:
 				if main not in paths:
@@ -214,8 +216,8 @@ class SnapshotReconstructor(object):
 				direct_dependencies = direct_dependencies + paths[main]
 
 		if tests:
-			for dependencies in map(lambda l: l["dependencies"], packages_artefact["data"]["tests"]):
-				direct_dependencies = direct_dependencies + dependencies
+			for package in data["tests"]:
+				direct_dependencies = direct_dependencies + data["tests"][package]
 
 		# remove duplicates
 		direct_dependencies = list(set(direct_dependencies))
